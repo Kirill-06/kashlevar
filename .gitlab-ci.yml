@@ -15,9 +15,12 @@ variables:
   image: docker:latest
   services:
     - name: docker:dind
-      command: ["--tls=false"]
+      command: ["--tls=false", "--insecure-registry=5.144.176.74:30050"]
+  variables:
+    DOCKER_HOST: "tcp://docker:2375"
+    DOCKER_TLS_CERTDIR: ""
   before_script:
-    - echo "$REGISTRY_PASSWORD" | docker login -u "$REGISTRY_USER" --password-stdin http://$REGISTRY_HOST
+    - echo "$REGISTRY_PASSWORD" | docker login -u "$REGISTRY_USER" --password-stdin $REGISTRY_HOST
 
 
 # Сборка фронтенда
