@@ -17,7 +17,8 @@ variables:
     - name: docker:dind
       command: ["--tls=false"]
   before_script:
-    - echo "$REGISTRY_PASSWORD" | docker login -u "$REGISTRY_USER" --password-stdin $REGISTRY_HOST
+    - echo "$REGISTRY_PASSWORD" | docker login -u "$REGISTRY_USER" --password-stdin http://$REGISTRY_HOST
+
 
 # Сборка фронтенда
 build-frontend:
