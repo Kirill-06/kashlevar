@@ -18,7 +18,7 @@ build-frontend:
   services:
     - docker:dind
   script:
-    - docker build -t $REGISTRY_URL/frontend:latest ./frontend
+    - docker build -t $REGISTRY_URL/frontend:latest ./client
 
 # Сборка бэкенда
 build-backend:
@@ -27,7 +27,7 @@ build-backend:
   services:
     - docker:dind
   script:
-    - docker build -t $REGISTRY_URL/backend:latest ./backend
+    - docker build -t $REGISTRY_URL/backend:latest ./server
 
 # Пушим фронт
 push-frontend:
