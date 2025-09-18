@@ -4,7 +4,8 @@ stages:
   - deploy
 
 variables:
-  REGISTRY_URL: "http://5.144.176.74:30050"
+  REGISTRY_HOST: "5.144.176.74:30050"
+  REGISTRY_URL: "$REGISTRY_HOST"
   REGISTRY_USER: "gitlab"
   REGISTRY_PASSWORD: "IuM0DYTEfPZuSa9"
   DOCKER_HOST: "tcp://docker:2375"
@@ -16,7 +17,7 @@ variables:
     - name: docker:dind
       command: ["--tls=false"]
   before_script:
-    - echo "$REGISTRY_PASSWORD" | docker login -u "$REGISTRY_USER" --password-stdin $REGISTRY_URL
+    - echo "$REGISTRY_PASSWORD" | docker login -u "$REGISTRY_USER" --password-stdin $REGISTRY_HOST
 
 # Сборка фронтенда
 build-frontend:
