@@ -1,11 +1,9 @@
 stages:
   - build
-  - push
   - deploy
 
 variables:
   REGISTRY_HOST: "5.144.176.74:30050"
-  REGISTRY_URL: "$REGISTRY_HOST"
   REGISTRY_USER: "gitlab"
   REGISTRY_PASSWORD: "IuM0DYTEfPZuSa9"
   DOCKER_HOST: "tcp://docker:2375"
@@ -16,44 +14,24 @@ variables:
   services:
     - name: docker:dind
       command: ["--tls=false", "--insecure-registry=5.144.176.74:30050"]
-  variables:
-    DOCKER_HOST: "tcp://docker:2375"
-    DOCKER_TLS_CERTDIR: ""
   before_script:
     - echo "$REGISTRY_PASSWORD" | docker login -u "$REGISTRY_USER" --password-stdin $REGISTRY_HOST
 
-
-# Сборка фронтенда
-build-frontend:
+# Сборка и пуш фронтенда
+build-and-push-frontend:
   stage: build
   <<: *before_docker
   script:
-    - docker build -t $REGISTRY_URL/frontend:latest ./client
+    - docker build -t $REGISTRY_HOST/frontend:latest ./client
+    - docker push $REGISTRY_HOST/frontend:latest
 
-# Сборка бэкенда
-build-backend:
+# Сборка и пуш бэкенда
+build-and-push-backend:
   stage: build
   <<: *before_docker
   script:
-    - docker build -t $REGISTRY_URL/backend:latest ./server
-
-# Пушим фронтенд
-push-frontend:
-  stage: push
-  <<: *before_docker
-  script:
-    - docker push $REGISTRY_URL/frontend:latest
-  needs:
-    - build-frontend
-
-# Пушим бэкенд
-push-backend:
-  stage: push
-  <<: *before_docker
-  script:
-    - docker push $REGISTRY_URL/backend:latest
-  needs:
-    - build-backend
+    - docker build -t $REGISTRY_HOST/backend:latest ./server
+    - docker push $REGISTRY_HOST/backend:latest
 
 # Деплой в K8S
 deploy:
@@ -62,5 +40,5 @@ deploy:
   script:
     - kubectl apply -f k8s/
   needs:
-    - push-frontend
-    - push-backend
+    - build-and-push-frontend
+    - build-and-push-backend
