@@ -1,0 +1,62 @@
+stages:
+  - build
+  - push
+  - deploy
+
+variables:
+  REGISTRY_URL: "5.144.176.74:30050"
+  REGISTRY_USER: "gitlab"
+  REGISTRY_PASSWORD: "IuM0DYTEfPZuSa9"
+
+before_script:
+  - echo "$REGISTRY_PASSWORD" | docker login -u "$REGISTRY_USER" --password-stdin $REGISTRY_URL
+
+# Сборка фронтенда
+build-frontend:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker build -t $REGISTRY_URL/frontend:latest ./client
+
+# Сборка бэкенда
+build-backend:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker build -t $REGISTRY_URL/backend:latest ./server
+
+# Пушим фронт
+push-frontend:
+  stage: push
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker push $REGISTRY_URL/frontend:latest
+  needs:
+    - build-frontend
+
+# Пушим бэк
+push-backend:
+  stage: push
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker push $REGISTRY_URL/backend:latest
+  needs:
+    - build-backend
+
+# Деплой в K8S
+deploy:
+  stage: deploy
+  image: bitnami/kubectl:latest
+  script:
+    - kubectl apply -f k8s/
+  needs:
+    - push-frontend
+    - push-backend
