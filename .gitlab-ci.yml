@@ -36,7 +36,9 @@ build-and-push-backend:
 # Деплой в K8S
 deploy:
   stage: deploy
-  image: registry.k8s.io/kubectl:v1.34.1
+  image: lachlanevenson/k8s-kubectl:v1.34.1
+  before_script:
+    - echo "$KUBECONFIG_CONTENT" > kubeconfig.yaml
   script:
     - kubectl --kubeconfig=kubeconfig.yaml apply -f k8s/
   needs:
