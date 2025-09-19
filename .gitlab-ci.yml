@@ -36,7 +36,7 @@ build-and-push-backend:
 # Деплой в K8S
 deploy:
   stage: deploy
-  image: bitnami/kubectl:1.10.11-ol-7
+  image: bitnami/kubectl:1.27.6-debian-11-r0
   script:
     - kubectl apply -f k8s/
   needs:
