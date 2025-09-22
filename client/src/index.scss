@@ -6,7 +6,7 @@ $font-size: 30px; // 1920x1080
 
 body {
     overflow: hidden;
-    background-color: $main-theme;
+    background: url('./assets/img/background/bg.png') center center / cover no-repeat, #181818;
     color: $text-color;
     margin: 0;
     padding: 0;
@@ -15,11 +15,10 @@ body {
     sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none;   /* Chrome/Safari/Opera */
-    -khtml-user-select: none;    /* Konqueror */
-    -moz-user-select: none;      /* Firefox */
-    -ms-user-select: none;       /* Internet Explorer/Edge */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
     user-select: none;
 }
 

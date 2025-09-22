@@ -1,20 +1,233 @@
+@font-face {
+    font-family: 'Cezanne';
+    src: url('../../assets/fonts/p22-cezanne-pro.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 .login {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    height: auto;
+
+    // Делаем скролл для всей страницы
+    width: 100vw;
+    overflow: auto;
+
+    @media (min-width: 900px) {
+        flex-direction: row;
+        min-height: 100vh;
+        height: 100vh;
+        align-items: stretch;
+        justify-content: flex-start;
+        background: none;
+        position: relative;
+        width: 100vw;
+        overflow: auto;
+    }
+
+    &-left {
+        background: #181818;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 0 48px;
+        width: 480px;
+        min-width: 480px;
+        height: 100vh;
+        position: relative;
+        z-index: 2;
+
+        @media (max-width: 900px) {
+            width: 90vw;
+            min-width: 0;
+            padding: 32px 16px;
+            height: auto;
+            background: #1E2022CC;
+            border-radius: 30px;
+            margin: 32px auto;
+        }
+    }
+
+    &-title {
+        font-weight: 700;
+        font-size: 32px;
+        margin-bottom: 24px;
+    }
+
+    &-description {
+        font-size: 18px;
+        margin-bottom: 32px;
+        color: #ccc;
+        max-width: 340px;
+        text-align: center;
+    }
+
+    &-wrapper {
+        background: transparent; // убран белый фон
+        border-radius: 0; // убраны скругления
+        box-shadow: none; // убрана тень
+        padding: 40px 32px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: 340px;
+        gap: 24px;
+        width: 100%;
+        border: none; // убрана рамка
+    }
 
     &-inputs {
         display: flex;
         flex-direction: column;
+        gap: 16px;
+        width: 100%;
+
+        .input-icon-wrapper {
+            position: relative;
+            width: 100%;
+        }
 
         input {
-            margin: 10px;
-            padding: 0 10px 5px 10px;
-            background-color: aquamarine;
-            width: 300px;
+            padding: 14px 44px 14px 18px; // место для иконки справа
+            border-radius: 0;
+            border: 2px solid #23272f;
+            background: transparent;
+            font-size: 18px;
+            outline: none;
+            transition: border-color 0.2s;
+            width: 100%;
+            color: #fff;
+
+            &:focus {
+                border-color: #6C63FF;
+                background: transparent;
+            }
+        }
+
+        .input-icon {
+            position: absolute;
+            right: 14px; // справа
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            color: #888;
+            pointer-events: none;
         }
     }
 
     &-buttons {
         display: flex;
-        justify-content: space-between;
-        max-width: 500px;
+        justify-content: center; // по центру
+        width: 100%;
+        gap: 0;
+        margin-top: 20px;
+    }
+
+    .button {
+        border-radius: 0 !important;
+        background: transparent !important;
+        border: 2px solid #23272f !important;
+        color: #fff !important;
+        font-size: 18px;
+        padding: 12px 32px;
+        box-shadow: none !important;
+        transition: border-color 0.2s, color 0.2s;
+        cursor: pointer;
+
+        &:hover, &:focus {
+            border-color: #6C63FF !important;
+            color: #6C63FF !important;
+            background: transparent !important;
+        }
+    }
+
+    &-register {
+        margin-top: 18px;
+        text-align: center;
+        font-size: 16px;
+        color: #ccc;
+
+        a {
+            color: #6C63FF;
+            text-decoration: underline;
+            cursor: pointer;
+            margin-left: 4px;
+        }
+    }
+
+    &-divider {
+        width: 2px;
+        background: #fff;
+        height: 100vh;
+        align-self: stretch;
+        z-index: 3;
+        @media (max-width: 900px) {
+            display: none;
+        }
+    }
+
+    &-right {
+        flex: 1 1 0;
+        background:
+                url('../../assets/img/background/bg.png') center center / cover no-repeat,
+                #181818;
+        background-blend-mode: normal;
+        min-width: 0;
+        position: relative;
+        z-index: 1;
+        height: 100vh;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        @media (max-width: 900px) {
+            display: none;
+        }
+    }
+
+    &-right-text {
+        font-family: 'Cezanne', serif;
+        font-size: 128px;
+        color: #fff;
+        text-align: center;
+        max-width: 70%;
+        line-height: 1.2;
+        letter-spacing: 2px;
+        opacity: 0.92;
+        user-select: none;
+
+        @media (max-width: 900px) {
+            display: none;
+        }
+    }
+
+    &-logo {
+        font-family: 'Cezanne', serif;
+        font-size: 64px;
+        color: #ffffff;
+        margin-bottom: 32px;
+        letter-spacing: 2px;
+        text-align: center;
+        user-select: none;
+    }
+
+    &-error {
+        color: #ff4d4f;
+        background: rgba(255, 77, 79, 0.08);
+        border: 1px solid #ff4d4f;
+        border-radius: 6px;
+        padding: 8px 16px;
+        margin: 10px 0 0 0;
+        width: 100%;
+        text-align: center;
+        font-size: 15px;
     }
 }
