@@ -4,11 +4,11 @@ FROM node:20 AS build
 WORKDIR /app
 
 # Копируем package.json и устанавливаем зависимости
-COPY /package*.json ./
+COPY package*.json ./
 RUN npm install
 
 # Копируем весь проект
-COPY / .
+COPY . .
 
 # Собираем фронтенд
 RUN npm run build
