@@ -1,62 +1,46 @@
 stages:
   - build
-  - push
   - deploy
 
 variables:
-  REGISTRY_URL: "5.144.176.74:30050"
+  REGISTRY_HOST: "5.144.176.74:30050"
   REGISTRY_USER: "gitlab"
   REGISTRY_PASSWORD: "IuM0DYTEfPZuSa9"
+  DOCKER_HOST: "tcp://docker:2375"
+  DOCKER_TLS_CERTDIR: ""
 
-before_script:
-  - echo "$REGISTRY_PASSWORD" | docker login -u "$REGISTRY_USER" --password-stdin $REGISTRY_URL
+.before_docker: &before_docker
+  image: docker:latest
+  services:
+    - name: docker:dind
+      command: ["--tls=false", "--insecure-registry=5.144.176.74:30050"]
+  before_script:
+    - echo "$REGISTRY_PASSWORD" | docker login -u "$REGISTRY_USER" --password-stdin $REGISTRY_HOST
 
-# Сборка фронтенда
-build-frontend:
+# Сборка и пуш фронтенда
+build-and-push-frontend:
   stage: build
-  image: docker:latest
-  services:
-    - docker:dind
+  <<: *before_docker
   script:
-    - docker build -t $REGISTRY_URL/frontend:latest ./client
+    - docker build -t $REGISTRY_HOST/frontend:latest ./client
+    - docker push $REGISTRY_HOST/frontend:latest
 
-# Сборка бэкенда
-build-backend:
+# Сборка и пуш бэкенда
+build-and-push-backend:
   stage: build
-  image: docker:latest
-  services:
-    - docker:dind
+  <<: *before_docker
   script:
-    - docker build -t $REGISTRY_URL/backend:latest ./server
-
-# Пушим фронт
-push-frontend:
-  stage: push
-  image: docker:latest
-  services:
-    - docker:dind
-  script:
-    - docker push $REGISTRY_URL/frontend:latest
-  needs:
-    - build-frontend
-
-# Пушим бэк
-push-backend:
-  stage: push
-  image: docker:latest
-  services:
-    - docker:dind
-  script:
-    - docker push $REGISTRY_URL/backend:latest
-  needs:
-    - build-backend
+    - docker build -t $REGISTRY_HOST/backend:latest ./server
+    - docker push $REGISTRY_HOST/backend:latest
 
 # Деплой в K8S
 deploy:
   stage: deploy
-  image: bitnami/kubectl:latest
+  image: lachlanevenson/k8s-kubectl:v1.34.1
+  before_script:
+    - echo "$KUBECONFIG_CONTENT" > kubeconfig.yaml
   script:
-    - kubectl apply -f k8s/
+    - kubectl --kubeconfig=kubeconfig.yaml apply -f k8s/
   needs:
-    - push-frontend
-    - push-backend
+    - build-and-push-frontend
+    - build-and-push-backend
