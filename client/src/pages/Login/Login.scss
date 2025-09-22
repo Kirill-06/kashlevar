@@ -13,7 +13,6 @@
     min-height: 100vh;
     height: auto;
 
-    // Делаем скролл для всей страницы
     width: 100vw;
     overflow: auto;
 
@@ -69,9 +68,9 @@
     }
 
     &-wrapper {
-        background: transparent; // убран белый фон
-        border-radius: 0; // убраны скругления
-        box-shadow: none; // убрана тень
+        background: transparent;
+        border-radius: 0;
+        box-shadow: none;
         padding: 40px 32px;
         display: flex;
         flex-direction: column;
@@ -79,7 +78,7 @@
         min-width: 340px;
         gap: 24px;
         width: 100%;
-        border: none; // убрана рамка
+        border: none;
     }
 
     &-inputs {
@@ -94,7 +93,7 @@
         }
 
         input {
-            padding: 14px 44px 14px 18px; // место для иконки справа
+            padding: 14px 44px 14px 18px;
             border-radius: 0;
             border: 2px solid #23272f;
             background: transparent;
@@ -112,7 +111,7 @@
 
         .input-icon {
             position: absolute;
-            right: 14px; // справа
+            right: 14px;
             top: 50%;
             transform: translateY(-50%);
             width: 20px;
@@ -124,7 +123,7 @@
 
     &-buttons {
         display: flex;
-        justify-content: center; // по центру
+        justify-content: center;
         width: 100%;
         gap: 0;
         margin-top: 20px;
