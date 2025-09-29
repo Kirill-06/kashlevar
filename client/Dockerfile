@@ -4,11 +4,11 @@ FROM node:20 AS build
 WORKDIR /app
 
 # Копируем package.json и устанавливаем зависимости
-COPY package*.json ./
+COPY client/package*.json ./
 RUN npm install
 
 # Копируем весь проект
-COPY . .
+COPY client/. .
 
 # Собираем фронтенд
 RUN npm run build
@@ -20,7 +20,8 @@ FROM nginx:stable-alpine
 COPY --from=build /app/build /usr/share/nginx/html
 
 # Копируем кастомный конфиг Nginx (если нужен роутинг SPA)
-COPY nginx/default.conf /etc/nginx/conf.d/default.conf
+ARG NGINX_CONF
+COPY ${NGINX_CONF} /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
