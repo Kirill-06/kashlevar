@@ -11,6 +11,8 @@
           - action: sync
             path: ./server/api
             target: /var/www/html
+      depends_on:
+          - postgres
 
     nginx-api:
       build:
@@ -35,6 +37,21 @@
       container_name: nginx-frontend
       ports:
         - "${NGINX_FRONTEND_PORT}:80"
+      networks:
+        - backend
+
+    postgres:
+      image: postgres:16
+      container_name: postgres
+      environment:
+        POSTGRES_DB: ${NAME_DB}
+        POSTGRES_USER: ${USER_DB}
+        POSTGRES_PASSWORD: ${PASSWORD_DB}
+      volumes:
+        - ${PATH_DB}:/var/lib/postgresql/data
+        - ./server/api/application/db/init:/docker-entrypoint-initdb.d
+      ports:
+        - "${PORT_DB}:5432"
       networks:
         - backend
 
