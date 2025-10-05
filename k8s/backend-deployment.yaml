@@ -52,6 +52,8 @@ spec:
             limits:
               cpu: 300m
               memory: 256Mi
+      imagePullSecrets:
+        - name: myregistrykey
 ---
 apiVersion: v1
 kind: Service
