@@ -3,17 +3,20 @@ stages:
   - deploy
 
 variables:
-  REGISTRY_HOST: "5.144.176.74:30050"
+  REGISTRY_HOST: "http://5.144.176.74:30050"
   REGISTRY_USER: "gitlab"
   REGISTRY_PASSWORD: "IuM0DYTEfPZuSa9"
   DOCKER_HOST: "tcp://docker:2375"
   DOCKER_TLS_CERTDIR: ""
+  IMAGE_TAG: "latest"
 
 .before_docker: &before_docker
   image: docker:latest
   services:
     - name: docker:dind
-      command: ["--tls=false"]
+      command:
+        - "--tls=false"
+        - "--insecure-registry=5.144.176.74:30050"
   before_script:
     - echo "$REGISTRY_PASSWORD" | docker login -u "$REGISTRY_USER" --password-stdin $REGISTRY_HOST
 
@@ -21,15 +24,15 @@ build-and-push-frontend:
   stage: build
   <<: *before_docker
   script:
-    - docker build -t $REGISTRY_HOST/frontend:latest -f ./client/Dockerfile.prod ./client
-    - docker push $REGISTRY_HOST/frontend:latest
+    - docker build -t 5.144.176.74:30050/frontend:$IMAGE_TAG -f ./client/Dockerfile.prod ./client
+    - docker push 5.144.176.74:30050/frontend:$IMAGE_TAG
 
 build-and-push-backend:
   stage: build
   <<: *before_docker
   script:
-    - docker build -t $REGISTRY_HOST/backend:latest -f ./server/php/Dockerfile.prod ./server
-    - docker push $REGISTRY_HOST/backend:latest
+    - docker build -t 5.144.176.74:30050/backend:$IMAGE_TAG -f ./server/php/Dockerfile.prod ./server
+    - docker push 5.144.176.74:30050/backend:$IMAGE_TAG
 
 deploy:
   stage: deploy
