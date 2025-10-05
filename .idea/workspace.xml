@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0aed8d79-2321-4950-8c64-3e60892d5eec" name="Changes" comment="create registration" />
+    <list default="true" id="0aed8d79-2321-4950-8c64-3e60892d5eec" name="Changes" comment="setting up a project">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -18,9 +20,29 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 3
-}]]></component>
+  <component name="GitLabMergeRequestFiltersHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPENED&quot;,
+    &quot;assignee&quot;: {
+      &quot;type&quot;: &quot;org.jetbrains.plugins.gitlab.mergerequest.ui.filters.GitLabMergeRequestsFiltersValue.MergeRequestsMemberFilterValue.MergeRequestsAssigneeFilterValue&quot;,
+      &quot;username&quot;: &quot;project_2_bot_762f9217fb20b63ff41639b45b13c331&quot;,
+      &quot;fullname&quot;: &quot;pycharm&quot;
+    }
+  }
+}</component>
+  <component name="GitLabMergeRequestsSettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;first&quot;: &quot;https://gitlab.kashlevar.ru/root/messenger.git&quot;,
+    &quot;second&quot;: &quot;49edbb58-54fe-476f-a643-ad50b0b6b997&quot;
+  }
+}</component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
   <component name="ProjectId" id="333zPUxVKbXpY47UR8Rq1SS7X9U" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -28,30 +50,50 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Docker.client/Dockerfile.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "registration",
-    "last_opened_file_path": "/Users/kirillvarlamov/udgu/messenger/client/src/assets/fonts",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "/Users/kirillvarlamov/PycharmProjects/NoPainNoGame",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "vcs.Subversion",
-    "ts.external.directory.path": "/Users/kirillvarlamov/Applications/WebStorm.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external",
+    "ts.external.directory.path": "/Users/kirillvarlamov/PycharmProjects/NoPainNoGame/client/node_modules/typescript/lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/php" />
       <recent name="$PROJECT_DIR$/client/src/assets/fonts" />
       <recent name="$PROJECT_DIR$/client/src/assets/img/background" />
     </key>
   </component>
+  <component name="RunManager">
+    <configuration default="true" type="docker-deploy" factoryName="dockerfile" temporary="true">
+      <deployment type="dockerfile">
+        <settings />
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration name="client/Dockerfile" type="docker-deploy" factoryName="dockerfile" temporary="true" server-name="Docker">
+      <deployment type="dockerfile">
+        <settings>
+          <option name="sourceFilePath" value="client/Dockerfile" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-WS-243.26053.12" />
+        <option value="bundled-python-sdk-ce6832f46686-7b97d883f26b-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-252.25557.178" />
       </set>
     </attachedChunks>
   </component>
@@ -67,6 +109,7 @@
       <option name="presentableId" value="Default" />
       <updated>1758560519573</updated>
       <workItem from="1758560520651" duration="2587000" />
+      <workItem from="1758718789653" duration="10000" />
     </task>
     <task id="LOCAL-00001" summary="create registration">
       <option name="closed" value="true" />
@@ -76,7 +119,31 @@
       <option name="project" value="LOCAL" />
       <updated>1758561518953</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="test ci/cd">
+      <option name="closed" value="true" />
+      <created>1758570952199</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1758570952199</updated>
+    </task>
+    <task id="LOCAL-00003" summary="test ci/cd">
+      <option name="closed" value="true" />
+      <created>1758573304529</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1758573304529</updated>
+    </task>
+    <task id="LOCAL-00004" summary="setting up a project">
+      <option name="closed" value="true" />
+      <created>1759045259623</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1759045259623</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -95,6 +162,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="create registration" />
-    <option name="LAST_COMMIT_MESSAGE" value="create registration" />
+    <MESSAGE value="test ci/cd" />
+    <MESSAGE value="setting up a project" />
+    <option name="LAST_COMMIT_MESSAGE" value="setting up a project" />
   </component>
 </project>
