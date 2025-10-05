@@ -31,7 +31,7 @@ build-and-push-backend:
   stage: build
   <<: *before_docker
   script:
-    - docker build -t 5.144.176.74:30050/backend:$IMAGE_TAG -f ./server/php/Dockerfile.prod ./server
+    - docker build --no-cache -t 5.144.176.74:30050/backend:$IMAGE_TAG -f ./server/php/Dockerfile.prod ./server
     - docker push 5.144.176.74:30050/backend:$IMAGE_TAG
 
 deploy:
