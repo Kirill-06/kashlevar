@@ -26,6 +26,10 @@ build-and-push-frontend:
   script:
     - docker build -t 5.144.176.74:30050/frontend:$IMAGE_TAG -f ./client/Dockerfile.prod ./client
     - docker push 5.144.176.74:30050/frontend:$IMAGE_TAG
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'
+      when: always
+    - when: never
 
 build-and-push-backend:
   stage: build
@@ -33,6 +37,10 @@ build-and-push-backend:
   script:
     - docker build --no-cache -t 5.144.176.74:30050/backend:$IMAGE_TAG -f ./server/php/Dockerfile.prod ./server
     - docker push 5.144.176.74:30050/backend:$IMAGE_TAG
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'
+      when: always
+    - when: never
 
 deploy:
   stage: deploy
@@ -51,3 +59,7 @@ deploy:
   needs:
     - build-and-push-frontend
     - build-and-push-backend
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'
+      when: always
+    - when: never
