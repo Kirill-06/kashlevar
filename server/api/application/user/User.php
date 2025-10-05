@@ -9,15 +9,15 @@ class User {
         return $this->db->getUserByToken($token);
     }
 
-    public function login($login, $hash, $rnd) {
-        $user = $this->db->getUserByLogin($login);
+    public function login($username, $hash_password, $rnd) {
+        $user = $this->db->getUserByUserName($username);
         if ($user) {
-            if (md5($user->password . $rnd) === $hash) {
+            if (md5($user->hash_password . $rnd) === $hash_password) {
                 $token = md5(rand());
                 $this->db->updateToken($user->id, $token);
                 return [
                     'id' => $user->id,
-                    'name' => $user->name,
+                    'name' => $user->username,
                     'token' => $token
                 ];
             }
@@ -35,19 +35,19 @@ class User {
         return ['error' => 1003];
     }
 
-    public function registration($login, $password, $name) {
-        $user = $this->db->getUserByLogin($login, $password);
+    public function registration($username, $hash_password) {
+        $user = $this->db->getUserByUserName($username);
         if ($user) {
             return ['error' => 1001];
         }
-        $this->db->registration($login, $password, $name);
-        $user = $this->db->getUserByLogin($login, $password);
+        $this->db->registration($username, $hash_password);
+        $user = $this->db->getUserByUserName($username);
         if ($user) {
             $token = md5(rand());
             $this->db->updateToken($user->id, $token);
             return [
                 'id' => $user->id,
-                'name' => $user->name,
+                'username' => $user->username,
                 'token' => $token
             ];
         }

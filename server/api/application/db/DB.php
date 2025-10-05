@@ -4,23 +4,12 @@ class DB {
     private $pdo;
 
     function __construct() {
-        // MySQL
-        /*
-        $host = '127.0.0.1';
-        $port = '3306';
-        $user = 'root';
-        $pass = '---';
-        $db = 'nopainnogame';
-        $connect = "mysql:host=$host;port=$port;dbname=$db;charset=utf8";
-        $this->pdo = new PDO($connect, $user, $pass);
-        */
-
         // Postgres
-        $host = 'localhost';
+        $host = 'postgres';
         $port = '5432';
-        $user = 'postgres';
-        $pass = '---';
-        $db = 'nopainnogame';
+        $user = 'user';
+        $pass = 'user';
+        $db = 'game_data';
         $connect = "pgsql:host=$host;port=$port;dbname=$db;";
         $this->pdo = new PDO($connect, $user, $pass, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
     }
@@ -49,8 +38,8 @@ class DB {
         return $sth->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getUserByLogin($login) {
-        return $this->query("SELECT * FROM users WHERE login=?", [$login]);
+    public function getUserByUserName($username) {
+        return $this->query("SELECT * FROM users WHERE username=?", [$username]);
     }
 
     public function getUserByToken($token) {
@@ -61,8 +50,8 @@ class DB {
         $this->execute("UPDATE users SET token=? WHERE id=?", [$token, $userId]);
     }
 
-    public function registration($login, $password, $name) {
-        $this->execute("INSERT INTO users (login,password,name) VALUES (?, ?, ?)",[$login, $hash, $name]);
+    public function registration($username, $hash_password) {
+        $this->execute("INSERT INTO users (username,hash_password) VALUES (?, ?)",[$username, $hash_password]);
     }
 
     public function getChatHash() {
