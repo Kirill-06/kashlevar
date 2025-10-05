@@ -36,13 +36,15 @@ build-and-push-backend:
 
 deploy:
   stage: deploy
-  image: registry.k8s.io/kubectl:latest
+  image: registry.k8s.io/kubectl:v1.30.1
   before_script:
     - echo "$KUBECONFIG_CONTENT" > kubeconfig.yaml
   script:
     - kubectl --kubeconfig=kubeconfig.yaml apply -f k8s/
-    - echo "✅ Deployment applied successfully!"
-    - kubectl --kubeconfig=kubeconfig.yaml get pods -o wide
+    - kubectl --kubeconfig=kubeconfig.yaml rollout status deployment/frontend -n default
+    - kubectl --kubeconfig=kubeconfig.yaml rollout status deployment/backend -n default
+    - echo "Deployment applied successfully!"
+    - kubectl --kubeconfig=kubeconfig.yaml get pods -o wide -n default
   needs:
     - build-and-push-frontend
     - build-and-push-backend
