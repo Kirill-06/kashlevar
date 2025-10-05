@@ -2,7 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend
-  namespace: default
+  labels:
+    app: backend
 spec:
   replicas: 1
   selector:
@@ -18,20 +19,49 @@ spec:
           image: 5.144.176.74:30050/backend:latest
           ports:
             - containerPort: 80
-      imagePullSecrets:
-        - name: myregistrykey
+          env:
+            - name: POSTGRES_HOST
+              value: "postgres"
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_DB
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_PASSWORD
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 300m
+              memory: 256Mi
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: backend-service
-  namespace: default
 spec:
-  type: NodePort
   selector:
     app: backend
   ports:
     - protocol: TCP
       port: 80
       targetPort: 80
-      nodePort: 30085
+  type: NodePort

@@ -4,14 +4,14 @@ class DB {
     private $pdo;
 
     function __construct() {
-        // Postgres
-        $host = 'postgres';
-        $port = '5432';
-        $user = 'user';
-        $pass = 'user';
-        $db = 'game_data';
-        $connect = "pgsql:host=$host;port=$port;dbname=$db;";
-        $this->pdo = new PDO($connect, $user, $pass, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+        $host = getenv('POSTGRES_HOST') ?: 'localhost';
+        $port = getenv('POSTGRES_PORT') ?: '5432';
+        $user = getenv('POSTGRES_USER') ?: 'user';
+        $pass = getenv('POSTGRES_PASSWORD') ?: 'user';
+        $db   = getenv('POSTGRES_DB') ?: 'game_data';
+
+        $dsn = "pgsql:host=$host;port=$port;dbname=$db;";
+        $this->pdo = new PDO($dsn, $user, $pass, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
     }
 
     public function __destruct() {
