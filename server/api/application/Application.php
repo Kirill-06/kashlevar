@@ -11,8 +11,8 @@ class Application {
     }
 
     public function login($params) {
-        if ($params['login'] && $params['hash'] && $params['rnd']) {
-            return $this->user->login($params['login'], $params['hash'], $params['rnd']);
+        if ($params['username'] && $params['hash'] && $params['rnd']) {
+            return $this->user->login($params['username'], $params['hash'], $params['rnd']);
         }
         return ['error' => 242];
     }
@@ -29,8 +29,8 @@ class Application {
     }
 
     public function registration($params) {
-        if ($params['login'] && $params['password'] && $params['name']) {
-            return $this->user->registration($params['login'], $params['password'], $params['name']);
+        if ($params['login'] && $params['hash_password']) {
+            return $this->user->registration($params['login'], $params['hash_password']);
         }
         return ['error' => 242];
     }

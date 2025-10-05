@@ -89,7 +89,7 @@ Message: {
 **Параметры**
 ```
 {
-    login: string; - логин пользователя
+    username: string; - логин пользователя
     hash: string; - контрольная сумма, равная hash = md5(nd5(login + password) + rnd)
     rnd: number; - случайно целое число
 }
@@ -126,9 +126,8 @@ Message: {
 **Параметры**
 ```
 {
-    login: string; - логин пользователя
-    password: string; - хеш пароля: md5(login + password)
-    name: string; - имя пользователя
+    username: string; - логин пользователя
+    hash_password: string; - хеш пароля: md5(login + password)
 }
 ```
 **Успешный ответ**
