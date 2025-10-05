@@ -13,7 +13,7 @@ variables:
   image: docker:latest
   services:
     - name: docker:dind
-      command: ["--tls=false", "--insecure-registry=5.144.176.74:30050"]
+      command: ["--tls=false"]
   before_script:
     - echo "$REGISTRY_PASSWORD" | docker login -u "$REGISTRY_USER" --password-stdin $REGISTRY_HOST
 
@@ -21,14 +21,14 @@ build-and-push-frontend:
   stage: build
   <<: *before_docker
   script:
-    - docker build -t $REGISTRY_HOST/frontend:latest -f ./client/Dockerfile ./client
+    - docker build -t $REGISTRY_HOST/frontend:latest -f ./client/Dockerfile.prod ./client
     - docker push $REGISTRY_HOST/frontend:latest
 
 build-and-push-backend:
   stage: build
   <<: *before_docker
   script:
-    - docker build -t $REGISTRY_HOST/backend:latest -f ./server/php/Dockerfile ./server
+    - docker build -t $REGISTRY_HOST/backend:latest -f ./server/php/Dockerfile.prod ./server
     - docker push $REGISTRY_HOST/backend:latest
 
 deploy:
