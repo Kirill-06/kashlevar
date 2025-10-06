@@ -107,7 +107,7 @@ const Register: React.FC<IBasePage> = (props: IBasePage) => {
             //     return;
             // }
             setError("");
-            setPage(PAGES.CHAT);
+            setPage(PAGES.START);
         }
     }
 
