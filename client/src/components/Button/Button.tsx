@@ -8,26 +8,34 @@ export type TButton = {
     isHover?: boolean;
     className?: string;
     text?: string;
-    onClick: (a: any) => void;
+    onClick?: () => void;
     isDisabled?: boolean;
-}
+};
 
-const Button: React.FC<TButton> = (props: TButton) => {
-    const {
-        variant = 'main',
-        isHover = false,
-        className,
-        text = 'No Text',
-        onClick = () => { },
-        isDisabled = false,
-    } = props;
 
-    return (<button
-        className={cn('button', `button-${variant}`, className, { 'hover': isHover, 'disabled': isDisabled })}
-        onClick={onClick}
-    >
-        {text}
-    </button>);
-}
+const Button: React.FC<TButton> = ({
+    variant = 'main',
+    isHover = false,
+    className,
+    text = 'No Text',
+    onClick,
+    isDisabled = false,
+}) => {
+    return (
+        <button
+            className={cn(
+                'button',
+                `button-${variant}`,
+                className,
+                { hover: isHover, disabled: isDisabled }
+            )}
+            onClick={onClick}
+            disabled={isDisabled}
+        >
+            {text}
+        </button>
+    );
+};
+
 
 export default Button;

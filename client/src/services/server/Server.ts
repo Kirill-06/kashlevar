@@ -19,6 +19,7 @@ class Server {
     private async request<T>(method: string, params: { [key: string]: string } = {}): Promise<T | null> {
         try {
             params.method = method;
+            
             const token = this.store.getToken();
             if (token) {
                 params.token = token;
@@ -48,10 +49,10 @@ class Server {
         this.showErrorCb = cb;
     }
 
-    async login(login: string, password: string): Promise<boolean> {
+    async login(username: string, password: string): Promise<boolean> {
         const rnd = Math.round(Math.random() * 100000);
-        const hash = md5(`${md5(`${login}${password}`)}${rnd}`);
-        const user = await this.request<TUser>('login', { login, hash, rnd: `${rnd}` });
+        const hash = md5(`${md5(`${username}${password}`)}${rnd}`);
+        const user = await this.request<TUser>('login', { username, hash, rnd: `${rnd}` });
         if (user) {
             this.store.setUser(user);
             return true;
@@ -66,9 +67,9 @@ class Server {
         }
     }
 
-    registration(login: string, password: string, name: string): Promise<boolean | null> {
-        const hash = md5(`${login}${password}`);
-        return this.request<boolean>('registration', { login, hash, name });
+    registration(login: string, password: string): Promise<boolean | null> {
+        const hash_password = md5(`${login}${password}`);
+        return this.request<boolean>('registration', { login, hash_password});
     }
 
     sendMessage(message: string): void {
@@ -85,17 +86,17 @@ class Server {
         return null;
     }
 
-    startChatMessages(cb: (hash: string) => void): void {
-        this.chatInterval = setInterval(async () => {
-            const result = await this.getMessages();
-            if (result) {
-                const { messages, hash } = result;
-                this.store.addMessages(messages);
-                cb(hash);
-            }
-        }, CHAT_TIMESTAMP);
+    // startChatMessages(cb: (hash: string) => void): void {
+    //     this.chatInterval = setInterval(async () => {
+    //         const result = await this.getMessages();
+    //         if (result) {
+    //             const { messages, hash } = result;
+    //             this.store.addMessages(messages);
+    //             cb(hash);
+    //         }
+    //     }, CHAT_TIMESTAMP);
 
-    }
+    // }
 
     stopChatMessages(): void {
         if (this.chatInterval) {
