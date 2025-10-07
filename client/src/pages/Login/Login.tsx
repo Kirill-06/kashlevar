@@ -7,16 +7,16 @@ import './Login.scss';
 
 const UserIcon = () => (
     <svg className="input-icon" viewBox="0 0 24 24" fill="none">
-        <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="2"/>
-        <path d="M4 20c0-4 4-6 8-6s8 2 8 6" stroke="currentColor" strokeWidth="2"/>
+        <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="2" />
+        <path d="M4 20c0-4 4-6 8-6s8 2 8 6" stroke="currentColor" strokeWidth="2" />
     </svg>
 );
 
 const LockIcon = () => (
     <svg className="input-icon" viewBox="0 0 24 24" fill="none">
-        <rect x="6" y="11" width="12" height="8" rx="2" stroke="currentColor" strokeWidth="2"/>
-        <path d="M12 15v2" stroke="currentColor" strokeWidth="2"/>
-        <path d="M8 11V8a4 4 0 1 1 8 0v3" stroke="currentColor" strokeWidth="2"/>
+        <rect x="6" y="11" width="12" height="8" rx="2" stroke="currentColor" strokeWidth="2" />
+        <path d="M12 15v2" stroke="currentColor" strokeWidth="2" />
+        <path d="M8 11V8a4 4 0 1 1 8 0v3" stroke="currentColor" strokeWidth="2" />
     </svg>
 );
 
@@ -36,12 +36,16 @@ const Login: React.FC<IBasePage> = (props: IBasePage) => {
                 setError("Заполните все поля");
                 return;
             }
-            // if (!(await server.login(login, password))) {
-            //     setError("Неверный логин или пароль");
-            //     return;
-            // }
-            setError("");
-            setPage(PAGES.CHAT);
+try {
+                const response = await server.login(login, password);
+
+
+                setError("");
+                setPage(PAGES.CHAT); 
+            } catch (err) {
+                console.error(err);
+                setError("Ошибка соединения с сервером");
+            }
         }
     }
 
@@ -94,22 +98,29 @@ const Register: React.FC<IBasePage> = (props: IBasePage) => {
     const [error, setError] = React.useState<string>("");
 
     const registerClickHandler = async () => {
-        if (nameRef.current && loginRef.current && passwordRef.current) {
-            const name = nameRef.current.value;
-            const login = loginRef.current.value;
-            const password = passwordRef.current.value;
-            if (!name || !login || !password) {
+        console.log('hi')
+        if (nameRef.current && passwordRef.current) {
+            const name = nameRef.current.value.trim();
+            const password = passwordRef.current.value.trim();
+
+            if (!name || !password) {
                 setError("Заполните все поля");
                 return;
             }
-            // if (!(await server.register(name, login, password))) {
-            //     setError("Ошибка регистрации");
-            //     return;
-            // }
-            setError("");
-            setPage(PAGES.START);
+
+            try {
+                const response = await server.registration(name, password);
+
+
+                setError("");
+                setPage(PAGES.START); 
+            } catch (err) {
+                console.error(err);
+                setError("Ошибка соединения с сервером");
+            }
         }
-    }
+    };
+
 
     return (
         <div className='login'>
@@ -123,10 +134,6 @@ const Register: React.FC<IBasePage> = (props: IBasePage) => {
                     <div className='login-inputs'>
                         <div className="input-icon-wrapper">
                             <input ref={nameRef} placeholder='Имя' />
-                            <UserIcon />
-                        </div>
-                        <div className="input-icon-wrapper">
-                            <input ref={loginRef} placeholder='Логин' />
                             <UserIcon />
                         </div>
                         <div className="input-icon-wrapper">

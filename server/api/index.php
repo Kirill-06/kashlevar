@@ -20,7 +20,14 @@ function result($params) {
             // chat
             case 'sendMessage': return $app->sendMessage($params);
             case 'getMessages': return $app->getMessages($params);
+            //math
+            case 'getSolvesQuadraticEquations': return $app->getSolvesQuadraticEquations($params);
+            case 'getSolvesCubicEquations': return $app->getSolvesCubicEquations($params);
+            case 'getSolvesQuadrupleEquations': return $app->getSolvesQuadrupleEquations($params);
+
             default: return ['error' => 102];
+            
+            
         }
     }
     return ['error' => 101];

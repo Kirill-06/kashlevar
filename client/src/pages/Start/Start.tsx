@@ -34,7 +34,7 @@ const Start: React.FC<IBasePage> = (props: IBasePage) => {
                 <div style={{flex: 1}}></div>
                 <Button 
                     onClick={startGameHandler} 
-                    text='Начать игру' 
+                    text='Новая игра' 
                     className="button-start"
                 />
             </div>

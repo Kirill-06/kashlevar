@@ -16,17 +16,17 @@ const Chat: React.FC<IBasePage> = (props: IBasePage) => {
     const user = store.getUser();
 
     useEffect(() => {
-        const newMessages = (hash: string) => {
-            const messages = store.getMessages();
-            if (messages?.length) {
-                setMessages(messages);
-                setHash(hash);
-            }
-        }
+        // const newMessages = (hash: string) => {
+        //     const messages = store.getMessages();
+        //     if (messages?.length) {
+        //         setMessages(messages);
+        //         setHash(hash);
+        //     }
+        //}
 
-        if (user) {
-            server.startChatMessages(newMessages);
-        }
+        // if (user) {
+        //     server.startChatMessages(newMessages);
+        // }
 
         return () => {
             server.stopChatMessages();

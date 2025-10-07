@@ -21,9 +21,12 @@ class Answer {
         '709' => ' session did not start or you need use previous method',
         '800' => 'not found object',
         '801' => 'unknown state',
+        '1000' => 'Деление на ноль',
         '1001' => 'params login or password not set',
         '1005' => 'Other user is playing wright now. If you doesn`t, please change the password',
         '1006' => 'user with this email is already registered',
+        '8001' => 'Хотя бы один из параметров должен быть ненулевым',
+        '8002' => 'Нет вещественных корней',
         '9000' => 'unknown error'
     );
 

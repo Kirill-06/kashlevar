@@ -4,7 +4,7 @@ class DB {
     private $pdo;
 
     function __construct() {
-        $host = getenv('POSTGRES_HOST') ?: 'localhost';
+        $host = getenv('POSTGRES_HOST') ?: 'postgres';
         $port = getenv('POSTGRES_PORT') ?: '5432';
         $user = getenv('POSTGRES_USER') ?: 'user';
         $pass = getenv('POSTGRES_PASSWORD') ?: 'user';
