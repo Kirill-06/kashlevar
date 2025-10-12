@@ -2,18 +2,15 @@ CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(20) NOT NULL UNIQUE,
     hash_password VARCHAR(255) NOT NULL,
-    token VARCHAR(255),
-    is_active BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    last_login TIMESTAMP
+    token VARCHAR(255)
 );
 
 
 CREATE TABLE IF NOT EXISTS user_progress (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    level INT DEFAULT 1,
-    score INT DEFAULT 0,
+    happines INT DEFAULT 100, 
+    health INT DEFAULT 100,
     coins INT DEFAULT 0,
     last_played TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
