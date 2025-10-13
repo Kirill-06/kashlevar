@@ -1,0 +1,142 @@
+@font-face {
+    font-family: 'Cezanne';
+    src: url('../../assets/fonts/p22-cezanne-pro.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'ST-Brigantina-free';
+    src: url('../../assets/fonts/ST-Brigantina-free.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+.start {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    width: 100vw;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+
+    &-background {
+        position: fixed;
+        top: -20px;
+        left: -20px;
+        right: -20px;
+        bottom: -20px;
+        background: url('../../assets/img/background/city.png') center center / cover no-repeat;
+        filter: blur(10px);
+        z-index: -2;
+    }
+
+    &-texture {
+        position: fixed;
+        top: 63%;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        opacity: 0.1;
+        z-index: -1;
+        background: url('../../assets/img/background/texture.png') center center / cover no-repeat;
+    }
+
+    &-logo {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+        height: 100%;
+        max-width: 100px;
+        max-height: 100px;
+        background: url('../../assets/img/logo/cigarette.png') center center / contain no-repeat;
+        z-index: 0;
+        object-fit: contain;
+    }
+
+    &-title {
+        font-family: 'Cezanne', serif;
+        font-weight: 400;
+        font-style: normal;
+        font-size: 200px;
+        line-height: 100%;
+        letter-spacing: 0%;
+        text-align: center;
+        position: absolute;
+        top: 63%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 0;
+        user-select: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        gap: 40px; 
+    }
+
+    &-rectangle {
+        width: 371px;
+        height: 7px;
+        opacity: 1;
+        border-radius: 80px;
+        background: #fff; /* Цвет прямоугольников */
+    }
+
+    &-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        width: 100%;
+        max-width: 300px;
+        height: 100vh;
+        justify-content: space-between;
+        padding: 60px 0;
+        position: relative;
+        z-index: 1;
+    }
+
+    .button {
+        border-radius: 0 !important;
+        background: transparent !important;
+        border: none !important;
+        color: #fff !important;
+        font-size: 18px;
+        padding: 8px 16px !important;
+        box-shadow: none !important;
+        transition: color 0.2s;
+        cursor: pointer;
+        width: auto !important;
+        display: inline-block !important;
+
+        &:hover, &:focus {
+            color: #7f7f90 !important;
+            background: transparent !important;
+        }
+    }
+
+    .button-exit {
+        font-family: 'ST-Brigantina-free', serif;
+        font-weight: 400;
+        font-style: normal;
+        font-size: 72px;
+        line-height: 100%;
+        letter-spacing: 10%;
+        text-align: center;
+    }
+
+    .button-start {
+        font-family: 'ST-Brigantina-free', serif;
+        font-weight: 400;
+        font-style: normal;
+        font-size: 100px;
+        line-height: 100%;
+        letter-spacing: 5%;
+        text-align: center;
+    }
+}

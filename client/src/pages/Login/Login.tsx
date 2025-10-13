@@ -113,7 +113,7 @@ const Register: React.FC<IBasePage> = (props: IBasePage) => {
 
 
                 setError("");
-                setPage(PAGES.CHAT); 
+                setPage(PAGES.START); 
             } catch (err) {
                 console.error(err);
                 setError("Ошибка соединения с сервером");
