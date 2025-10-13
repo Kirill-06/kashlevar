@@ -93,12 +93,17 @@ class Application {
     }
 
     public function getPersonInfo($params) {
-        $token = $params['token'];
-        $user = $this->user->getUser($token);
-        return [
-            'id' => $user->id,
-            'username' => $user->username
-        ];
+        if ($params['token']) {
+            $user = $this->user->getUser($params['token']);
+            if ($user) {
+                return [
+                    'id' => $user->id,
+                    'username' => $user->username,
+                ];
+            }
+            return ['error' => 705];
+        }
+        return ['error' => 242];
     }
 
     public function puff($params) {
