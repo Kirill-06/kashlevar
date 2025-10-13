@@ -92,4 +92,23 @@ class Application {
         return ['error' => 8001];
     }
 
+    public function getPersonInfo($params) {
+        if ($params['token']) {
+            $user = $this->user->getUser($params['token']);
+            if ($user) {
+                return [
+                    'id' => $user->id,
+                    'username' => $user->username,
+                ];
+            }
+            return ['error' => 705];
+        }
+        return ['error' => 242];
+    }
+
+    public function puff($params) {
+        $token = $params['token'];
+        $itemId = $params['itemId'];
+    }
+
 }
