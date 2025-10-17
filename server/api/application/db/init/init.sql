@@ -16,11 +16,28 @@ CREATE TABLE IF NOT EXISTS user_progress (
 );
 
 
-CREATE TABLE IF NOT EXISTS inventory (
+CREATE TABLE IF NOT EXISTS shop (
     id SERIAL PRIMARY KEY,
-    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    item_name VARCHAR(50) NOT NULL,
-    quantity INT DEFAULT 1,
-    acquired_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT unique_user_item UNIQUE(user_id, item_name)
+    name VARCHAR(50) NOT NULL,
+    price INTEGER NOT NULL,
+    type VARCHAR(20) NOT NULL  -- 'vape'
+);
+
+
+CREATE TABLE IF NOT EXISTS vape_items (
+    id SERIAL PRIMARY KEY,
+    shop_id INTEGER NOT NULL REFERENCES shop(id) ON DELETE CASCADE,
+    base_health_change INTEGER NOT NULL,
+    base_happiness_change INTEGER NOT NULL
+);
+
+
+CREATE TABLE IF NOT EXISTS user_vapes (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    vape_id INTEGER NOT NULL REFERENCES vape_items(id) ON DELETE CASCADE,
+    level INTEGER DEFAULT 1,
+    health_change INTEGER NOT NULL,
+    happiness_change INTEGER NOT NULL,
+    UNIQUE (user_id, vape_id)
 );
