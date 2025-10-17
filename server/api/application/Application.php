@@ -3,6 +3,8 @@ require_once ('db/DB.php');
 require_once ('user/User.php');
 require_once ('chat/Chat.php');
 require_once ('math/Math.php');
+require_once ('gameManager/GameManager.php');
+require_once ('smokingDevice/SmokingDevice.php');
 
 class Application {
     function __construct() {
@@ -10,6 +12,8 @@ class Application {
         $this->user = new User($db);
         $this->chat = new Chat($db);
         $this->math = new Math($db);
+        $this->SmokingDevice = new SmokingDevice($db);
+        $this->gameManager = new GameManager($db);
     }
 
     public function login($params) {
@@ -107,8 +111,43 @@ class Application {
     }
 
     public function puff($params) {
-        $token = $params['token'];
-        $itemId = $params['itemId'];
+        if (!($params['token'] && $params["userDeviceId"])) {
+            return ['error' => 242];
+        }
+        
+        $user = $this->user->getUser($params['token']);
+        if (!$user) {
+            return ['error' => 705];
+        }
+
+        $vape = $this->SmokingDevice->getUserDevice($user->id, $params['userDeviceId']);
+        if (!$vape) {
+            return ['error' => 702];
+        }
+
+        $result = $this->gameManager->puff($user, $vape);
+        return [
+            'success' => $result['success'],
+            'user' => [
+                'health' => $result['health'],
+                'happiness' => $result['happiness']
+            ]
+        ];
+    }
+
+    public function buyVape($params) {
+        if (!($params['token'] && $params['userDeviceId'])) {
+            return ['error' => 242];
+        }
+        
+        $user = $this->user->getUser($params['token']);
+        if (!$user) {
+            return ['error' => 705];
+        }
+
+        // TODO это и все остальная логика должна перейти в GameManager
+        $this->SmokingDevice->addDeviceToUser($user->id, $params['userDeviceId']); 
+        return ['text'=>"successful paid"];
     }
 
 }

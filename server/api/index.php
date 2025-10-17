@@ -25,10 +25,11 @@ function result($params) {
             case 'getSolvesQuadraticEquations': return $app->getSolvesQuadraticEquations($params);
             case 'getSolvesCubicEquations': return $app->getSolvesCubicEquations($params);
             case 'getSolvesQuadrupleEquations': return $app->getSolvesQuadrupleEquations($params);
+            //game
+            case 'puff': return $app->puff($params);
 
             default: return ['error' => 102];
-            
-            
+
         }
     }
     return ['error' => 101];
