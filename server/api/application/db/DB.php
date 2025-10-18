@@ -38,8 +38,6 @@ class DB {
         return $sth->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // ======================= USERS =======================
-
     public function getUserByUserName($username) {
         return $this->query("SELECT * FROM users WHERE username=?", [$username]);
     }
@@ -53,8 +51,19 @@ class DB {
     }
 
     public function registration($username, $hash_password) {
-        $this->execute("INSERT INTO users (username, hash_password) VALUES (?, ?)", [$username, $hash_password]);
+        $this->execute(
+            "INSERT INTO users (username, hash_password) VALUES (?, ?)",
+            [$username, $hash_password]
+        );
+
+        $userId = $this->pdo->lastInsertId();
+
+        $this->execute(
+            "INSERT INTO user_progress (user_id) VALUES (?)",
+            [$userId]
+        );
     }
+
     public function getUserProgress($userId) {
         return $this->query("SELECT * FROM user_progress WHERE user_id=?", [$userId]);
     }
@@ -82,20 +91,60 @@ class DB {
         $this->execute($sql, $params);
     }
 
-    public function getUserItems($userId) {
-        return $this->queryAll("SELECT * FROM user_items WHERE user_id=?", [$userId]);
+    public function getUserVape($userId, $vapeId) {
+        return $this->query("
+            SELECT user_vapes.id, user_vapes.user_id, user_vapes.vape_id, user_vapes.level,
+                user_vapes.health_change, user_vapes.happiness_change,
+                shop.name AS name
+            FROM user_vapes
+            JOIN vape_items ON user_vapes.vape_id = vape_items.id
+            JOIN shop ON vape_items.shop_id = shop.id
+            WHERE user_vapes.user_id = ? AND user_vapes.vape_id = ?
+        ", [$userId, $vapeId]);
     }
 
-    public function addUserItem($userId, $itemId, $quantity = 1) {
-        $this->execute("INSERT INTO user_items (user_id, item_id, quantity) VALUES (?, ?, ?)", [$userId, $itemId, $quantity]);
+
+    public function getUserVapes($userId) {
+        return $this->queryAll("
+            SELECT user_vapes.id, user_vapes.user_id, user_vapes.vape_id, user_vapes.level,
+                user_vapes.health_change, user_vapes.happiness_change, shop.name AS name
+            FROM user_vapes
+            JOIN vape_items ON user_vapes.vape_id = vape_items.id
+            JOIN shop ON vape_items.shop_id = shop.id
+            WHERE user_vapes.user_id = ?
+        ", [$userId]);
+    }
+    
+    public function addUserVape($userId, $vapeShopId) {
+        $vape = $this->query("
+            SELECT id AS vape_id, base_health_change, base_happiness_change
+            FROM vape_items
+            WHERE shop_id = ?
+        ", [$vapeShopId]);
+
+        $this->execute("
+            INSERT INTO user_vapes (user_id, vape_id, level, health_change, happiness_change)
+            VALUES (?, ?, 1, ?, ?)
+        ", [$userId, $vape->vape_id, $vape->base_health_change, $vape->base_happiness_change]);
     }
 
-    public function updateUserItem($userItemId, $quantity) {
-        $this->execute("UPDATE user_items SET quantity=? WHERE id=?", [$quantity, $userItemId]);
+    public function updateUserVape($userVapeId, $level = null, $healthChange = null, $happinessChange = null) {
+        $fields = [];
+        $params = [];
+
+        if ($level !== null) { $fields[] = "level=?"; $params[] = $level; }
+        if ($healthChange !== null) { $fields[] = "health_change=?"; $params[] = $healthChange; }
+        if ($happinessChange !== null) { $fields[] = "happiness_change=?"; $params[] = $happinessChange; }
+
+        if (empty($fields)) return;
+
+        $params[] = $userVapeId;
+        $sql = "UPDATE user_vapes SET " . implode(", ", $fields) . " WHERE id=?";
+        $this->execute($sql, $params);
     }
 
-    public function deleteUserItem($userItemId) {
-        $this->execute("DELETE FROM user_items WHERE id=?", [$userItemId]);
+    public function deleteUserVape($userVapeId) {
+        $this->execute("DELETE FROM user_vapes WHERE id=?", [$userVapeId]);
     }
 
     public function getChatHash() {
