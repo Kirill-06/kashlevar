@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS user_progress (
     user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     happines INT DEFAULT 100, 
     health INT DEFAULT 100,
-    coins INT DEFAULT 0,
+    coins INT DEFAULT 100,
     last_played TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
