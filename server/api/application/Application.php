@@ -148,7 +148,8 @@ class Application {
         $result = $this->gameManager->buy($user, $params['shopDeviceId']);
         if ($result['success']){
             return [
-                "transaction" => "ok"
+                "success" => "Vape is bought",
+                "vapeName" => $result['$vape->name']
             ];
         }
         else{
@@ -156,10 +157,5 @@ class Application {
                 "error" => $result["error"]
             ];
         }
-
-    
     }
-
-
-
 }
