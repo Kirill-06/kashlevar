@@ -7,7 +7,7 @@ const Start: React.FC<IBasePage> = (props: IBasePage) => {
     const { setPage } = props;
 
     const startGameHandler = () => {
-        setPage(PAGES.GAME); // Вот сюда следующий экран вместо GAME
+        setPage(PAGES.WELCOME); // Вот сюда следующий экран вместо GAME
     };
 
     const exitHandler = () => {
