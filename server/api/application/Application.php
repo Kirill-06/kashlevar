@@ -110,6 +110,26 @@ class Application {
         return ['error' => 242];
     }
 
+    public function getPersonProgress($params) {
+        if (!$params['token']) {
+            return ['error' => 242];
+        }
+        
+        $user = $this->user->getUser($params['token']);
+        if (!$user) {
+            return ['error' => 705];
+        }
+
+        $progress = $this->user->getUserProgress($user->id);
+        return [
+            'user_id' => $progress->user_id,
+            'happines' => $progress->happines,
+            'health' => $progress->health,
+            'coins' => $progress->coins,
+            'last_played' => $progress->last_played
+        ];
+    }
+
     public function puff($params) {
         if (!($params['token'] && $params["userDeviceId"])) {
             return ['error' => 242];
