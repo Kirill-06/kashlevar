@@ -54,3 +54,7 @@ export type UserInfo = {
     id: Number;
     username: string;
 }
+
+export type updateHappines = {
+    happiness: Number;
+}

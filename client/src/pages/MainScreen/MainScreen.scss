@@ -84,13 +84,6 @@
       display: block;
       z-index: 1;
     }
-
-    .mainScreen-nickname {
-      width: clamp(160px, 12vw, 240px);
-      margin: 1vh auto 0;
-      display: block;
-      z-index: 2;
-    }
   }
 
   &-avatarBtn {
@@ -104,8 +97,7 @@
     padding: 0;
     cursor: pointer;
     z-index: 3;
-
-    .mainScreen-person {
+.mainScreen-person {
       position: static;
       transform: none;
       width: 100%;
@@ -188,5 +180,15 @@
 
   &-smokeRight {
     right: 3vw;
+  }
+   .mainScreen-healthValue {
+    margin: 6px auto 0;
+    width: fit-content;       
+    padding: 0 6px;
+    font-weight: 700;
+    font-size: 18px;           
+    line-height: 1.1;
+    text-shadow: 0 1px 2px rgba(0,0,0,.35);
+    pointer-events: none;      
   }
 }

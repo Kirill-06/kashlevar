@@ -1,7 +1,7 @@
 import md5 from 'md5';
 import CONFIG from "../../config";
 import Store from "../store/Store";
-import { TAnswer, TError, TMessagesResponse, TUser, UserInfo, UserProgress, UserVapes} from "./types";
+import { TAnswer, TError, TMessagesResponse, TUser, UserInfo, UserProgress, UserVapes, updateHappines} from "./types";
 
 const { CHAT_TIMESTAMP, HOST } = CONFIG;
 
@@ -103,13 +103,16 @@ class Server {
 
     // }
 
-    async puff(): Promise<UserProgress | null> {
-        const token = this.store.getToken() ?? ""
-        const result = await this.request<UserProgress>('puff', {token});
-        if (result) {
-            return result;
-        }
-        return null;
+    async puff(userDeviceId?: number): Promise<UserProgress | null> {
+    const token = this.store.getToken() ?? "";
+
+    const params: Record<string, string> = { token };
+    if (typeof userDeviceId === "number") {
+        params.userDeviceId = String(userDeviceId);
+    }
+
+    const result = await this.request<UserProgress>("puff", params);
+    return result ?? null;
     }
 
     async getUserProgress(): Promise<UserProgress | null> {
@@ -142,6 +145,14 @@ class Server {
         return null;
     }
 
+    async updateHappinessAfterOfline(): Promise<updateHappines | null> {
+        const token = this.store.getToken() ?? ""
+        const result = await this.request<updateHappines>('updateHappinessAfterOfline', {token});
+        if (result) {
+            return result;
+        }
+        return null;
+    }
 
 
     stopChatMessages(): void {

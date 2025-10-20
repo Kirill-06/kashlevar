@@ -1,59 +1,113 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { IBasePage } from '../PageManager';
+import React, { useContext, useState, useEffect, useRef } from 'react';
+import { IBasePage, PAGES } from '../PageManager';
 import { ServerContext } from '../../App';
 import './MainScreen.scss';
-import { UserProgress, UserVapes } from '../../services/server/types';
+import { UserProgress, UserVapes, UserInfo} from '../../services/server/types';
 
-// Изображения
 import Background from '../../assets/img/MainScreen/city.png';
-import { ReactComponent as Person } from '../../assets/img/MainScreen/person 2.svg';
-import { ReactComponent as Nickname } from '../../assets/img/MainScreen/Nickname.svg';
-import { ReactComponent as AscensionButton } from '../../assets/img/MainScreen/Кнопка восхождения.svg';
-import { ReactComponent as ShopButton } from '../../assets/img/MainScreen/Кнопка магазина.svg';
-import { ReactComponent as RatingButton } from '../../assets/img/MainScreen/Кнопка рейтинга.svg';
-import { ReactComponent as Coins } from '../../assets/img/MainScreen/Монета.svg';
-import { ReactComponent as HappinessBar } from '../../assets/img/MainScreen/happynessbar 2.svg';
-import Platform from '../../assets/img/MainScreen/Ellipse 1.svg';
+import { ReactComponent as Person } from '../../assets/img/MainScreen/person2.svg';
+import { ReactComponent as AscensionButton } from '../../assets/img/MainScreen/AscensionButton.svg';
+import { ReactComponent as ShopButton } from '../../assets/img/MainScreen/ShopButton.svg';
+import { ReactComponent as RatingButton } from '../../assets/img/MainScreen/RatingButton.svg';
+import { ReactComponent as Coins } from '../../assets/img/MainScreen/coin.svg';
+import { ReactComponent as HappinessBar } from '../../assets/img/MainScreen/happynessbar.svg';
+import Platform from '../../assets/img/MainScreen/Ellipse.svg';
 import HpBar from '../../assets/img/MainScreen/Hpbar.png';
-import { ReactComponent as SmokeLeft } from '../../assets/img/MainScreen/Smokebuttons 2.svg';
-import { ReactComponent as SmokeRight } from '../../assets/img/MainScreen/Smokebuttons 3.svg';
+import { ReactComponent as SmokeLeft } from '../../assets/img/MainScreen/Smokebuttons2.svg';
+import { ReactComponent as SmokeRight } from '../../assets/img/MainScreen/Smokebuttons3.svg';
 
-const MainScreen: React.FC<IBasePage> = () => {
+const TEN_MIN_MS = 10 * 60 * 1000;
+
+const MainScreen: React.FC<IBasePage> = (props: IBasePage) => {
+     const { setPage } = props;
   const server = useContext(ServerContext);
-const [stats, setStats] = useState<{ userProgress: UserProgress | null; userVapes: UserVapes | null }>({
-  userProgress: null,
-  userVapes: null,
-});
-const [error, setError] = useState<string>("");
 
-const fetchStats = async () => {
-  try {
-    const [progress, vapes] = await Promise.all([
-      server.getUserProgress(),
-      server.getUserVapes(),
-    ]);
-    setStats({ userProgress: progress, userVapes: vapes });
-  } catch (err) {
-    console.error('Ошибка загрузки данных:', err);
-    setError("Не удалось загрузить данные с сервера");
+  const [stats, setStats] = useState<{
+    userProgress: UserProgress | null;
+    userVapes: UserVapes | null;
+    userInfo: UserInfo | null;
+  }>({
+    userProgress: null,
+    userVapes: null,
+    userInfo: null,
+  });
+
+  const [error, setError] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(true);
+  const intervalRef = useRef<number | null>(null);
+
+  const fetchInitial = async () => {
+    try {
+      const [progress, vapes, user] = await Promise.all([
+        server.getUserProgress(),
+        server.getUserVapes(),
+        server.getUserInfo(),
+      ]);
+      setStats({ userProgress: progress, userVapes: vapes, userInfo: user });
+      setError('');
+    } catch (e) {
+      console.error('Ошибка загрузки данных:', e);
+      setError('Не удалось загрузить данные с сервера');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateHappiness = async () => {
+    try {
+      const res = await server.updateHappinessAfterOfline();
+      if (res && typeof (res as any).happiness !== 'undefined') {
+        const nextHappiness = Number((res as any).happiness);
+        setStats(prev => {
+          if (!prev.userProgress) return prev;
+          return {
+            ...prev,
+            userProgress: {
+              ...prev.userProgress,
+              happines: (nextHappiness as unknown) as Number,
+            },
+          };
+        });
+      }
+    } catch (e) {
+      console.error('Ошибка обновления счастья:', e);
+    }
+  };
+
+  useEffect(() => {
+    fetchInitial();
+    intervalRef.current = window.setInterval(updateHappiness, TEN_MIN_MS);
+
+    return () => {
+      if (intervalRef.current) {
+        window.clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, []);
+
+  const displayHappiness = stats.userProgress
+    ? Math.max(0, Number(stats.userProgress.happines))
+    : 0;
+
+  const displayCoins = stats.userProgress ? Number(stats.userProgress.coins) : 0;
+
+  const displayHealth = stats.userProgress
+    ? Math.max(0, Number(stats.userProgress.health))
+    : 0;
+
+  const displayName = stats.userInfo?.username || 'Гость';
+  
+
+  const onAvatarClick = async () => { 
+    const updated = await server.puff(
+    stats.userVapes ? Number(stats.userVapes.vape_id) : undefined
+  );
+    fetchInitial();
   }
-};
-
-useEffect(() => {
-  fetchStats();
-  const interval = setInterval(fetchStats, 10000);
-  return () => clearInterval(interval);
-}, []);
-
-  const displayHappiness = userProgress ? Number(userProgress.happines) * 10 : 0;
-  const displayCoins = userProgress ? Number(userProgress.coins) * 10 : 0;
-
-  const onAvatarClick = () => console.log('Avatar clicked');
   const onAscendClick = () => console.log('Ascension clicked');
-  const onShopClick = () => console.log('Shop clicked');
+  const onShopClick = () =>  setPage(PAGES.SHOP); 
   const onRatingClick = () => console.log('Rating clicked');
-
-
   return (
     <div className="mainScreen">
       <img src={Background} alt="Background" className="mainScreen-background" />
@@ -74,13 +128,15 @@ useEffect(() => {
           type="button"
           className="mainScreen-avatarBtn"
           onClick={onAvatarClick}
-          onKeyDown={onKeyBtn}
           aria-label="Аватар"
         >
           <Person className="mainScreen-person" />
         </button>
         <img src={HpBar} alt="Health Bar" className="mainScreen-healthBar" />
-        <Nickname className="mainScreen-nickname" />
+        <div className="mainScreen-healthValue">{loading ? '—' : `${displayHealth}%`}</div>
+        <div className="mainScreen-nicknameWrap">
+          <span className="mainScreen-nicknameText">{displayName}</span>
+        </div>
       </div>
 
       <div className="mainScreen-smokeLeft">
@@ -91,7 +147,6 @@ useEffect(() => {
             role="button"
             tabIndex={0}
             onClick={onAscendClick}
-            onKeyDown={onKeyBtn}
             aria-label="Восхождение"
           >
             <AscensionButton />
@@ -101,7 +156,6 @@ useEffect(() => {
             role="button"
             tabIndex={0}
             onClick={onShopClick}
-            onKeyDown={onKeyBtn}
             aria-label="Магазин"
           >
             <ShopButton />
@@ -117,7 +171,6 @@ useEffect(() => {
             role="button"
             tabIndex={0}
             onClick={onRatingClick}
-            onKeyDown={onKeyBtn}
             aria-label="Рейтинг"
           >
             <RatingButton />
