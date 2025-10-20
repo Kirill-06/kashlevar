@@ -1,7 +1,7 @@
 import md5 from 'md5';
 import CONFIG from "../../config";
 import Store from "../store/Store";
-import { TAnswer, TError, TMessagesResponse, TUser } from "./types";
+import { TAnswer, TError, TMessagesResponse, TUser, UserProgress, UserVapes} from "./types";
 
 const { CHAT_TIMESTAMP, HOST } = CONFIG;
 
@@ -67,9 +67,14 @@ class Server {
         }
     }
 
-    registration(login: string, password: string): Promise<boolean | null> {
+    async registration(login: string, password: string): Promise<boolean> {
         const hash_password = md5(`${login}${password}`);
-        return this.request<boolean>('registration', { login, hash_password});
+        const user = await this.request<TUser>('registration', { login, hash_password});
+         if (user) {
+            this.store.setUser(user);
+            return true;
+        }
+        return false;
     }
 
     sendMessage(message: string): void {
@@ -97,6 +102,35 @@ class Server {
     //     }, CHAT_TIMESTAMP);
 
     // }
+
+    async puff(): Promise<UserProgress | null> {
+        const token = this.store.getToken() ?? ""
+        const result = await this.request<UserProgress>('puff', {token});
+        if (result) {
+            return result;
+        }
+        return null;
+    }
+
+    async getUserProgress(): Promise<UserProgress | null> {
+        const token = this.store.getToken() ?? ""
+        const result = await this.request<UserProgress>('get-user-progress', {token});
+        if (result) {
+            return result;
+        }
+        return null;
+    }
+
+
+    async getUserVapes(): Promise<UserVapes | null> {
+        const token = this.store.getToken() ?? ""
+        const result = await this.request<UserVapes>('get-user-vapes', {token});
+        if (result) {
+            return result;
+        }
+        return null;
+    }
+
 
     stopChatMessages(): void {
         if (this.chatInterval) {

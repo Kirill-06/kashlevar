@@ -110,9 +110,6 @@ const Register: React.FC<IBasePage> = (props: IBasePage) => {
 
             try {
                 const response = await server.registration(name, password);
-
-
-                setError("");
                 setPage(PAGES.START); 
             } catch (err) {
                 console.error(err);

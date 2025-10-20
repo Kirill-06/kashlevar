@@ -7,6 +7,7 @@ import GamePage from './Game/Game';
 import NotFound from './NotFound/NotFound';
 import Start from './Start/Start';
 import Welcome from './Welcome/Welcome';
+import MainScreen from './MainScreen/MainScreen';
 
 export enum PAGES {
     PRELOADER,
@@ -17,6 +18,7 @@ export enum PAGES {
     REGISTER,
     START,
     WELCOME,
+    MAIN_SCREEN
 }
 
 export interface IBasePage {
@@ -36,6 +38,7 @@ const PageManager: React.FC = () => {
             {page === PAGES.REGISTER && <Register setPage={setPage} />}
             {page === PAGES.START && <Start setPage={setPage} />}
             {page === PAGES.WELCOME && <Welcome setPage={setPage} />}
+            {page === PAGES.MAIN_SCREEN && <MainScreen setPage={setPage} />}
         </>
     );
 }

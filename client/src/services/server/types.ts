@@ -25,3 +25,15 @@ export type TMessagesResponse = {
     messages: TMessages;
     hash: string;
 }
+
+export type UserProgress = {
+    happines: string;
+    health: string;
+    coins: string;
+}
+
+
+export type UserVapes = {
+    
+    id: string;
+}
