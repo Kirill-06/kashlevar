@@ -27,13 +27,30 @@ export type TMessagesResponse = {
 }
 
 export type UserProgress = {
-    happines: string;
-    health: string;
-    coins: string;
+    user_id: Number;
+    happines: Number;
+    health: Number;
+    coins: Number;
+    last_played: string;
+
 }
 
 
 export type UserVapes = {
     
-    id: string;
+    id: Number;
+    vape_id: Number;
+    name: string;
+    level: Number;
+    health_change: Number;
+    happiness_change: Number;
+}
+
+
+
+
+export type UserInfo = {
+    
+    id: Number;
+    username: string;
 }

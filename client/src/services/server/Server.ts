@@ -1,7 +1,7 @@
 import md5 from 'md5';
 import CONFIG from "../../config";
 import Store from "../store/Store";
-import { TAnswer, TError, TMessagesResponse, TUser, UserProgress, UserVapes} from "./types";
+import { TAnswer, TError, TMessagesResponse, TUser, UserInfo, UserProgress, UserVapes} from "./types";
 
 const { CHAT_TIMESTAMP, HOST } = CONFIG;
 
@@ -114,7 +114,7 @@ class Server {
 
     async getUserProgress(): Promise<UserProgress | null> {
         const token = this.store.getToken() ?? ""
-        const result = await this.request<UserProgress>('get-user-progress', {token});
+        const result = await this.request<UserProgress>('getUserProgress', {token});
         if (result) {
             return result;
         }
@@ -124,12 +124,24 @@ class Server {
 
     async getUserVapes(): Promise<UserVapes | null> {
         const token = this.store.getToken() ?? ""
-        const result = await this.request<UserVapes>('get-user-vapes', {token});
+        const result = await this.request<Array<UserVapes>>('getUserVapes', {token});
+        if (result) {
+            return result[0];
+        }
+        return null;
+    }
+
+
+
+    async getUserInfo(): Promise<UserInfo | null> {
+        const token = this.store.getToken() ?? ""
+        const result = await this.request<UserInfo>('getUser', {token});
         if (result) {
             return result;
         }
         return null;
     }
+
 
 
     stopChatMessages(): void {

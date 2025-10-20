@@ -40,8 +40,7 @@ try {
                 const response = await server.login(login, password);
 
 
-                setError("");
-                setPage(PAGES.CHAT); 
+                setPage(PAGES.WELCOME); 
             } catch (err) {
                 console.error(err);
                 setError("Ошибка соединения с сервером");
