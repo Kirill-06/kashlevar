@@ -224,4 +224,22 @@ class Application {
         }, $vapes);
         return $result;
     }
+
+    public function updateHappinessAfterOfline($params){
+
+        if (!($params['token'])) {
+            return ['error' => 242];
+        }
+        
+        $user = $this->user->getUser($params['token']);
+        if (!$user) {
+            return ['error' => 705];
+        }
+
+        $result = $this->gameManager->updateHappinesAfterOffline($user);
+        return [
+            "happiness" => $result
+        ];
+
+    }
 }

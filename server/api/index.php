@@ -31,6 +31,7 @@ function result($params) {
             case 'puff': return $app->puff($params);
             case 'buyVape': return $app->buyVape($params);
             case 'getCatalogShop': return $app->getCatalogShop($params);
+            case 'updateHappinesAfterOffline': return $app->updateHappinessAfterOfline($params);
 
             default: return ['error' => 102];
 
