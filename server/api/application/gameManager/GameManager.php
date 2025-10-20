@@ -53,4 +53,24 @@ class GameManager {
             "buyVape" => $vape->name
         ];
     }
+
+    public function updateHappinesAfterOffline($user){
+
+        $progress = $this->db->getUserProgress($user->id);
+
+        $currentTimestamp = time();
+        $lastTimestamp = strtotime($progress->last_played);
+
+        if (!$lastTimestamp) {
+        $lastTimestamp = $currentTimestamp;
+        }
+
+        $differenceInSeconds = $currentTimestamp - $lastTimestamp;
+        $changingHappiness = floor($differenceInSeconds/60/60);
+        
+        $progress->happines -= $changingHappiness;
+        
+        return $progress->happines;
+
+    }
 }

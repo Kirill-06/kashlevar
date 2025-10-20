@@ -179,6 +179,7 @@ class DB
             JOIN shop ON vape_items.shop_id = shop.id
         ");
     }
+    
 
     public function addUserVape($userId, $vapeShopId)
     {
