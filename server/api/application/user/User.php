@@ -49,6 +49,7 @@ class User {
         if ($user) {
             $token = md5(rand());
             $this->db->updateToken($user->id, $token);
+            
             return [
                 'id' => $user->id,
                 'username' => $user->username,

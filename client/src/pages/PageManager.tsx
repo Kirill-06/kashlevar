@@ -8,6 +8,7 @@ import NotFound from './NotFound/NotFound';
 import Start from './Start/Start';
 import Welcome from './Welcome/Welcome';
 import MainScreen from './MainScreen/MainScreen';
+import Shop from './Shop/Shop';
 
 export enum PAGES {
     PRELOADER,
@@ -19,6 +20,7 @@ export enum PAGES {
     START,
     WELCOME,
     MAIN_SCREEN
+    SHOP,
 }
 
 export interface IBasePage {
@@ -39,6 +41,7 @@ const PageManager: React.FC = () => {
             {page === PAGES.START && <Start setPage={setPage} />}
             {page === PAGES.WELCOME && <Welcome setPage={setPage} />}
             {page === PAGES.MAIN_SCREEN && <MainScreen setPage={setPage} />}
+            {page === PAGES.SHOP && <Shop setPage={setPage} />}
         </>
     );
 }

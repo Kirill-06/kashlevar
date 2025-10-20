@@ -72,6 +72,8 @@ class DB
             "INSERT INTO user_progress (user_id) VALUES (?)",
             [$userId]
         );
+
+        $this->addUserVape($userId, 1);
     }
 
     public function getUserProgress($userId)
@@ -177,6 +179,7 @@ class DB
             JOIN shop ON vape_items.shop_id = shop.id
         ");
     }
+    
 
     public function addUserVape($userId, $vapeShopId)
     {
