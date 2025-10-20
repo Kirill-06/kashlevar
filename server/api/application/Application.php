@@ -143,7 +143,7 @@ class Application {
         if (!$user) {
             return ['error' => 705];
         }
-        $catalog = $this->SmokingDevice->getShopDevices()
+        $catalog = $this->SmokingDevice->getShopDevices();
         $result = array_map(function($item) {
         return [
             'shop_id' => $item['shop_id'],

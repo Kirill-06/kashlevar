@@ -28,7 +28,7 @@ function result($params) {
             //game
             case 'puff': return $app->puff($params);
             case 'buyVape': return $app->buyVape($params);
-            case 'getCatalogShop': return $app
+            case 'getCatalogShop': return $app->getCatalogShop($params);
 
             default: return ['error' => 102];
 

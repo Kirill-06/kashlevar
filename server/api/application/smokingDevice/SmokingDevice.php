@@ -18,7 +18,7 @@ class SmokingDevice {
     }
 
     public function getShopDevices() {
-        return $this->db->getVapesFromShop()
+        return $this->db->getVapesFromShop();
     }
     
 
