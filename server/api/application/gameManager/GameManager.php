@@ -26,7 +26,7 @@ class GameManager
     }
 
     public function isDead() {}
-
+    
     public function buy($user, $vapeItemId)
     {
 

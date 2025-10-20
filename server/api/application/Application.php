@@ -135,6 +135,28 @@ class Application {
         ];
     }
 
+    public function getCatalogShop($params) {
+        if (!$params['token']) {
+            return ['error' => 242];
+        }
+        $user = $this->user->getUser($params['token']);
+        if (!$user) {
+            return ['error' => 705];
+        }
+        $catalog = $this->SmokingDevice->getShopDevices()
+        $result = array_map(function($item) {
+        return [
+            'shop_id' => $item['shop_id'],
+            'base_health_change' => $item['base_health_change'],
+            'base_happiness_change' => $item['base_happiness_change'],
+            'name' => $item['name'],
+            'price' => $item['price'],
+            'type' => $item['type'],
+        ];
+        }, $catalog);
+        return $result;
+    }
+
     public function buyVape($params) {
         if (!($params['token'] && $params['shopDeviceId'])) {
             return ['error' => 242];
