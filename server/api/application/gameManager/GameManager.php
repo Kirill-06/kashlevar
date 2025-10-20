@@ -1,10 +1,8 @@
 <?php
 
-class GameManager
-{
+class GameManager {
 
-    function __construct($db)
-    {
+    function __construct($db) {
         $this->db = $db;
     }
 
@@ -26,7 +24,7 @@ class GameManager
     }
 
     public function isDead() {}
-
+    
     public function buy($user, $vapeItemId)
     {
 

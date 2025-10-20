@@ -110,6 +110,26 @@ class Application {
         return ['error' => 242];
     }
 
+    public function getPersonProgress($params) {
+        if (!$params['token']) {
+            return ['error' => 242];
+        }
+        
+        $user = $this->user->getUser($params['token']);
+        if (!$user) {
+            return ['error' => 705];
+        }
+
+        $progress = $this->user->getUserProgress($user->id);
+        return [
+            'user_id' => $progress->user_id,
+            'happines' => $progress->happines,
+            'health' => $progress->health,
+            'coins' => $progress->coins,
+            'last_played' => $progress->last_played
+        ];
+    }
+
     public function puff($params) {
         if (!($params['token'] && $params["userDeviceId"])) {
             return ['error' => 242];
@@ -135,6 +155,28 @@ class Application {
         ];
     }
 
+    public function getCatalogShop($params) {
+        if (!$params['token']) {
+            return ['error' => 242];
+        }
+        $user = $this->user->getUser($params['token']);
+        if (!$user) {
+            return ['error' => 705];
+        }
+        $catalog = $this->SmokingDevice->getShopDevices();
+        $result = array_map(function($item) {
+        return [
+            'shop_id' => $item['shop_id'],
+            'base_health_change' => $item['base_health_change'],
+            'base_happiness_change' => $item['base_happiness_change'],
+            'name' => $item['name'],
+            'price' => $item['price'],
+            'type' => $item['type'],
+        ];
+        }, $catalog);
+        return $result;
+    }
+
     public function buyVape($params) {
         if (!($params['token'] && $params['shopDeviceId'])) {
             return ['error' => 242];
@@ -157,5 +199,29 @@ class Application {
                 "error" => $result["error"]
             ];
         }
+    }
+
+    public function getUserVapes($params) {
+        if (!($params['token'])) {
+            return ['error' => 242];
+        }
+        
+        $user = $this->user->getUser($params['token']);
+        if (!$user) {
+            return ['error' => 705];
+        }
+
+        $vapes = $this->SmokingDevice->getUserDevices($user->id);
+        $result = array_map(function($vape) {
+        return [
+            'id' => $vape['id'],
+            'vape_id' => $vape['vape_id'],
+            'name' => $vape['name'],
+            'level' => $vape['level'],
+            'health_change' => $vape['health_change'],
+            'happiness_change' => $vape['happiness_change'],
+        ];
+        }, $vapes);
+        return $result;
     }
 }

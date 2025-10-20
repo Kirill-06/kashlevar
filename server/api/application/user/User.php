@@ -9,6 +9,10 @@ class User {
         return $this->db->getUserByToken($token);
     }
 
+    public function getUserProgress($userId) {
+        return $this->db->getUserProgress($userId);
+    }
+
     public function login($username, $hash_password, $rnd) {
         $user = $this->db->getUserByUserName($username);
         if ($user) {

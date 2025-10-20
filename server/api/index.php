@@ -18,6 +18,8 @@ function result($params) {
             case 'logout': return $app->logout($params);
             case 'registration': return $app->registration($params);
             case 'getUser': return $app->getPersonInfo($params);
+            case 'getUserProgress': return $app->getPersonProgress($params);
+            case 'getUserVapes': return $app->getUserVapes($params);
             // chat
             case 'sendMessage': return $app->sendMessage($params);
             case 'getMessages': return $app->getMessages($params);
@@ -28,6 +30,7 @@ function result($params) {
             //game
             case 'puff': return $app->puff($params);
             case 'buyVape': return $app->buyVape($params);
+            case 'getCatalogShop': return $app->getCatalogShop($params);
 
             default: return ['error' => 102];
 
