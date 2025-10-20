@@ -40,8 +40,7 @@ try {
                 const response = await server.login(login, password);
 
 
-                setError("");
-                setPage(PAGES.CHAT); 
+                setPage(PAGES.WELCOME); 
             } catch (err) {
                 console.error(err);
                 setError("Ошибка соединения с сервером");
@@ -110,9 +109,6 @@ const Register: React.FC<IBasePage> = (props: IBasePage) => {
 
             try {
                 const response = await server.registration(name, password);
-
-
-                setError("");
                 setPage(PAGES.START); 
             } catch (err) {
                 console.error(err);

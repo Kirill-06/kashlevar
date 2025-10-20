@@ -1,0 +1,194 @@
+.mainScreen {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  font-family: 'Play', sans-serif;
+  color: #fff;
+  user-select: none;
+
+  &-background {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+  }
+
+  &-topLeft {
+    position: absolute;
+    top: 2vh;
+    left: 2vw;
+    display: flex;
+    align-items: center;
+    gap: 0.8vw;
+    z-index: 2;
+
+    .mainScreen-happinessIcon {
+      width: 5.2vw;
+      min-width: 60px;
+      height: auto;
+      display: block;
+    }
+
+    .mainScreen-happinessText {
+      font-size: clamp(14px, 1.8vw, 26px);
+      font-weight: 700;
+      line-height: 1;
+    }
+  }
+
+  &-topRight {
+    position: absolute;
+    top: 2vh;
+    right: 2vw;
+    display: flex;
+    align-items: center;
+    gap: 0.8vw;
+    z-index: 2;
+
+    .mainScreen-coinsIcon {
+      width: 6.8vw;
+      min-width: 76px;
+      height: auto;
+      display: block;
+    }
+
+    .mainScreen-coinsText {
+      font-size: clamp(16px, 2vw, 30px);
+      font-weight: 700;
+      line-height: 1;
+    }
+  }
+
+  &-center {
+    position: absolute;
+    top: 54%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 1;
+
+    .mainScreen-platform {
+      width: clamp(220px, 24vw, 460px);
+      height: auto;
+      display: block;
+      margin: 0 auto;
+      z-index: 1;
+    }
+
+    .mainScreen-healthBar {
+      width: clamp(240px, 26vw, 500px);
+      margin: 1.2vh auto 0;
+      display: block;
+      z-index: 1;
+    }
+  }
+
+  &-avatarBtn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -80%);
+    width: clamp(200px, 22vw, 420px);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    z-index: 3;
+.mainScreen-person {
+      position: static;
+      transform: none;
+      width: 100%;
+      height: auto;
+      pointer-events: none;
+      display: block;
+    }
+  }
+
+  &-smokeLeft,
+  &-smokeRight {
+    position: absolute;
+    bottom: 5vh;
+    width: clamp(280px, 25vw, 520px);
+    z-index: 2;
+
+    .smokeBase {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .smokeCircles {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 2.2vw;
+
+           .circle {
+        width: clamp(100px, 10vw, 200px);
+        height: clamp(100px, 10vw, 200px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+
+        svg {
+          width: 100%;
+          height: auto;
+          display: block;
+        }
+      }
+
+      .circle-left {
+        align-self: flex-start;
+      }
+
+      .circle-right {
+        align-self: flex-end;
+      }
+
+      .is-clickable {
+        cursor: pointer;
+        outline: none;
+
+        &:focus-visible {
+          outline: 2px solid rgba(255, 255, 255, 0.7);
+          border-radius: 999px;
+        }
+
+        &:hover {
+          transform: scale(1.05);
+        }
+
+        &:active {
+          transform: scale(0.95);
+        }
+      }
+    }
+  }
+
+  &-smokeLeft {
+    left: 3vw;
+  }
+
+  &-smokeRight {
+    right: 3vw;
+  }
+   .mainScreen-healthValue {
+    margin: 6px auto 0;
+    width: fit-content;       
+    padding: 0 6px;
+    font-weight: 700;
+    font-size: 18px;           
+    line-height: 1.1;
+    text-shadow: 0 1px 2px rgba(0,0,0,.35);
+    pointer-events: none;      
+  }
+}

@@ -1,7 +1,7 @@
 import md5 from 'md5';
 import CONFIG from "../../config";
 import Store from "../store/Store";
-import { TAnswer, TError, TMessagesResponse, TUser } from "./types";
+import { TAnswer, TError, TMessagesResponse, TUser, UserInfo, UserProgress, UserVapes, updateHappines} from "./types";
 
 const { CHAT_TIMESTAMP, HOST } = CONFIG;
 
@@ -67,9 +67,14 @@ class Server {
         }
     }
 
-    registration(login: string, password: string): Promise<boolean | null> {
+    async registration(login: string, password: string): Promise<boolean> {
         const hash_password = md5(`${login}${password}`);
-        return this.request<boolean>('registration', { login, hash_password});
+        const user = await this.request<TUser>('registration', { login, hash_password});
+         if (user) {
+            this.store.setUser(user);
+            return true;
+        }
+        return false;
     }
 
     sendMessage(message: string): void {
@@ -97,6 +102,58 @@ class Server {
     //     }, CHAT_TIMESTAMP);
 
     // }
+
+    async puff(userDeviceId?: number): Promise<UserProgress | null> {
+    const token = this.store.getToken() ?? "";
+
+    const params: Record<string, string> = { token };
+    if (typeof userDeviceId === "number") {
+        params.userDeviceId = String(userDeviceId);
+    }
+
+    const result = await this.request<UserProgress>("puff", params);
+    return result ?? null;
+    }
+
+    async getUserProgress(): Promise<UserProgress | null> {
+        const token = this.store.getToken() ?? ""
+        const result = await this.request<UserProgress>('getUserProgress', {token});
+        if (result) {
+            return result;
+        }
+        return null;
+    }
+
+
+    async getUserVapes(): Promise<UserVapes | null> {
+        const token = this.store.getToken() ?? ""
+        const result = await this.request<Array<UserVapes>>('getUserVapes', {token});
+        if (result) {
+            return result[0];
+        }
+        return null;
+    }
+
+
+
+    async getUserInfo(): Promise<UserInfo | null> {
+        const token = this.store.getToken() ?? ""
+        const result = await this.request<UserInfo>('getUser', {token});
+        if (result) {
+            return result;
+        }
+        return null;
+    }
+
+    async updateHappinessAfterOfline(): Promise<updateHappines | null> {
+        const token = this.store.getToken() ?? ""
+        const result = await this.request<updateHappines>('updateHappinessAfterOfline', {token});
+        if (result) {
+            return result;
+        }
+        return null;
+    }
+
 
     stopChatMessages(): void {
         if (this.chatInterval) {

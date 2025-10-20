@@ -1,11 +1,13 @@
-import { TMessages, TUser } from "../server/types";
+import { UserProgress, TMessages, TUser } from "../server/types";
 
 const TOKEN = 'token';
+
 
 class Store {
     user: TUser | null = null;
     messages: TMessages = [];
     chatHash: string = 'empty chat hash';
+
 
     setToken(token: string): void {
         localStorage.setItem(TOKEN, token);
