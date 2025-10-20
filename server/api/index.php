@@ -27,6 +27,7 @@ function result($params) {
             case 'getSolvesQuadrupleEquations': return $app->getSolvesQuadrupleEquations($params);
             //game
             case 'puff': return $app->puff($params);
+            case 'buyVape': return $app->buyVape($params);
 
             default: return ['error' => 102];
 

@@ -136,7 +136,7 @@ class Application {
     }
 
     public function buyVape($params) {
-        if (!($params['token'] && $params['userDeviceId'])) {
+        if (!($params['token'] && $params['shopDeviceId'])) {
             return ['error' => 242];
         }
         
@@ -145,9 +145,17 @@ class Application {
             return ['error' => 705];
         }
 
-        // TODO это и все остальная логика должна перейти в GameManager
-        $this->SmokingDevice->addDeviceToUser($user->id, $params['userDeviceId']); 
-        return ['text'=>"successful paid"];
+        $result = $this->gameManager->buy($user, $params['shopDeviceId']);
+        if ($result['success']){
+            return [
+                "success" => "Vape is bought",
+                "vapeName" => $result['$vape->name']
+            ];
+        }
+        else{
+            return[
+                "error" => $result["error"]
+            ];
+        }
     }
-
 }
