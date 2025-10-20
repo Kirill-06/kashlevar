@@ -16,6 +16,7 @@ class Answer {
         '700' => 'No skins',
         '701' => 'Skin is not found',
         '702' => 'smoking device not foud',
+        '703' => 'The user does not have vapes',
         '706' => 'text message is empty',
         '707' => 'could not send message', // e-mail;
         '708' => 'invalid code from E-mail',

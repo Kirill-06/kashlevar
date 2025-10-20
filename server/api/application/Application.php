@@ -212,6 +212,9 @@ class Application {
         }
 
         $vapes = $this->SmokingDevice->getUserDevices($user->id);
+        if (!$vapes) {
+            return ['error' => 703];
+        }
         $result = array_map(function($vape) {
         return [
             'id' => $vape['id'],
@@ -222,6 +225,7 @@ class Application {
             'happiness_change' => $vape['happiness_change'],
         ];
         }, $vapes);
+
         return $result;
     }
 }
