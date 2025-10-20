@@ -1,10 +1,3 @@
-@font-face {
-  font-family: 'Play';
-  src: url('../../assets/fonts/Play-Regular.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-
 .mainScreen {
   position: relative;
   width: 100vw;
@@ -12,140 +5,188 @@
   overflow: hidden;
   font-family: 'Play', sans-serif;
   color: #fff;
+  user-select: none;
 
   &-background {
     position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: url('../../assets/img/MainScreen/city.png') center / cover no-repeat;
-    z-index: -2;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
   }
 
-  &-coinsTopRight {
+  &-topLeft {
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: 2vh;
+    left: 2vw;
     display: flex;
     align-items: center;
-    gap: 10px;
-    font-size: 18px;
+    gap: 0.8vw;
     z-index: 2;
-  }
 
-  &-happinessTopLeft {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 18px;
-    z-index: 2;
-  }
-
-  &-smokeLeft, &-smokeRight {
-  position: absolute;
-  z-index: 1;
-
-  img {
-    height: 906px; // уменьшили размер
-    width: 504px; // сохраняет пропорции
-  }
-}
-
-&-smokeLeft {
-  left: 0;
-  bottom: 0; // опускаем вниз
-
-}
-
-&-smokeRight {
-  right: 0;
-  top: 25%; // чуть ниже, чтобы не прилипала к самому верху
-}
-
-
-  &-smokeButtons {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  z-index: 2;
-
-  button {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-
-    img {
-      width: 140px; // чуть меньше, чтобы не выходили за дымку
+    .mainScreen-happinessIcon {
+      width: 5.2vw;
+      min-width: 60px;
       height: auto;
+      display: block;
+    }
+
+    .mainScreen-happinessText {
+      font-size: clamp(14px, 1.8vw, 26px);
+      font-weight: 700;
+      line-height: 1;
     }
   }
-}
 
-
-  &-centerSection {
+  &-topRight {
     position: absolute;
-    top: 50%;
+    top: 2vh;
+    right: 2vw;
+    display: flex;
+    align-items: center;
+    gap: 0.8vw;
+    z-index: 2;
+
+    .mainScreen-coinsIcon {
+      width: 6.8vw;
+      min-width: 76px;
+      height: auto;
+      display: block;
+    }
+
+    .mainScreen-coinsText {
+      font-size: clamp(16px, 2vw, 30px);
+      font-weight: 700;
+      line-height: 1;
+    }
+  }
+
+  &-center {
+    position: absolute;
+    top: 54%;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
-    z-index: 2;
-  }
+    z-index: 1;
 
-  &-person {
-    width: 304px;
-    height: 435px;
-  }
-
-  &-healthContainer {
-    margin-top: 10px;
-    position: relative;
-    display: inline-block;
+    .mainScreen-platform {
+      width: clamp(220px, 24vw, 460px);
+      height: auto;
+      display: block;
+      margin: 0 auto;
+      z-index: 1;
+    }
 
     .mainScreen-healthBar {
-      width: 300px;
-      height: auto;
+      width: clamp(240px, 26vw, 500px);
+      margin: 1.2vh auto 0;
+      display: block;
+      z-index: 1;
     }
-
-    .mainScreen-healthText {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 18px;
-      font-weight: bold;
-    }
-  }
-
-  &-nicknameContainer {
-    margin-top: 10px;
 
     .mainScreen-nickname {
-      width: 208px;
-      height: 29px;
+      width: clamp(160px, 12vw, 240px);
+      margin: 1vh auto 0;
+      display: block;
+      z-index: 2;
     }
   }
 
-  &-error {
+  &-avatarBtn {
     position: absolute;
-    bottom: 10px;
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%);
-    background: rgba(255, 0, 0, 0.2);
-    padding: 10px 20px;
-    border-radius: 10px;
-    font-size: 16px;
+    transform: translate(-50%, -80%);
+    width: clamp(200px, 22vw, 420px);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
     z-index: 3;
+
+    .mainScreen-person {
+      position: static;
+      transform: none;
+      width: 100%;
+      height: auto;
+      pointer-events: none;
+      display: block;
+    }
+  }
+
+  &-smokeLeft,
+  &-smokeRight {
+    position: absolute;
+    bottom: 5vh;
+    width: clamp(280px, 25vw, 520px);
+    z-index: 2;
+
+    .smokeBase {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .smokeCircles {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 2.2vw;
+
+           .circle {
+        width: clamp(100px, 10vw, 200px);
+        height: clamp(100px, 10vw, 200px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+
+        svg {
+          width: 100%;
+          height: auto;
+          display: block;
+        }
+      }
+
+      .circle-left {
+        align-self: flex-start;
+      }
+
+      .circle-right {
+        align-self: flex-end;
+      }
+
+      .is-clickable {
+        cursor: pointer;
+        outline: none;
+
+        &:focus-visible {
+          outline: 2px solid rgba(255, 255, 255, 0.7);
+          border-radius: 999px;
+        }
+
+        &:hover {
+          transform: scale(1.05);
+        }
+
+        &:active {
+          transform: scale(0.95);
+        }
+      }
+    }
+  }
+
+  &-smokeLeft {
+    left: 3vw;
+  }
+
+  &-smokeRight {
+    right: 3vw;
   }
 }
-
-
-
-
-
-
-
-

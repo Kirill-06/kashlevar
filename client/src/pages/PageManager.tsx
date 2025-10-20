@@ -19,7 +19,7 @@ export enum PAGES {
     REGISTER,
     START,
     WELCOME,
-    MAIN_SCREEN
+    MAIN_SCREEN,
     SHOP,
 }
 
