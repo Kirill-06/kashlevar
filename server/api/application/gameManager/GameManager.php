@@ -1,10 +1,8 @@
 <?php
 
-class GameManager
-{
+class GameManager {
 
-    function __construct($db)
-    {
+    function __construct($db) {
         $this->db = $db;
     }
 

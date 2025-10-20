@@ -158,4 +158,28 @@ class Application {
             ];
         }
     }
+
+    public function getUserVapes($params) {
+        if (!($params['token'])) {
+            return ['error' => 242];
+        }
+        
+        $user = $this->user->getUser($params['token']);
+        if (!$user) {
+            return ['error' => 705];
+        }
+
+        $vapes = $this->SmokingDevice->getUserDevices($user->id);
+        $result = array_map(function($vape) {
+        return [
+            'id' => $vape['id'],
+            'vape_id' => $vape['vape_id'],
+            'name' => $vape['name'],
+            'level' => $vape['level'],
+            'health_change' => $vape['health_change'],
+            'happiness_change' => $vape['happiness_change'],
+        ];
+        }, $vapes);
+        return $result;
+    }
 }
