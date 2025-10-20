@@ -163,6 +163,21 @@ class DB
         ", [$shopId]);
     }
 
+    public function getVapesFromShop()
+    {
+        return $this->queryAll("
+            SELECT 
+                vape_items.shop_id,
+                vape_items.base_health_change,
+                vape_items.base_happiness_change,
+                shop.name,
+                shop.price,
+                shop.type
+            FROM vape_items
+            JOIN shop ON vape_items.shop_id = shop.id
+        ");
+    }
+
     public function addUserVape($userId, $vapeShopId)
     {
         $vape = $this->query("

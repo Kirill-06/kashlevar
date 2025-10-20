@@ -18,8 +18,9 @@ class SmokingDevice {
     }
 
     public function getShopDevices() {
-        // TODO реализовать метод для получения списка всех вейпов в DB
+        return $this->db->getVapesFromShop();
     }
+    
 
     public function updateUserDevice($userVapeId, $level = null, $healthChange = null, $happinessChange = null) {
         $this->db->updateUserVape($userVapeId, $level, $healthChange, $happinessChange);
