@@ -18,6 +18,8 @@ function result($params) {
             case 'logout': return $app->logout($params);
             case 'registration': return $app->registration($params);
             case 'getUser': return $app->getPersonInfo($params);
+            case 'getUserProgress': return $app->getPersonProgress($params);
+            case 'getUserVapes': return $app->getUserVapes($params);
             // chat
             case 'sendMessage': return $app->sendMessage($params);
             case 'getMessages': return $app->getMessages($params);
