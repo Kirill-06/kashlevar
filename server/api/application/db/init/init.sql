@@ -1,43 +1,35 @@
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
-    username VARCHAR(20) NOT NULL UNIQUE,
-    hash_password VARCHAR(255) NOT NULL,
-    token VARCHAR(255)
+    username VARCHAR(30) NOT NULL UNIQUE,
+    hash_password VARCHAR(32) NOT NULL,
+    token VARCHAR(32),
+    money INTEGER DEFAULT 100
 );
 
-
-CREATE TABLE IF NOT EXISTS user_progress (
-    id SERIAL PRIMARY KEY,
-    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    happines INT DEFAULT 100, 
-    health INT DEFAULT 100,
-    coins INT DEFAULT 100,
-    last_played TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-
-CREATE TABLE IF NOT EXISTS shop (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
-    price INTEGER NOT NULL,
-    type VARCHAR(20) NOT NULL  -- 'vape'
-);
-
-
-CREATE TABLE IF NOT EXISTS vape_items (
-    id SERIAL PRIMARY KEY,
-    shop_id INTEGER NOT NULL REFERENCES shop(id) ON DELETE CASCADE,
-    base_health_change INTEGER NOT NULL,
-    base_happiness_change INTEGER NOT NULL
-);
-
-
-CREATE TABLE IF NOT EXISTS user_vapes (
+CREATE TABLE IF NOT EXISTS persons (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    vape_id INTEGER NOT NULL REFERENCES vape_items(id) ON DELETE CASCADE,
+    hp INTEGER DEFAULT 100,
+    happines INTEGER DEFAULT 100,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status VARCHAR(30) DEFAULT 'alive', -- 'alive', 'in hell', 'resurrected', 'dead'
+    active BOOLEAN DEFAULT FALSE
+);
+
+CREATE TABLE IF NOT EXISTS items (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    cost INTEGER DEFAULT 1,
+    type VARCHAR(20) DEFAULT 'vape', -- 'vape', 'sigaret', 'sigara', 'tablets'
+    value INTEGER DEFAULT 1,
+    base_level INTEGER DEFAULT 1
+);
+
+CREATE TABLE IF NOT EXISTS inventory (
+    id SERIAL PRIMARY KEY,
+    person_id INTEGER NOT NULL REFERENCES persons(id) ON DELETE CASCADE,
+    item_id INTEGER NOT NULL REFERENCES items(id) ON DELETE CASCADE,
     level INTEGER DEFAULT 1,
-    health_change INTEGER NOT NULL,
-    happiness_change INTEGER NOT NULL,
-    UNIQUE (user_id, vape_id)
+    current_value INTEGER NOT NULL
 );

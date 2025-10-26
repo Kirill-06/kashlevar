@@ -1,19 +1,6 @@
-INSERT INTO shop (name, price, type)
-VALUES 
-    ('XROS 5', 100, 'vape'),
-    ('VapePro', 250, 'vape'),
-    ('CloudMaster', 500, 'vape')
-ON CONFLICT DO NOTHING;
-
-
-INSERT INTO vape_items (shop_id, base_health_change, base_happiness_change)
-SELECT id, -5, 10 FROM shop WHERE name = 'XROS 5'
-ON CONFLICT DO NOTHING;
-
-INSERT INTO vape_items (shop_id, base_health_change, base_happiness_change)
-SELECT id, -10, 20 FROM shop WHERE name = 'VapePro'
-ON CONFLICT DO NOTHING;
-
-INSERT INTO vape_items (shop_id, base_health_change, base_happiness_change)
-SELECT id, -15, 30 FROM shop WHERE name = 'CloudMaster'
+INSERT INTO items (name, cost, type, value)
+VALUES
+    ('XROS 5', 100, 'vape', 10),
+    ('Aegis Hero 5', 250, 'vape', 20),
+    ('Pasito II', 500, 'vape', 30)
 ON CONFLICT DO NOTHING;

@@ -3,17 +3,24 @@ require_once ('db/DB.php');
 require_once ('user/User.php');
 require_once ('chat/Chat.php');
 require_once ('math/Math.php');
-require_once ('gameManager/GameManager.php');
-require_once ('smokingDevice/SmokingDevice.php');
+require_once ('person/Person.php');
+require_once ('shop/Shop.php');
+
 
 class Application {
+    private $user;
+    private $chat;
+    private $math;
+    private $person;
+    private $shop;
+
     function __construct() {
         $db = new DB();
         $this->user = new User($db);
         $this->chat = new Chat($db);
-        $this->math = new Math($db);
-        $this->SmokingDevice = new SmokingDevice($db);
-        $this->gameManager = new GameManager($db);
+        $this->math = new Math();
+        $this->person = new Person($db);
+        $this->shop = new Shop($db);
     }
 
     public function login($params) {
@@ -38,6 +45,7 @@ class Application {
         if ($params['login'] && $params['hash_password']) {
             return $this->user->registration($params['login'], $params['hash_password']);
         }
+
         return ['error' => 242];
     }
 
@@ -96,66 +104,49 @@ class Application {
         return ['error' => 8001];
     }
 
-    public function getPersonInfo($params) {
-        if ($params['token']) {
-            $user = $this->user->getUser($params['token']);
-            if ($user) {
-                return [
-                    'id' => $user->id,
-                    'username' => $user->username,
-                ];
-            }
-            return ['error' => 705];
-        }
-        return ['error' => 242];
-    }
-
-    public function getPersonProgress($params) {
+    // получать персонаж и содержимое его карманов
+    public function getPerson($params) 
+    {
         if (!$params['token']) {
             return ['error' => 242];
         }
-        
+        $user = $this->user->getUser($params['token']);
+        if (!$user) {
+            return ['error' => 705];
+        }
+        return $this->person->getPerson($user->id);
+    }
+
+    public function getUser($params) 
+    {
+        if (!$params['token']) {
+            return ['error' => 242];
+        }
+
         $user = $this->user->getUser($params['token']);
         if (!$user) {
             return ['error' => 705];
         }
 
-        $progress = $this->user->getUserProgress($user->id);
         return [
-            'user_id' => $progress->user_id,
-            'happines' => $progress->happines,
-            'health' => $progress->health,
-            'coins' => $progress->coins,
-            'last_played' => $progress->last_played
+            'id' => $user->id,
+            'username' => $user->username,
+            'money' => $user->money
         ];
     }
 
     public function puff($params) {
-        if (!($params['token'] && $params["userDeviceId"])) {
+        if (!($params['token'] && $params["itemId"])) {
             return ['error' => 242];
         }
-        
         $user = $this->user->getUser($params['token']);
         if (!$user) {
             return ['error' => 705];
         }
-
-        $vape = $this->SmokingDevice->getUserDevice($user->id, $params['userDeviceId']);
-        if (!$vape) {
-            return ['error' => 702];
-        }
-
-        $result = $this->gameManager->puff($user, $vape);
-        return [
-            'success' => $result['success'],
-            'user' => [
-                'health' => $result['health'],
-                'happiness' => $result['happiness']
-            ]
-        ];
+        return $this->person->puff($user->id, $params['itemId']);
     }
 
-    public function getCatalogShop($params) {
+    public function getCatalog($params) {
         if (!$params['token']) {
             return ['error' => 242];
         }
@@ -163,22 +154,11 @@ class Application {
         if (!$user) {
             return ['error' => 705];
         }
-        $catalog = $this->SmokingDevice->getShopDevices();
-        $result = array_map(function($item) {
-        return [
-            'shop_id' => $item['shop_id'],
-            'base_health_change' => $item['base_health_change'],
-            'base_happiness_change' => $item['base_happiness_change'],
-            'name' => $item['name'],
-            'price' => $item['price'],
-            'type' => $item['type'],
-        ];
-        }, $catalog);
-        return $result;
+        return $this->shop->getCatalog();
     }
 
-    public function buyVape($params) {
-        if (!($params['token'] && $params['shopDeviceId'])) {
+    public function buy($params) {
+        if (!($params['token'] && $params['itemId'])) {
             return ['error' => 242];
         }
         
@@ -187,21 +167,14 @@ class Application {
             return ['error' => 705];
         }
 
-        $result = $this->gameManager->buy($user, $params['shopDeviceId']);
-        if ($result['success']){
-            return [
-                "success" => "Vape is bought",
-                "vapeName" => $result['$vape->name']
-            ];
+       $result = $this->shop->buy($user->id, $params['itemId']);
+        if ($result) {
+            return $result;
         }
-        else{
-            return[
-                "error" => $result["error"]
-            ];
-        }
+       return $this->person->getInventory($user->id);
     }
 
-    public function getUserVapes($params) {
+    public function getInventory($params) {
         if (!($params['token'])) {
             return ['error' => 242];
         }
@@ -210,40 +183,6 @@ class Application {
         if (!$user) {
             return ['error' => 705];
         }
-
-        $vapes = $this->SmokingDevice->getUserDevices($user->id);
-        if (!$vapes) {
-            return ['error' => 703];
-        }
-        $result = array_map(function($vape) {
-        return [
-            'id' => $vape['id'],
-            'vape_id' => $vape['vape_id'],
-            'name' => $vape['name'],
-            'level' => $vape['level'],
-            'health_change' => $vape['health_change'],
-            'happiness_change' => $vape['happiness_change'],
-        ];
-        }, $vapes);
-
-        return $result;
-    }
-
-    public function updateHappinessAfterOfline($params){
-
-        if (!($params['token'])) {
-            return ['error' => 242];
-        }
-        
-        $user = $this->user->getUser($params['token']);
-        if (!$user) {
-            return ['error' => 705];
-        }
-
-        $result = $this->gameManager->updateHappinesAfterOffline($user);
-        return [
-            "happiness" => $result
-        ];
-
+        return $this->person->getInventory($user->id);
     }
 }
