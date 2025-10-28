@@ -17,21 +17,30 @@ function result($params) {
             case 'login': return $app->login($params);
             case 'logout': return $app->logout($params);
             case 'registration': return $app->registration($params);
-            case 'getUser': return $app->getPersonInfo($params);
-            case 'getUserProgress': return $app->getPersonProgress($params);
-            case 'getUserVapes': return $app->getUserVapes($params);
+            case 'getUser': return $app->getUser($params);
+           
             // chat
             case 'sendMessage': return $app->sendMessage($params);
             case 'getMessages': return $app->getMessages($params);
+
             //math
             case 'getSolvesQuadraticEquations': return $app->getSolvesQuadraticEquations($params);
             case 'getSolvesCubicEquations': return $app->getSolvesCubicEquations($params);
             case 'getSolvesQuadrupleEquations': return $app->getSolvesQuadrupleEquations($params);
-            //game
+            
+            // person
+            case 'getPerson': return $app->getPerson($params);
+            case 'getInventory': return $app->getInventory($params);
             case 'puff': return $app->puff($params);
-            case 'buyVape': return $app->buyVape($params);
-            case 'getCatalogShop': return $app->getCatalogShop($params);
-            case 'updateHappinesAfterOffline': return $app->updateHappinessAfterOfline($params);
+            // case 'update': return $app->update($params); // loop
+            // case 'getRating': return $app->getRating($params);
+
+            // shop
+            case 'getCatalog': return $app->getCatalog($params);
+            case 'buy': return $app->buy($params);
+            // case 'upgradeItem': return $app->upgradeItem($params);
+
+            //tower
 
             default: return ['error' => 102];
 

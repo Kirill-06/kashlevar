@@ -9,13 +9,9 @@ class User {
         return $this->db->getUserByToken($token);
     }
 
-    public function getUserProgress($userId) {
-        return $this->db->getUserProgress($userId);
-    }
-
     public function login($username, $hash_password, $rnd) {
         $user = $this->db->getUserByUserName($username);
-        if ($user) {
+        if (!$user) {
             if (md5($user->hash_password . $rnd) === $hash_password) {
                 $token = md5(rand());
                 $this->db->updateToken($user->id, $token);

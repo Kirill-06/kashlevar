@@ -54,9 +54,19 @@ class DB
         return $this->query("SELECT * FROM users WHERE token=?", [$token]);
     }
 
+    public function getUserById($userId) 
+    {
+        return $this->query("SELECT * FROM users WHERE id=?", [$userId]);
+    }
+
     public function updateToken($userId, $token)
     {
         $this->execute("UPDATE users SET token=? WHERE id=?", [$token, $userId]);
+    }
+
+    public function updateUserMoney($userId, $coins) 
+    {
+        $this->execute("UPDATE users SET money=? WHERE id=?", [$coins, $userId]);
     }
 
     public function registration($username, $hash_password)
@@ -65,164 +75,131 @@ class DB
             "INSERT INTO users (username, hash_password) VALUES (?, ?)",
             [$username, $hash_password]
         );
-
         $userId = $this->pdo->lastInsertId();
-
-        $this->execute(
-            "INSERT INTO user_progress (user_id) VALUES (?)",
-            [$userId]
-        );
-
-        $this->addUserVape($userId, 1);
+        $this->createPerson($userId);
     }
 
-    public function getUserProgress($userId)
+    public function getPersonById($personId)
     {
-        return $this->query("SELECT * FROM user_progress WHERE user_id=?", [$userId]);
+        return $this->query("SELECT * FROM persons WHERE id=?", [$personId]);
     }
 
-    public function addUserProgress($userId)
+    public function createPerson($userId)
     {
         $this->execute(
-            "INSERT INTO user_progress (user_id) VALUES (?)",
+            "INSERT INTO persons (user_id) VALUES (?)",
             [$userId]
         );
     }
 
-    public function updateUserProgress($userId, $happines = null, $health = null, $coins = null, $lastPlayed = null)
+    public function updatePersonHP($personId, $hp) 
     {
-        $fields = [];
-        $params = [];
-
-        if ($happines !== null) {
-            $fields[] = "happines=?";
-            $params[] = $happines;
-        }
-        if ($health !== null) {
-            $fields[] = "health=?";
-            $params[] = $health;
-        }
-        if ($coins !== null) {
-            $fields[] = "coins=?";
-            $params[] = $coins;
-        }
-        if ($lastPlayed !== null) {
-            $fields[] = "last_played=?";
-            $params[] = $lastPlayed;
-        }
-
-        if (empty($fields)) return;
-
-        $params[] = $userId;
-        $sql = "UPDATE user_progress SET " . implode(", ", $fields) . " WHERE user_id=?";
-        $this->execute($sql, $params);
+        $this->execute(
+            "UPDATE persons SET hp=? WHERE id=?",
+            [max(0, min(100, $hp)), $personId]
+        );
     }
 
-    public function getUserVape($userId, $vapeId)
+    public function updatePersonHappines($personId, $happines) 
     {
-        return $this->query("
-            SELECT user_vapes.id, user_vapes.user_id, user_vapes.vape_id, user_vapes.level,
-                user_vapes.health_change, user_vapes.happiness_change,
-                shop.name AS name
-            FROM user_vapes
-            JOIN vape_items ON user_vapes.vape_id = vape_items.id
-            JOIN shop ON vape_items.shop_id = shop.id
-            WHERE user_vapes.user_id = ? AND user_vapes.vape_id = ?
-        ", [$userId, $vapeId]);
+        $this->execute(
+            "UPDATE persons SET happines=? WHERE id=?",
+            [max(0, min(100, $happines)), $personId]
+        );
     }
 
-
-    public function getUserVapes($userId)
+    public function updatePersonStatus($personId, $status) 
     {
-        return $this->queryAll("
-            SELECT user_vapes.id, user_vapes.user_id, user_vapes.vape_id, user_vapes.level,
-                user_vapes.health_change, user_vapes.happiness_change, shop.name AS name
-            FROM user_vapes
-            JOIN vape_items ON user_vapes.vape_id = vape_items.id
-            JOIN shop ON vape_items.shop_id = shop.id
-            WHERE user_vapes.user_id = ?
-        ", [$userId]);
+        $this->execute(
+            "UPDATE persons SET status=? WHERE id=?",
+            [$status, $personId]
+        );
     }
 
-    /*public function getVapesFromShop()
+    public function setPersonActive($personId, $active) 
     {
-
-    }*/
-
-    public function getVapeFromShop($shopId)
-    {
-        return $this->query("
-            SELECT 
-                vape_items.shop_id,
-                vape_items.base_health_change,
-                vape_items.base_happiness_change,
-                shop.name,
-                shop.price,
-                shop.type
-            FROM vape_items
-            JOIN shop ON vape_items.shop_id = shop.id
-            WHERE shop.id = ?
-        ", [$shopId]);
+        $this->execute(
+            "UPDATE persons SET active=? WHERE id=?",
+            [$active, $personId]
+        );
     }
 
-    public function getVapesFromShop()
+    private function updatePersonLastUpdate($personId) 
     {
-        return $this->queryAll("
-            SELECT 
-                vape_items.shop_id,
-                vape_items.base_health_change,
-                vape_items.base_happiness_change,
-                shop.name,
-                shop.price,
-                shop.type
-            FROM vape_items
-            JOIN shop ON vape_items.shop_id = shop.id
-        ");
-    }
-    
-
-    public function addUserVape($userId, $vapeShopId)
-    {
-        $vape = $this->query("
-            SELECT id AS vape_id, base_health_change, base_happiness_change
-            FROM vape_items
-            WHERE shop_id = ?
-        ", [$vapeShopId]);
-
-        $this->execute("
-            INSERT INTO user_vapes (user_id, vape_id, level, health_change, happiness_change)
-            VALUES (?, ?, 1, ?, ?)
-        ", [$userId, $vape->vape_id, $vape->base_health_change, $vape->base_happiness_change]);
+        $this->execute(
+            "UPDATE persons SET last_update=CURRENT_TIMESTAMP WHERE id=?",
+            [$personId]
+        );
     }
 
-    public function updateUserVape($userVapeId, $level = null, $healthChange = null, $happinessChange = null)
+    public function deletePerson($personId)
     {
-        $fields = [];
-        $params = [];
-
-        if ($level !== null) {
-            $fields[] = "level=?";
-            $params[] = $level;
-        }
-        if ($healthChange !== null) {
-            $fields[] = "health_change=?";
-            $params[] = $healthChange;
-        }
-        if ($happinessChange !== null) {
-            $fields[] = "happiness_change=?";
-            $params[] = $happinessChange;
-        }
-
-        if (empty($fields)) return;
-
-        $params[] = $userVapeId;
-        $sql = "UPDATE user_vapes SET " . implode(", ", $fields) . " WHERE id=?";
-        $this->execute($sql, $params);
+        $this->execute("DELETE FROM persons WHERE id=?", [$personId]);
     }
 
-    public function deleteUserVape($userVapeId)
+    public function getUserPerson($userId)
     {
-        $this->execute("DELETE FROM user_vapes WHERE id=?", [$userVapeId]);
+        return $this->query("SELECT * FROM persons WHERE user_id=?", [$userId]);
+    }
+
+    public function getCatalogItems()
+    {
+        return $this->queryAll("SELECT * FROM items");
+    }
+
+    public function getItemById($itemId) 
+    {
+        return $this->query("SELECT * FROM items WHERE id=?", [$itemId]);
+    }
+
+    public function addItemToPerson($personId, $itemId, $level, $currentValue)
+    {
+        $this->execute(
+            "INSERT INTO inventory (person_id, item_id, level, current_value) VALUES (?, ?, ?, ?)",
+            [$personId, $itemId, $level, $currentValue]
+        );
+    }
+
+    public function updateInventoryLevel($inventoryId, $level)
+    {
+        $this->execute(
+            "UPDATE inventory SET level=? WHERE id=?",
+            [$level, $inventoryId]
+        );
+    }
+
+    public function updateInventoryCurrentValue($inventoryId, $currentValue)
+    {
+        $this->execute(
+            "UPDATE inventory SET current_value=? WHERE id=?",
+            [$currentValue, $inventoryId]
+        );
+    }
+
+    public function removeItemFromPerson($personId, $itemId)
+    {
+        $this->execute(
+            "DELETE FROM inventory WHERE person_id=? AND item_id=?",
+            [$personId, $itemId]
+        );
+    }
+
+    public function getInventoryByPerson($personId)
+    {
+        return $this->queryAll(
+            "SELECT 
+                    inventory.id,
+                    inventory.level,
+                    inventory.current_value,
+                    items.name,
+                    items.type,
+                    items.cost,
+                    items.value
+            FROM inventory
+            JOIN items ON items.id = inventory.item_id
+            WHERE inventory.person_id = ?",
+            [$personId]
+        );
     }
 
     public function getChatHash()
