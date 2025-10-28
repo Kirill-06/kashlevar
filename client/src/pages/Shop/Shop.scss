@@ -22,7 +22,6 @@
         font-size: 35px;
         line-height: 100%;
         text-align: right;
-
     }
 
     &-person {
@@ -42,32 +41,20 @@
 
     &-exitButton{
         position: absolute;
-        top: 0;
-        margin-top: 50px;
+        top: 50px;
         left: 23%; 
-
         width: 50px;
         height: 50px;
-        max-width: 100%;
         transform: rotate(180deg);
             
         background-image: url('../../assets/img/arrow/arrow.png');
         background-repeat: no-repeat;
         background-size: 100%; 
+        cursor: pointer;
+        z-index: 1000; // Поднимаем выше всех элементов
+
+        &:hover {
+            opacity: 0.8;
+        }
     }
-    
-    .button{
-        border-radius: 0 !important;
-        background: transparent !important;
-
-        width: 35px;
-        height: 35px;
-
-        border: 2px solid #00000000;
-        padding: 25px; 
-
-    }
-
-
-
 }

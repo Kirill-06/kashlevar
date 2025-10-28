@@ -5,16 +5,16 @@ import './MainScreen.scss';
 import { UserProgress, UserVapes, UserInfo} from '../../services/server/types';
 
 import Background from '../../assets/img/MainScreen/city.png';
-import { ReactComponent as Person } from '../../assets/img/MainScreen/person2.svg';
+import Person from '../../assets/img/MainScreen/person2.png';
 import { ReactComponent as AscensionButton } from '../../assets/img/MainScreen/AscensionButton.svg';
 import { ReactComponent as ShopButton } from '../../assets/img/MainScreen/ShopButton.svg';
 import { ReactComponent as RatingButton } from '../../assets/img/MainScreen/RatingButton.svg';
 import { ReactComponent as Coins } from '../../assets/img/MainScreen/coin.svg';
-import { ReactComponent as HappinessBar } from '../../assets/img/MainScreen/happynessbar.svg';
+import HappinessBar from '../../assets/img/MainScreen/happynessbar.png';
 import Platform from '../../assets/img/MainScreen/Ellipse.svg';
 import HpBar from '../../assets/img/MainScreen/Hpbar.png';
-import { ReactComponent as SmokeLeft } from '../../assets/img/MainScreen/Smokebuttons2.svg';
-import { ReactComponent as SmokeRight } from '../../assets/img/MainScreen/Smokebuttons3.svg';
+import SmokeLeft from '../../assets/img/MainScreen/smokeL.png';
+import SmokeRight from '../../assets/img/MainScreen/smokeR.png';
 
 const TEN_MIN_MS = 10 * 60 * 1000;
 
@@ -113,7 +113,7 @@ const MainScreen: React.FC<IBasePage> = (props: IBasePage) => {
       <img src={Background} alt="Background" className="mainScreen-background" />
 
       <div className="mainScreen-topLeft">
-        <HappinessBar className="mainScreen-happinessIcon" />
+        <img src={HappinessBar} alt="Happiness Bar" className="mainScreen-happinessIcon" />
         <span className="mainScreen-happinessText">{displayHappiness}%</span>
       </div>
 
@@ -130,7 +130,7 @@ const MainScreen: React.FC<IBasePage> = (props: IBasePage) => {
           onClick={onAvatarClick}
           aria-label="Аватар"
         >
-          <Person className="mainScreen-person" />
+          <img src={Person} alt="Person" className="mainScreen-person" />
         </button>
         <img src={HpBar} alt="Health Bar" className="mainScreen-healthBar" />
         <div className="mainScreen-healthValue">{loading ? '—' : `${displayHealth}%`}</div>
@@ -140,7 +140,7 @@ const MainScreen: React.FC<IBasePage> = (props: IBasePage) => {
       </div>
 
       <div className="mainScreen-smokeLeft">
-        <SmokeLeft className="smokeBase" />
+        <img src={SmokeLeft} alt="Smoke Left" className="smokeBase" />
         <div className="smokeCircles">
           <div
             className="circle circle-left is-clickable"
@@ -164,7 +164,7 @@ const MainScreen: React.FC<IBasePage> = (props: IBasePage) => {
       </div>
 
       <div className="mainScreen-smokeRight">
-        <SmokeRight className="smokeBase" />
+        <img src={SmokeRight} alt="Smoke Right" className="smokeBase" />
         <div className="smokeCircles">
           <div
             className="circle circle-right is-clickable"

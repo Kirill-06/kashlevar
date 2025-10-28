@@ -143,7 +143,7 @@ const Register: React.FC<IBasePage> = (props: IBasePage) => {
                         <a href="#" onClick={() => setPage(PAGES.LOGIN)}>Войти</a>
                     </div>
                     <div className='login-buttons'>
-                        <Button onClick={registerClickHandler} text='Начать' />
+                        <Button onClick={registerClickHandler} text='Зарегистрироваться' />
                     </div>
                 </div>
             </div>

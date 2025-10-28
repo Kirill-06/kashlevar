@@ -1,9 +1,7 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext } from 'react';
 import { ServerContext, StoreContext } from '../../App';
-import Button from '../../components/Button/Button';
 import { IBasePage, PAGES } from '../PageManager';
 import './Shop.scss';
-
 
 const Shop: React.FC<IBasePage> = (props: IBasePage) => {
     const { setPage } = props;
@@ -12,27 +10,22 @@ const Shop: React.FC<IBasePage> = (props: IBasePage) => {
     const user = store.getUser();
 
     const exitClickHandler = async () => {
-        setPage(PAGES.GAME); //сделать переход на главную страницу
+        setPage(PAGES.MAIN_SCREEN);
     };
 
-     const buyClickHandler = async () => {
-
-        //сделать покупку товаров
-
+    const buyClickHandler = async () => {
+        // функционал покупки товаров - оставляем для дальнейшего развития
     };
-    
 
     return (
         <div className='shop'>
-            <div></div>
-            <div className='shop-exitButton'><Button onClick={exitClickHandler} text=' '/></div>
-
+            <div className='shop-exitButton' onClick={exitClickHandler}></div>
             <div className='shop-title'>Нажмите на ценник, чтобы купить понравившийся товар</div>
             <div className='shop-person'></div>
-
+            
+            {/* Здесь будут товары для покупки */}
         </div>
     )
 }
 
 export default Shop;
-
