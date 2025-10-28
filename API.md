@@ -184,6 +184,7 @@ Message: {
 **Ошибки**
 * `705` - невалидный токен. Пользователь не авторизован
 
+
 ### 4.6. getUser
 Получить информацию о пользователе
 
@@ -199,8 +200,230 @@ Message: {
     Answer<{
         id: integer; - id пользователя
         username: string; - имя пользователя
+        money: integer; - деньги пользователя
+    }>
+```
+
+
+**Ошибки**
+* `705` - невалидный токен. Пользователь не авторизован
+
+
+### 4.7. buy
+покупка предмета
+
+**Параметры**
+```
+{
+    token: string; - токен 
+    itemId: integer; - id товара
+}
+```
+
+**Успешный ответ**
+```
+    Answer<{
+        Array[
+            id: integer; - id предмета в инвентаре
+            type: string; - type предмета
+            name: string; - имя предмета
+            level: integer; - level предмета
+            current_value: integer; - количество жижи/сигарет 
+        ]
+    }>
+```
+**Ошибки**
+* `705` - невалидный токен. Пользователь не авторизован
+* `1011` - Item not found in catalog
+* `1012` - Item already owned
+* `1013` - Not enough money
+
+
+### 4.8. getCatalog
+католог предметов в магазине
+
+**Параметры**
+```
+{
+    token: string; - токен 
+}
+```
+
+**Успешный ответ**
+```
+    Answer<{
+        Array[
+            id: integer; - id предмета
+            type: string; - type предмета
+            name: string; - имя предмета
+            level: integer; - level предмета
+            current_value: integer; - количество жижи/сигарет 
+        ]
     }>
 ```
 
 **Ошибки**
 * `705` - невалидный токен. Пользователь не авторизован
+* `1010` - Catalog is empty
+
+
+### 4.9. puff
+покурить 
+
+**Параметры**
+```
+{
+    token: string; - токен
+    itemId: integer; - id предмета
+}
+```
+
+**Успешный ответ**
+```
+    Answer<{
+        hp: integer; - здоровье персонаж
+        happines: integer; - счастье персонаж
+        status: string; - состояние персонажа
+    }>
+```
+
+**Ошибки**
+* `705` - невалидный токен. Пользователь не авторизован
+* `901` - Person is dead
+* `800` - Not found object
+
+
+### 4.10. getInventory
+инвентарь персонажа
+
+**Параметры**
+```
+{
+    token: string; - токен 
+    itemId: integer; - id товара
+}
+```
+
+**Успешный ответ**
+```
+    Answer<{
+        Array[
+            id: integer; - id предмета в инвентаре
+            type: string; - type предмета
+            name: string; - имя предмета
+            level: integer; - level предмета
+            current_value: integer; - количество жижи/сигарет 
+        ]
+    }>
+```
+
+**Ошибки**
+* `705` - невалидный токен. Пользователь не авторизован
+* `900` - Inventory is empty
+
+
+### 4.11. getPerson
+персонаж
+
+**Параметры**
+```
+{
+    token: string; - токен 
+}
+```
+
+**Успешный ответ**
+```
+    Answer<{
+        hp: integer; - здоровье персонаж
+        happines: integer; - счастье персонаж
+        status: string; - состояние персонажа
+    }>
+```
+
+**Ошибки**
+* `705` - невалидный токен. Пользователь не авторизован
+
+
+### 4.11. getSolvesQuadrupleEquations
+решение квадратиченого уравнения
+
+**Параметры**
+```
+{
+    a: float; - 1 аргумент
+    b: float; - 2 аргумент
+    c: float; - 3 аргумент
+    d: float; - 4 аргумент
+    e: float; - 5 аргумент
+}
+```
+
+**Успешный ответ**
+```
+    Answer<{
+        Array[
+            x1: integer; - 1 аргумент
+            x2: integer; - 2 аргумент
+            x3: integer; - 3 аргумент
+            x4: integer; - 4 аргумент
+        ]
+    }>
+```
+
+**Ошибки**
+* `8001` - At least one of the parameters must be non-zero
+
+
+### 4.12. getSolvesCubicEquations
+решение кубического уравнения
+
+**Параметры**
+```
+{
+    a: float; - 1 аргумент
+    b: float; - 2 аргумент
+    c: float; - 3 аргумент
+    d: float; - 4 аргумент
+}
+```
+
+**Успешный ответ**
+```
+    Answer<{
+        Array[
+            x1: integer; - 1 аргумент
+            x2: integer; - 2 аргумент
+            x3: integer; - 3 аргумент
+        ]
+    }>
+```
+
+**Ошибки**
+* `8001` - At least one of the parameters must be non-zero
+
+
+### 4.13. getSolvesQuadraticEquations
+решение квадратного уравнения
+
+**Параметры**
+```
+{
+    a: float; - 1 аргумент
+    b: float; - 2 аргумент
+    c: float; - 3 аргумент
+}
+```
+
+**Успешный ответ**
+```
+    Answer<{
+        Array[
+            x1: integer; - 1 аргумент
+        ]
+    }>
+```
+
+**Ошибки**
+* `8001` - At least one of the parameters must be non-zero
+* `8002` - There are no real roots
