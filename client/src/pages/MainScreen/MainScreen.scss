@@ -86,25 +86,52 @@
     }
   }
 
+  &-person {
+    width: 100%;
+    height: 100%;
+    image-rendering: crisp-edges;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: pixelated;
+    transform: translateZ(0);
+  }
+
+  .mainScreen-person {
+    width: 70%;     // меняй эту цифру
+    height: auto;    // меняй эту цифру
+}
+
+
   &-avatarBtn {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -80%);
-    width: clamp(200px, 22vw, 420px);
-    background: none;
+    width: 200px;
+    height: 300px;
+    background: transparent;
     border: none;
     padding: 0;
-    cursor: pointer;
-    z-index: 3;
-.mainScreen-person {
-      position: static;
-      transform: none;
-      width: 100%;
-      height: auto;
-      pointer-events: none;
-      display: block;
+    
+    &:focus {
+      outline: none;
     }
+  }
+
+  &-healthValue {
+    margin: 6px auto 0;
+    width: fit-content;       
+    padding: 0 6px;
+    font-weight: 700;
+    font-size: 18px;           
+    line-height: 1.1;
+    text-shadow: 0 1px 2px rgba(0,0,0,.35);
+    pointer-events: none;      
+  }
+
+  &-nicknameWrap {
+    margin-top: 8px;
+  }
+
+  &-nicknameText {
+    font-size: 20px;
+    font-weight: 700;
+    text-shadow: 0 1px 2px rgba(0,0,0,.35);
   }
 
   &-smokeLeft,
@@ -128,7 +155,7 @@
       align-items: center;
       padding: 0 2.2vw;
 
-           .circle {
+      .circle {
         width: clamp(100px, 10vw, 200px);
         height: clamp(100px, 10vw, 200px);
         display: flex;
@@ -180,15 +207,5 @@
 
   &-smokeRight {
     right: 3vw;
-  }
-   .mainScreen-healthValue {
-    margin: 6px auto 0;
-    width: fit-content;       
-    padding: 0 6px;
-    font-weight: 700;
-    font-size: 18px;           
-    line-height: 1.1;
-    text-shadow: 0 1px 2px rgba(0,0,0,.35);
-    pointer-events: none;      
   }
 }
