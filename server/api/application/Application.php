@@ -185,4 +185,28 @@ class Application {
         }
         return $this->person->getInventory($user->id);
     }
+
+    public function upgradeItem($params){
+        if (!($params['token'] && $params['itemId'])){
+            return ['error' => 242];
+        }
+
+        $user = $this->user->getUser($params['token']);
+        if (!$user) {
+            return ['error' => 705];
+        }
+        return $this->shop->upgradeItem($user->id, $params['itemId']);
+    }
+
+    public function update($params){
+        if (!($params['token'])){
+            return ['error' => 242];
+        }
+        
+        $user = $this->user->getUser($params['token']);
+        if (!$user) {
+            return ['error' => 705];
+        }
+        return $this->person->update($user->id, 4, 100);
+    }
 }

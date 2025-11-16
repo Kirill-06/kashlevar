@@ -32,13 +32,13 @@ function result($params) {
             case 'getPerson': return $app->getPerson($params);
             case 'getInventory': return $app->getInventory($params);
             case 'puff': return $app->puff($params);
-            // case 'update': return $app->update($params); // loop
+            case 'update': return $app->update($params); //loop
             // case 'getRating': return $app->getRating($params);
 
             // shop
             case 'getCatalog': return $app->getCatalog($params);
             case 'buy': return $app->buy($params);
-            // case 'upgradeItem': return $app->upgradeItem($params);
+            case 'upgradeItem': return $app->upgradeItem($params);
 
             //tower
 

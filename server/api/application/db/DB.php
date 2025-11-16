@@ -202,6 +202,24 @@ class DB
         );
     }
 
+    public function getInventoryById($itemId)
+    {
+        return $this->query(
+            "SELECT 
+                    inventory.id,
+                    inventory.level,
+                    inventory.current_value,
+                    items.name,
+                    items.type,
+                    items.cost,
+                    items.value
+            FROM inventory
+            JOIN items ON items.id = inventory.item_id
+            WHERE inventory.id = ?",
+            [$itemId]
+        );
+    }
+
     public function getChatHash()
     {
         return $this->query("SELECT * FROM hashes WHERE id=1");

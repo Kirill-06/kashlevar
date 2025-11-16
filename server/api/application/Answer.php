@@ -33,6 +33,7 @@ class Answer {
         '1012' => 'Item already owned',
         '1013' => 'Not enough money',
         '1014' => 'Cannot upgrade item - not owned',
+        '1015' => 'Inventory is empty',
         '8001' => 'At least one of the parameters must be non-zero.',
         '8002' => 'There are no real roots',
         '9000' => 'Unknown error'
