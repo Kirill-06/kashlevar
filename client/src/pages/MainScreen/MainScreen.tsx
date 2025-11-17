@@ -13,13 +13,13 @@ import { ReactComponent as Coins } from '../../assets/img/MainScreen/coin.svg';
 import HappinessBar from '../../assets/img/MainScreen/happynessbar.png';
 import Platform from '../../assets/img/MainScreen/Ellipse.svg';
 import HpBar from '../../assets/img/MainScreen/Hpbar.png';
-import SmokeLeft from '../../assets/img/MainScreen/smokeL.png';
-import SmokeRight from '../../assets/img/MainScreen/smokeR.png';
+import { ReactComponent as SmokeLeft } from '../../assets/img/MainScreen/smokeL.svg';
+import { ReactComponent as SmokeRight } from '../../assets/img/MainScreen/smokeR.svg';
 
 const TEN_MIN_MS = 10 * 60 * 1000;
 
 const MainScreen: React.FC<IBasePage> = (props: IBasePage) => {
-     const { setPage } = props;
+  const { setPage } = props;
   const server = useContext(ServerContext);
 
   const [stats, setStats] = useState<{
@@ -97,17 +97,18 @@ const MainScreen: React.FC<IBasePage> = (props: IBasePage) => {
     : 0;
 
   const displayName = stats.userInfo?.username || 'Гость';
-  
 
   const onAvatarClick = async () => { 
     const updated = await server.puff(
-    stats.userVapes ? Number(stats.userVapes.vape_id) : undefined
-  );
+      stats.userVapes ? Number(stats.userVapes.vape_id) : undefined
+    );
     fetchInitial();
   }
+
   const onAscendClick = () => console.log('Ascension clicked');
-  const onShopClick = () =>  setPage(PAGES.SHOP); 
+  const onShopClick = () => setPage(PAGES.SHOP); 
   const onRatingClick = () => console.log('Rating clicked');
+
   return (
     <div className="mainScreen">
       <img src={Background} alt="Background" className="mainScreen-background" />
@@ -122,8 +123,18 @@ const MainScreen: React.FC<IBasePage> = (props: IBasePage) => {
         <span className="mainScreen-coinsText">{displayCoins}</span>
       </div>
 
+      {/* Платформа и UI элементы */}
       <div className="mainScreen-center">
         <img src={Platform} alt="Platform" className="mainScreen-platform" />
+        <img src={HpBar} alt="Health Bar" className="mainScreen-healthBar" />
+        <div className="mainScreen-healthValue">{loading ? '—' : `${displayHealth}%`}</div>
+        <div className="mainScreen-nicknameWrap">
+          <span className="mainScreen-nicknameText">{displayName}</span>
+        </div>
+      </div>
+
+      {/* Персонаж отдельно */}
+      <div className="mainScreen-personContainer">
         <button
           type="button"
           className="mainScreen-avatarBtn"
@@ -132,15 +143,10 @@ const MainScreen: React.FC<IBasePage> = (props: IBasePage) => {
         >
           <img src={Person} alt="Person" className="mainScreen-person" />
         </button>
-        <img src={HpBar} alt="Health Bar" className="mainScreen-healthBar" />
-        <div className="mainScreen-healthValue">{loading ? '—' : `${displayHealth}%`}</div>
-        <div className="mainScreen-nicknameWrap">
-          <span className="mainScreen-nicknameText">{displayName}</span>
-        </div>
       </div>
 
       <div className="mainScreen-smokeLeft">
-        <img src={SmokeLeft} alt="Smoke Left" className="smokeBase" />
+        <SmokeLeft className="smokeBase" />
         <div className="smokeCircles">
           <div
             className="circle circle-left is-clickable"
@@ -164,7 +170,7 @@ const MainScreen: React.FC<IBasePage> = (props: IBasePage) => {
       </div>
 
       <div className="mainScreen-smokeRight">
-        <img src={SmokeRight} alt="Smoke Right" className="smokeBase" />
+        <SmokeRight className="smokeBase" />
         <div className="smokeCircles">
           <div
             className="circle circle-right is-clickable"
