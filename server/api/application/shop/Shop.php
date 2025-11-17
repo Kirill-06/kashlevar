@@ -61,11 +61,11 @@ class Shop {
 
         $items = array_map(
             function($item) {
-                $currentLevel = $item->level + 1;
-                $upgradeCost = round($item->cost / 2 + (1.6 * ($currentLevel ^ 2)));
+                $currentLevel = $item['level'] + 1;
+                $upgradeCost = round($item['cost'] / 2 + (1.6 * ($currentLevel ^ 2)));
 
                 return [
-                    'id' => $item->itemId,
+                    'id' => $item['id'],
                     'cost' => $upgradeCost,
                     'level' => $currentLevel
                 ];
@@ -82,15 +82,13 @@ class Shop {
 
     public function upgradeItem($userId, $itemId) 
     {
-        
         $user = $this->db->getUserById($userId);
         $person = $this->db->getUserPerson($userId);
         $item = $this->db->getInventoryById($itemId);
-
         if (!$item){
             return ['error' => 1014];
         }
-        //Прокачка
+        
         foreach ($this->upgradeCost($person->id) as $item){
 
             if ($item['id'] == $itemId){
@@ -100,7 +98,7 @@ class Shop {
         }
 
         if ($user->money < $costUpgrage){
-            return ['error' => 1013]; 
+            return ['error' => 1013];
         }
         $user->money -= $costUpgrage;
 
@@ -108,8 +106,8 @@ class Shop {
         $this->db->updateInventoryLevel($itemId, $item['level']);
 
         return [
-            'itemId' => $item->id,
-            'level' => $item->level + 1
+            'itemId' => $item['id'],
+            'level' => $item['level']
         ];
     }
 }
