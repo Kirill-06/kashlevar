@@ -1,6 +1,5 @@
 import React from 'react';
 import { IBasePage, PAGES } from '../PageManager';
-import Button from '../../components/Button/Button';
 import './Welcome.scss';
 
 const Welcome: React.FC<IBasePage> = (props: IBasePage) => {
@@ -21,7 +20,7 @@ const Welcome: React.FC<IBasePage> = (props: IBasePage) => {
                 Удачи!
             </div>
             <div >
-                <Button className='welcome-button' onClick={startGameHandler}/>
+                <button className='welcome-button' onClick={startGameHandler}/>
             </div>
         </div>
     );
