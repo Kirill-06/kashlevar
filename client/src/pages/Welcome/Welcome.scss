@@ -66,5 +66,9 @@
         cursor: pointer;
         z-index: 10;
         text-indent: -9999px;
+
+        &:hover {
+            transform: scale(1.05);
+        }
     }
 }

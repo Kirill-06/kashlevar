@@ -1,144 +1,141 @@
 @import '../../scss/variables';
-
-@keyframes dots-move {
-    1% { box-shadow: -5px 9999px 0 -4px currentColor; }
-    50% { box-shadow: 15px 9999px 0 0px currentColor; }
-    100% { box-shadow: 30px 9999px 0 -4px currentColor; }
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .preloader {
-    position: fixed;
-    top: 0;
-    left: 0;
-
-    width: 100%;
-    height: 100vh;
-
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    flex-direction: column;
+    min-height: 100vh;
+    width: 100vw;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
 
-    background-image: url('../../assets/img/background/background.jpg');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
+    &-background {
+        position: fixed;
+        top: -20px;
+        left: -20px;
+        right: -20px;
+        bottom: -20px;
+        background: url('../../assets/img/background/city.png') center center / cover no-repeat;
+        filter: blur(10px);
+        z-index: -2;
+    }
 
-    color: $text-color;
+    &-texture {
+        position: fixed;
+        top: 63%;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        opacity: 0.1;
+        z-index: -1;
+        background: url('../../assets/img/background/texture.png') center center / cover no-repeat;
+    } 
 
-    >span {
+    &-log {
         position: absolute;
         top: 50%;
         left: 50%;
-        font-size: 16px;
-        transform: translate(-40%, 10px);
+        transform: translate(-50%, -50%);
+        width: 100%;
+        height: 100%;
+        max-width: 500px;
+        max-height: 100px;
+        background: url('../../assets/img/logo/cigarette.png') center center / contain no-repeat;
+        z-index: 0;
+        object-fit: contain;
+        
     }
 
-    >div {
+    &-circle {
+        position: absolute;
+        bottom: 20px; 
+        right: 20px; 
+        width: 100px;
+        height: 100px; 
+        background: url('../../assets/img/preloader.png') center center / contain no-repeat;
+        z-index: 10;
+        object-fit: contain;
+
+        animation: rotate 2s linear infinite; 
+    }
+
+    &-title {
+        font-family: 'Cezanne', serif;
+        font-weight: 400;
+        font-style: normal;
+        font-size: 200px;
+        line-height: 100%;
+        letter-spacing: 0%;
+        text-align: center;
+        position: absolute;
+        top: 63%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 0;
+        user-select: none;
+        margin: 0;
+        padding: 0;
         display: flex;
         align-items: center;
-        justify-content: center;
+        gap: 40px; 
     }
 
-    &-wrapper {
-        position: absolute;
-        top: 0;
-        left: 0;
-    
-        width: 100%;
-        height: 100vh;
-        background-color: #000B;
+    &-rectangle {
+        width: 371px;
+        height: 7px;
+        opacity: 1;
+        border-radius: 80px;
+        background: #fff;
     }
 }
 
-.preloader__dots {
-    $size: 8px;
 
-    position: relative;
-    top: -9999px;
-    width: $size;
-    height: $size;
-    border-radius: 50%;
-    background-color: currentColor;
-    box-shadow: 22.5px 9999px 0 -5px currentColor;
-    animation: dots-move 1.5s infinite linear;
-    animation-delay: -0.85s;
-
-    &::after, &::before {
-        content: "";
-        display: block;
-        position: absolute;
-        top: 0;
-        width: $size;
-        height: $size;
-        border-radius: 50%;
-        background-color: currentColor;
-        color: currentColor;
-    }
-
-    &::before {
-        box-shadow: 22.5px 9999px 0 -5px currentColor;
-        animation: dots-move 1.5s infinite linear;
-        animation-delay: -1.85s;
-    }
-
-    &::after {
-        box-shadow: 22.5px 9999px 0 -5px currentColor;
-        animation: dots-move 1.5s infinite linear;
-        animation-delay: -2.85s;
-    }
-}
-
-.preloader__authors {
-    position: absolute;
-    bottom: 28px;
-    left: 28px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-end;
-
-    font-size: 18px;
-
-    >h1 { font-size: 16px; }
-
-    >* {
-        width: 100%;
-        display: flex;
+@media (max-width: 900px) {
+    .preloader {
         justify-content: flex-start;
-        margin: 2px 0;
-    }
-
-    >div {
-        position: relative;
-        height: 32px;
-
-        >span {
-            position: relative;
-            height: 100%;
+        padding: 20px;
+        min-height: 100vh;
+        height: auto;
+        
+        &-title {
+            font-family: 'Cezanne', serif;
+            font-weight: 400;
+            font-style: normal;
+            font-size: 100px;
+            line-height: 100%;
+            letter-spacing: 0%;
+            text-align: center;
+            position: absolute;
+            top: 55%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             width: 100%;
-            display: flex;
-            align-items: center;
-            padding: 0 8px;
-        }
-
-        &::before {
-            content: '';
             display: block;
-            min-width: 32px;
-            min-height: 32px;
-            width: 32px;
-            height: 32px;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: contain;
         }
-
-        &.alex {
-            &::before {
-                background-image: url('../../assets/img/authors/alex_pixel-art.png');
-                background-size: 140%;
-            }
+        
+        &-rectangle {
+            display: none !important;
+        }
+        &-texture {
+            top: 60%;
+        }
+        
+        &-background {
+            top: -20px;
+            left: -20px;
+            right: -20px;
+            bottom: -20px;
+            filter: blur(10px);
         }
     }
 }
