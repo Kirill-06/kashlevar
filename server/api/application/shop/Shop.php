@@ -54,8 +54,60 @@ class Shop {
         $this->db->addItemToPerson($person->id, $itemId, $item->base_level, $item->value);
     }
 
+    
+    public function upgradeCost($personId)
+    {
+        $inventory = $this->db->getInventoryByPerson($personId);
+
+        $items = array_map(
+            function($item) {
+                $currentLevel = $item['level'] + 1;
+                $upgradeCost = round($item['cost'] / 2 + (1.6 * ($currentLevel ^ 2)));
+
+                return [
+                    'id' => $item['id'],
+                    'cost' => $upgradeCost,
+                    'level' => $currentLevel
+                ];
+            }, 
+            $inventory
+        );
+
+        if (empty($items)) {
+            return ['error' => 1015];
+        }
+
+        return $items;
+    }
+
     public function upgradeItem($userId, $itemId) 
     {
+        $user = $this->db->getUserById($userId);
+        $person = $this->db->getUserPerson($userId);
+        $item = $this->db->getInventoryById($itemId);
+        if (!$item){
+            return ['error' => 1014];
+        }
         
+        foreach ($this->upgradeCost($person->id) as $item){
+
+            if ($item['id'] == $itemId){
+                $costUpgrage = $item['cost'];
+                break;
+            }
+        }
+
+        if ($user->money < $costUpgrage){
+            return ['error' => 1013];
+        }
+        $user->money -= $costUpgrage;
+
+        $this->db->updateUserMoney($userId, $user->money);
+        $this->db->updateInventoryLevel($itemId, $item['level']);
+
+        return [
+            'itemId' => $item['id'],
+            'level' => $item['level']
+        ];
     }
 }
