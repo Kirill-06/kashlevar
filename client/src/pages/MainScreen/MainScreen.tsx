@@ -105,7 +105,7 @@ const MainScreen: React.FC<IBasePage> = (props: IBasePage) => {
     fetchInitial();
   }
 
-  const onAscendClick = () => console.log('Ascension clicked');
+  const onAscendClick = () => setPage(PAGES.GAME); 
   const onShopClick = () => setPage(PAGES.SHOP); 
   const onRatingClick = () => console.log('Rating clicked');
 
