@@ -1,0 +1,64 @@
+  services:
+    php-fpm:
+      build:
+        context: ./server
+        dockerfile: ./php/Dockerfile
+      container_name: php-fpm
+      networks:
+        - backend
+      develop:
+        watch:
+          - action: sync
+            path: ./server/api
+            target: /var/www/html
+      depends_on:
+          - postgres
+
+    nginx-api:
+      build:
+        context: .
+        dockerfile: ./server/nginx/Dockerfile
+        args:
+          - NGINX_CONF=${BACKEND_NGINX_CONF}
+      container_name: nginx-api
+      ports:
+        - "${NGINX_API_PORT}:80"
+      depends_on:
+        - php-fpm
+      networks:
+        - backend
+
+    nginx-frontend:
+      build:
+        context: .
+        dockerfile: ./client/Dockerfile
+        args:
+          - NGINX_CONF=${FRONTEND_NGINX_CONF}
+      container_name: nginx-frontend
+      ports:
+        - "${NGINX_FRONTEND_PORT}:80"
+      networks:
+        - backend
+      develop:
+        watch:
+          - action: sync
+            path: ./client
+            target: /app
+
+    postgres:
+      image: postgres:16
+      container_name: postgres
+      environment:
+        POSTGRES_DB: ${NAME_DB}
+        POSTGRES_USER: ${USER_DB}
+        POSTGRES_PASSWORD: ${PASSWORD_DB}
+      volumes:
+        - ${PATH_DB}:/var/lib/postgresql/data
+        - ./server/api/application/db/init:/docker-entrypoint-initdb.d
+      ports:
+        - "${PORT_DB}:5432"
+      networks:
+        - backend
+
+  networks:
+    backend:

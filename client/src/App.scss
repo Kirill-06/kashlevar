@@ -1,0 +1,22 @@
+@use './scss/variables.scss' as *;
+
+@font-face {
+    font-family: 'Play';
+    src: url('./assets/fonts/Play-Regular.ttf');
+}
+
+.app {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: transparent;
+}
+
+.absolute {
+    position: absolute;
+    top: 0;
+    right: 1rem;
+}

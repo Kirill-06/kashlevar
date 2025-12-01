@@ -1,0 +1,18 @@
+FROM php:8.2-fpm
+
+RUN apt-get update && apt-get install -y \
+    nginx \
+    libpq-dev \
+    libzip-dev \
+    unzip \
+    git \
+ && docker-php-ext-install pdo pdo_pgsql pgsql \
+ && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+COPY ./php/local.ini /usr/local/etc/php/conf.d/local.ini
+WORKDIR /var/www/html
+COPY ./api /var/www/html
+COPY ./nginx/api.prod.conf /etc/nginx/conf.d/default.conf
+RUN rm -f /etc/nginx/sites-enabled/default || true
+EXPOSE 80
+CMD ["bash", "-c", "php-fpm & nginx -g 'daemon off;'"]
