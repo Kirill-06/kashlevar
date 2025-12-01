@@ -16,7 +16,7 @@ class Answer {
         '700' => 'No skins',
         '701' => 'Skin is not found',
         '706' => 'Text message is empty',
-        '707' => 'Could not send message', // e-mail;
+        '707' => 'Could not send message',
         '708' => 'Invalid code from E-mail',
         '709' => 'Session did not start or you need use previous method',
         '800' => 'Not found object',
@@ -42,29 +42,32 @@ class Answer {
     );
 
     static function response($data) {
-        if ($data) {
-            if (!is_bool($data) && array_key_exists('error', $data)) {
-                $code = $data['error'];
-                return [
-                    'result' => 'error',
-                    'error' => [
-                        'code' => $code,
-                        'text' => self::$CODES[$code]
-                    ]
-                ];
-            }
+        if (is_array($data) && array_key_exists('error', $data)) {
+            $code = $data['error'];
             return [
-                'result' => 'ok',
-                'data' => $data
+                'result' => 'error',
+                'error'  => [
+                    'code' => $code,
+                    'text' => self::$CODES[$code] ?? 'Unknown error'
+                ]
             ];
         }
+
+        if ($data !== null) {
+            return [
+                'result' => 'ok',
+                'data'   => $data
+            ];
+        }
+
         $code = 9000;
         return [
             'result' => 'error',
-            'error' => [
+            'error'  => [
                 'code' => $code,
-                'text' => self::$CODES[$code]
+                'text' => self::$CODES[$code] ?? 'Unknown error'
             ]
         ];
     }
+
 }

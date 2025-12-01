@@ -124,13 +124,22 @@ class DB
         );
     }
 
-    private function updatePersonLastUpdate($personId) 
+    public function updatePersonLastUpdate($personId, $timestamp = null) 
     {
-        $this->execute(
-            "UPDATE persons SET last_update=CURRENT_TIMESTAMP WHERE id=?",
-            [$personId]
-        );
+        if ($timestamp === null) {
+            $this->execute(
+                "UPDATE persons SET last_update=CURRENT_TIMESTAMP WHERE id=?",
+                [$personId]
+            );
+        } else {
+            $date = date('Y-m-d H:i:s', $timestamp);
+            $this->execute(
+                "UPDATE persons SET last_update=? WHERE id=?",
+                [$date, $personId]
+            );
+        }
     }
+
 
     public function deletePerson($personId)
     {
@@ -240,10 +249,31 @@ class DB
     public function getMessages()
     {
         return $this->queryAll(
-            "SELECT u.name AS author, m.message AS message,
-                                to_char(m.created, 'yyyy-mm-dd hh24:mi:ss') AS created FROM messages as m 
-                                LEFT JOIN users as u on u.id = m.user_id 
-                                ORDER BY m.created DESC"
+            "SELECT 
+                u.username AS author,
+                m.message AS message,
+                m.created AS created
+            FROM messages AS m 
+            LEFT JOIN users AS u ON u.id = m.user_id 
+            ORDER BY m.created DESC"
         );
     }
+    public function getAllPersonsWithUsers()
+    {
+        return $this->queryAll("
+            SELECT 
+                p.id,
+                p.user_id,
+                p.hp,
+                p.happines,
+                p.created,
+                p.last_update,
+                p.status,
+                p.active,
+                u.username
+            FROM persons p
+            JOIN users u ON u.id = p.user_id
+        ");
+    }
+
 }
