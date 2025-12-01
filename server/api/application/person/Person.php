@@ -15,7 +15,7 @@ class Person {
         ];
     }
     
-   public function getInventory($userId) {
+    public function getInventory($userId) {
         $person = $this->db->getUserPerson($userId);
         if (!$person) {
             $this->db->createPerson($userId);
@@ -67,7 +67,6 @@ class Person {
 
         return $this->getPerson($userId);
     }
-
     
     private function findItemInInventory($personId, $itemId) {
         $inventory = $this->db->getInventoryByPerson($personId);
@@ -102,7 +101,6 @@ class Person {
 
         $this->isDead($userId);
     }
-
     
     public function update($userId, $happinessDecayRate, $decayInterval) {
         $person = $this->db->getUserPerson($userId);
@@ -110,7 +108,7 @@ class Person {
             return ['error' => 904];
         }
 
-        if ($person->status === 'dead') {
+        if ($person->status === 'dead' || $person->status === 'inHell') {
             return $this->getPerson($userId);
         }
 
@@ -132,10 +130,17 @@ class Person {
         $H1 = $H0 - $happinessLost;
 
         if ($H1 <= 0) {
-            $intervalsToDeath = (int)ceil($H0 / $happinessDecayRate);
-            $deathTs = $lastUpdate + $intervalsToDeath * $decayInterval;
+            $intervalsToZero = (int)ceil($H0 / $happinessDecayRate);
+            $zeroTs = $lastUpdate + $intervalsToZero * $decayInterval;
+
             $this->db->updatePersonHappines($person->id, 0);
-            $this->killPerson($person->id, $deathTs);
+
+            if ($person->status === 'alive') {
+                $this->moveToHell($person->id, $zeroTs);
+            } elseif ($person->status === 'resurrected') {
+                $this->db->deletePerson($person->id);
+                $this->db->createPerson($userId);
+            }
         } else {
             $this->db->updatePersonHappines($person->id, $H1);
             $this->db->updatePersonLastUpdate($person->id);
@@ -209,36 +214,68 @@ class Person {
             'user'   => $userPosition
         ];
     }
+
     
-    private function resurrect() {
-
-    }
-
-    private function killPerson($personId, $deathTimeTs = null) {
-        if ($deathTimeTs === null) {
-            $deathTimeTs = time();
+    private function isDead($userId) {
+        $person = $this->db->getUserPerson($userId);
+        if (!$person) {
+            return true;
         }
 
+        if ($person->status === 'dead' || $person->status === 'inHell') {
+            return true;
+        }
+
+        if ($person->status === 'resurrected'
+            && ($person->happines <= 0 || $person->hp <= 0)) {
+
+            $this->db->deletePerson($person->id);
+
+            $this->db->createPerson($userId);
+
+            return true;
+        }
+
+        if ($person->status === 'alive'
+            && ($person->happines <= 0 || $person->hp <= 0)) {
+
+            $this->moveToHell($person->id);
+            return true;
+        }
+
+        return false;
+    }
+
+    public function resurrectFromHell(int $userId): array
+    {
+        $person = $this->db->getUserPerson($userId);
+        if (!$person) {
+            return ['error' => 904];
+        }
+
+        $this->db->updatePersonHP($person->id, 100);
+        $this->db->updatePersonHappines($person->id, 100);
+        $this->db->updatePersonStatus($person->id, 'resurrected');
+        $this->db->setPersonActive($person->id, 1);
+        $this->db->updatePersonLastUpdate($person->id);
+
+        return [
+            'id'       => $person->id,
+            'status'   => 'resurrected',
+            'hp'       => 100,
+            'happines' => 100,
+        ];
+    }
+
+    private function moveToHell(int $personId, ?int $timeTs = null): void
+    {
+        if ($timeTs === null) {
+            $timeTs = time();
+        }
 
         $this->db->updatePersonHP($personId, 0);
         $this->db->updatePersonHappines($personId, 0);
-        $this->db->updatePersonStatus($personId, 'dead');
-        $this->db->updatePersonLastUpdate($personId, $deathTimeTs);
-    }
-
-
-    private function isDead($userId) {
-        $person = $this->db->getUserPerson($userId);
-        
-        if ($person->status == 'dead') {
-            return true;
-        }
-        
-        if ($person->happines <= 0 || $person->hp <= 0) {
-            $this->killPerson($person->id);
-            return true;
-        }
-        
-        return false;
+        $this->db->updatePersonStatus($personId, 'inHell');
+        $this->db->updatePersonLastUpdate($personId, $timeTs);
     }
 }

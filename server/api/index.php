@@ -43,8 +43,13 @@ function result($params) {
 
 
             //tower
-
             default: return ['error' => 102];
+
+            
+            // hell
+            case 'getHellTasks':   return $app->getHellTasks($params);
+            case 'solveHellTasks': return $app->solveHellTasks($params);
+
 
         }
     }
