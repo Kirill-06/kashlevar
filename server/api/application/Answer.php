@@ -26,6 +26,7 @@ class Answer {
         '902' => 'Item not found in inventory',
         '903' => 'Cannot perform action - person is dead',
         '904' => 'Person not found',
+        '905' => 'E-liquid is empty, please refill your vape',
         '1000' => 'Division by zero',
         '1006' => 'User with this email is already registered',
         '1010' => 'Catalog is empty',
@@ -34,6 +35,7 @@ class Answer {
         '1013' => 'Not enough money',
         '1014' => 'Cannot upgrade item - not owned',
         '1015' => 'Inventory is empty',
+        '1016' => 'Cannot refill item - not owned',
         '8001' => 'At least one of the parameters must be non-zero.',
         '8002' => 'There are no real roots',
         '9000' => 'Unknown error'

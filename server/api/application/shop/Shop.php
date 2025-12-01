@@ -110,4 +110,49 @@ class Shop {
             'level' => $item['level']
         ];
     }
+
+    public function refillItem($userId, $itemId)
+    {
+        $user = $this->db->getUserById($userId);
+        if (!$user) {
+            return ['error' => 705];
+        }
+
+        $person = $this->db->getUserPerson($userId);
+        if (!$person) {
+            return ['error' => 904];
+        }
+
+        $inventoryItem = $this->db->getInventoryById($itemId);
+        if (!$inventoryItem) {
+            return ['error' => 1016];
+        }
+
+        if ($inventoryItem->person_id != $person->id) {
+            return ['error' => 1016];
+        }
+
+        if ($inventoryItem->type !== 'vape') {
+            return ['error' => 800];
+        }
+
+        $refillCost = round($inventoryItem->cost / 4);
+
+        if ($user->money < $refillCost) {
+            return ['error' => 1013];
+        }
+
+        $user->money -= $refillCost;
+        $this->db->updateUserMoney($userId, $user->money);
+
+        $fullValue = $inventoryItem->value;
+        $this->db->updateInventoryCurrentValue($itemId, $fullValue);
+
+        return [
+            'itemId'        => $inventoryItem->id,
+            'current_value' => $fullValue,
+            'money'         => $user->money,
+            'refill_cost'   => $refillCost
+        ];
+    }
 }

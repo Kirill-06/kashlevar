@@ -209,4 +209,19 @@ class Application {
         }
         return $this->person->update($user->id, 4, 100);
     }
+
+    //заправка
+    public function refillItem($params) {
+        if (!($params['token'] && $params['itemId'])) {
+            return ['error' => 242];
+        }
+
+        $user = $this->user->getUser($params['token']);
+        if (!$user) {
+            return ['error' => 705];
+        }
+
+        return $this->shop->refillItem($user->id, $params['itemId']);
+    }
+
 }
