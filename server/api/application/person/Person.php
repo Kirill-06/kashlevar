@@ -106,39 +106,126 @@ class Person {
     
     public function update($userId, $happinessDecayRate, $decayInterval) {
         $person = $this->db->getUserPerson($userId);
-        
-        if ($this->isDead($userId)) {
-            return ['error' => 901];
+        if (!$person) {
+            return ['error' => 904];
         }
-        
-        $lastUpdate = strtotime($person->last_update);
-        $currentTime = time();
-        $timePassed = $currentTime - $lastUpdate;
-        
-        $happinessLost = floor($timePassed / $decayInterval) * $happinessDecayRate;
-        
-        if ($happinessLost > 0) {
-            $newHappines = $person->happines - $happinessLost;
-            $this->db->updatePersonHappines($person->id, $newHappines);
+
+        if ($person->status === 'dead') {
+            return $this->getPerson($userId);
+        }
+
+        $lastUpdate   = strtotime($person->last_update);
+        $currentTime  = time();
+        $timePassed   = $currentTime - $lastUpdate;
+
+        if ($timePassed <= 0) {
+            return $this->getPerson($userId);
+        }
+
+        $intervalsPassed = floor($timePassed / $decayInterval);
+        if ($intervalsPassed <= 0) {
+            return $this->getPerson($userId);
+        }
+
+        $H0 = $person->happines;
+        $happinessLost = $intervalsPassed * $happinessDecayRate;
+        $H1 = $H0 - $happinessLost;
+
+        if ($H1 <= 0) {
+            $intervalsToDeath = (int)ceil($H0 / $happinessDecayRate);
+            $deathTs = $lastUpdate + $intervalsToDeath * $decayInterval;
+            $this->db->updatePersonHappines($person->id, 0);
+            $this->killPerson($person->id, $deathTs);
+        } else {
+            $this->db->updatePersonHappines($person->id, $H1);
             $this->db->updatePersonLastUpdate($person->id);
-            $this->killPerson($person->id);
         }
-        
+
         return $this->getPerson($userId);
     }
     
-    public function getRating() {
+    public function getRating($userId) {
+        $persons = $this->db->getAllPersonsWithUsers();
 
+        if (!$persons || count($persons) === 0) {
+            return ['error' => 9000];
+        }
+
+        $now = time();
+        $rating = [];
+
+        foreach ($persons as $p) {
+            $createdTs = strtotime($p['created']);
+
+            if ($p['status'] === 'dead') {
+                $deathTs = strtotime($p['last_update']);
+                $aliveSeconds = max(0, $deathTs - $createdTs);
+            } else {
+                $aliveSeconds = max(0, $now - $createdTs);
+            }
+
+            $rating[] = [
+                'user_id'       => (int)$p['user_id'],
+                'username'      => $p['username'],
+                'person_id'     => (int)$p['id'],
+                'status'        => $p['status'],
+                'hp'            => (int)$p['hp'],
+                'happines'      => (int)$p['happines'],
+                'alive_seconds' => $aliveSeconds,
+            ];
+        }
+
+        usort($rating, function($a, $b) {
+            $aAlive = ($a['status'] === 'alive');
+            $bAlive = ($b['status'] === 'alive');
+
+            if ($aAlive && !$bAlive) return -1;
+            if (!$aAlive && $bAlive) return 1;
+
+            if ($a['alive_seconds'] == $b['alive_seconds']) return 0;
+            return ($a['alive_seconds'] > $b['alive_seconds']) ? -1 : 1;
+        });
+
+        $userPosition = null;
+
+        foreach ($rating as $index => &$row) {
+            $row['position'] = $index + 1;
+
+            if ($row['user_id'] === (int)$userId) {
+                $userPosition = [
+                    'user_id'       => $row['user_id'],
+                    'username'      => $row['username'],
+                    'person_id'     => $row['person_id'],
+                    'position'      => $row['position'],
+                    'alive_seconds' => $row['alive_seconds'],
+                    'status'        => $row['status'],
+                ];
+            }
+        }
+        unset($row);
+
+        return [
+            'rating' => $rating,
+            'user'   => $userPosition
+        ];
     }
     
     private function resurrect() {
 
     }
 
-    private function killPerson($personId) {
+    private function killPerson($personId, $deathTimeTs = null) {
+        if ($deathTimeTs === null) {
+            $deathTimeTs = time();
+        }
+
+
         $this->db->updatePersonHP($personId, 0);
+        $this->db->updatePersonHappines($personId, 0);
         $this->db->updatePersonStatus($personId, 'dead');
+        $this->db->updatePersonLastUpdate($personId, $deathTimeTs);
     }
+
 
     private function isDead($userId) {
         $person = $this->db->getUserPerson($userId);

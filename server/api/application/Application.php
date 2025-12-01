@@ -224,4 +224,19 @@ class Application {
         return $this->shop->refillItem($user->id, $params['itemId']);
     }
 
+    public function getRating($params) 
+    {
+        if (empty($params['token'])) {
+            return ['error' => 242];
+        }
+
+        $user = $this->user->getUser($params['token']);
+        if (!$user) {
+            return ['error' => 705];
+        }
+
+        return $this->person->getRating($user->id);
+    }
+
+
 }

@@ -33,7 +33,7 @@ function result($params) {
             case 'getInventory': return $app->getInventory($params);
             case 'puff': return $app->puff($params);
             case 'update': return $app->update($params); //loop
-            // case 'getRating': return $app->getRating($params);
+            case 'getRating': return $app->getRating($params);
 
             // shop
             case 'getCatalog': return $app->getCatalog($params);

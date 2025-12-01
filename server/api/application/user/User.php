@@ -11,13 +11,13 @@ class User {
 
     public function login($username, $hash_password, $rnd) {
         $user = $this->db->getUserByUserName($username);
-        if (!$user) {
+        if ($user) {
             if (md5($user->hash_password . $rnd) === $hash_password) {
                 $token = md5(rand());
                 $this->db->updateToken($user->id, $token);
                 return [
                     'id' => $user->id,
-                    'name' => $user->username,
+                    'username' => $user->username,
                     'token' => $token
                 ];
             }
@@ -25,6 +25,7 @@ class User {
         }
         return ['error' => 1005];
     }
+
 
     public function logout($token) {
         $user = $this->db->getUserByToken($token);
