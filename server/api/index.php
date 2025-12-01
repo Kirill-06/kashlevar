@@ -39,6 +39,8 @@ function result($params) {
             case 'getCatalog': return $app->getCatalog($params);
             case 'buy': return $app->buy($params);
             case 'upgradeItem': return $app->upgradeItem($params);
+            case 'refillItem': return $app->refillItem($params);
+
 
             //tower
 

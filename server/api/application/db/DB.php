@@ -207,6 +207,7 @@ class DB
         return $this->query(
             "SELECT 
                     inventory.id,
+                    inventory.person_id,
                     inventory.level,
                     inventory.current_value,
                     items.name,
@@ -219,6 +220,7 @@ class DB
             [$itemId]
         );
     }
+
 
     public function getChatHash()
     {

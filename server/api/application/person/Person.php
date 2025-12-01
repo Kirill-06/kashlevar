@@ -15,47 +15,59 @@ class Person {
         ];
     }
     
-    public function getInventory($userId) {
+   public function getInventory($userId) {
         $person = $this->db->getUserPerson($userId);
         if (!$person) {
             $this->db->createPerson($userId);
             $person = $this->db->getUserPerson($userId);
         }
+
         $inventory = $this->db->getInventoryByPerson($person->id);
+        if (!$inventory) {
+            return [];
+        }
+
         $result = array_map(
             function($item) {
                 return [
-                    'id' => $item['id'],
-                    'type' => $item['type'],
-                    'name' =>  $item['name'],
-                    'level' => $item['level'],
+                    'id'            => $item['id'],
+                    'type'          => $item['type'],
+                    'name'          => $item['name'],
+                    'level'         => $item['level'],
                     'current_value' => $item['current_value']
                 ];
-            }, $inventory);
-       
-        if (!$result) {
-            return ['error' => 900];
-        }
-        return $result;
+            },
+            $inventory
+        );
+        return $result ?: [];
     }
     
-    public function puff($userId, $itemId) {
+   public function puff($userId, $itemId) {
         $person = $this->db->getUserPerson($userId);
-        
-        if ($this->isDead($person->id)) {
-            return ['error' => 901];
+        if (!$person) {
+            return ['error' => 904];
         }
-        
+
+        if ($this->isDead($userId)) {
+            return $this->getPerson($userId);
+        }
+
         $item = $this->findItemInInventory($person->id, $itemId);
         if (!$item) {
-            return ['error' => 800];
+            return ['error' => 902];
         }
-        
-        $this->consumeItem($person->id, $itemId, $item->current_value);
-        $this->applyPuffEffects($person, $item->level);
-        
+
+        if ($item['current_value'] <= 0) {
+            return ['error' => 905];
+        }
+
+        $this->consumeItem($person->id, $itemId, $item['current_value']);
+
+        $this->applyPuffEffects($person, $item['level'], $userId);
+
         return $this->getPerson($userId);
     }
+
     
     private function findItemInInventory($personId, $itemId) {
         $inventory = $this->db->getInventoryByPerson($personId);
@@ -69,30 +81,28 @@ class Person {
     }
     
     private function consumeItem($personId, $itemId, $currentValue) {
-        $newValue = $currentValue - 1;
-        
-        if ($newValue <= 0) {
-            $this->db->removeItemFromPerson($personId, $itemId);
-        } else {
-            $this->db->updateInventoryCurrentValue($itemId, $newValue);
-        }
-    }
-    
-    private function applyPuffEffects($person, $level) {
-        $hpDamage = 2 + $level;
-        $happinessGain = round(5 + ($level * 1.5));
-        
-        $person->hp -= $hpDamage;
-        $person->happines += $happinessGain;
-
-        if ($person->hp <= 0 || $person->happines <= 0) {
-            $this->killPerson($person->id);
+        if ($currentValue <= 0) {
             return;
         }
 
+        $newValue = $currentValue - 1;
+        
+        $this->db->updateInventoryCurrentValue($itemId, max(0, $newValue));
+    }
+    
+    private function applyPuffEffects($person, $level, $userId) {
+        $hpDamage      = 2 + $level;
+        $happinessGain = round(5 + ($level * 1.5));
+        
+        $person->hp       -= $hpDamage;
+        $person->happines += $happinessGain;
+
         $this->db->updatePersonHP($person->id, $person->hp);
         $this->db->updatePersonHappines($person->id, $person->happines);
+
+        $this->isDead($userId);
     }
+
     
     public function update($userId, $happinessDecayRate, $decayInterval) {
         $person = $this->db->getUserPerson($userId);
