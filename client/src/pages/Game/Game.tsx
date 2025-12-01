@@ -43,12 +43,6 @@ const GamePage: React.FC<IBasePage> = (props: IBasePage) => {
             /************************/
             const { x, y } = kapitoshka;
             printKapitoshka(canvas, { x, y }, getSprite(1));
-
-            /******************/
-            /* нарисовать FPS */
-            /******************/
-            canvas.text(WINDOW.LEFT + 0.2, WINDOW.TOP + 0.5, String(FPS), GREEN);
-            /************************/
             /* отрендерить картинку */
             /************************/
             canvas.render();
@@ -125,8 +119,6 @@ const GamePage: React.FC<IBasePage> = (props: IBasePage) => {
     });
 
     return (<div className='game'>
-        <h1>Игра</h1>
-        <Button onClick={backClickHandler} text='Назад' />
         <div id={GAME_FIELD} className={GAME_FIELD}></div>
     </div>)
 }
