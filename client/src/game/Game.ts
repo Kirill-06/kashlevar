@@ -5,7 +5,7 @@ class Game {
     private kapitoshka: TPoint;
 
     constructor() {
-        this.kapitoshka = { x: 2, y: 5 };
+        this.kapitoshka = { x: 5, y: 5 };
     }
 
     destructor() {

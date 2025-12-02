@@ -156,7 +156,7 @@ class Canvas {
     }
 
     clear(): void {
-        this.contextV.fillStyle = '#305160';
+        this.contextV.fillStyle = 'black';
         this.contextV.fillRect(0, 0, this.WIDTH, this.HEIGHT);
     }
 
