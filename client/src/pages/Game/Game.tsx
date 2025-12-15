@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState, useMemo, useRef } from 'react';
 import CONFIG from '../../config';
+import { EDIRECTION } from '../../config';
 import { IBasePage, PAGES } from '../PageManager';
 import Game from '../../game/Game';
 import { Canvas, useCanvas } from '../../services/canvas';
@@ -11,8 +12,8 @@ const GAME_FIELD = 'game-field';
 const GamePage: React.FC<IBasePage> = (props: IBasePage) => {
     const { SPRITE_SIZE } = CONFIG;
     const { setPage } = props;
-    let game: Game | null = null;
-    let canvas: Canvas | null = null;
+    const gameRef = useRef<Game | null>(null);
+    const canvasRef = useRef<Canvas | null>(null);
     const Canvas = useCanvas(render);
     const backgroundImage = useRef<HTMLImageElement | null>(null);
     useEffect(() => {
@@ -33,68 +34,74 @@ const GamePage: React.FC<IBasePage> = (props: IBasePage) => {
     function printKapitoshka(canvas: Canvas, { x = 0, y = 0 }, points: number[]): void {
         printFillSprite(spritesImage, canvas, { x, y }, points);
     }
+
+
     function render(FPS: number): void {
-        if (canvas && game) {
-            canvas.clearImage(backgroundImage.current!);
-            const { kapitoshka } = game.getScene();
-            const { x, y } = kapitoshka;
-            printKapitoshka(canvas, { x, y }, getSprite(1));
-            canvas.render();}}
+        const game = gameRef.current;
+        const canvas = canvasRef.current;
+        if (!game || !canvas) return;
+        game.update();
+        canvas.clearImage(backgroundImage.current!);
+        const { kapitoshka } = game.getScene();
+
+        printKapitoshka(canvas, kapitoshka, getSprite(1));
+        canvas.render();
+    }
+
+
     const mouseMove = (_x: number, _y: number) => {}
     const mouseClick = (_x: number, _y: number) => {}
     const mouseRightClick = () => {}
+
+
     useEffect(() => {
-        game = new Game();
-        const canvasWidth = window.innerWidth * 0.47;
-        const canvasHeight = window.innerHeight;
-        canvas = Canvas({
+    gameRef.current = new Game();
+    const canvasWidth = window.innerWidth * 0.47;
+    const canvasHeight = window.innerHeight;
+    canvasRef.current = Canvas({
         parentId: GAME_FIELD,
         WIDTH: canvasWidth,
         HEIGHT: canvasHeight,
         WINDOW: {
             LEFT: 0,
             TOP: 0,
-            WIDTH: Math.floor(canvasWidth/ SPRITE_SIZE),
-            HEIGHT: Math.floor(canvasHeight/ SPRITE_SIZE),
-        },
-        callbacks: {mouseMove,mouseClick,mouseRightClick,},
-    });
+            WIDTH: Math.floor(canvasWidth / SPRITE_SIZE),
+            HEIGHT: Math.floor(canvasHeight / SPRITE_SIZE),
+            },
+            callbacks: { mouseMove, mouseClick, mouseRightClick },
+        });
+
         return () => {
-            // деинициализировать все экземпляры
-            game?.destructor();
-            canvas?.destructor();
-            canvas = null;
-            game = null;
-            if (interval) {
-                clearInterval(interval);
-                interval = null;
-            }
-        }
-    });
+        gameRef.current?.destructor();
+        canvasRef.current?.destructor();
+        gameRef.current = null;
+        canvasRef.current = null;
+        };
+    }, []); 
+
+
     useEffect(() => {
-        const keyDownHandler = (event: KeyboardEvent) => {
-            const delta = 0.2;
-            const keyCode = event.keyCode ? event.keyCode : event.which ? event.which : 0;
-            switch (keyCode) {
-                case 65: // a
-                    game?.move(-delta, 0);
-                break
-                case 68: // d
-                    game?.move(delta, 0);
-                break
-                case 87: // w
-                    game?.move(0, -delta);
-                break
-                case 83: // s
-                    game?.move(0, delta);
-                break
-            }
+    const keyDownHandler = (e: KeyboardEvent) => {
+        const game = gameRef.current;
+        if (!game) return;
+        if (e.key === 'a') game.moveDirection(EDIRECTION.LEFT);
+        if (e.key === 'd') game.moveDirection(EDIRECTION.RIGHT);
+        if (e.key === 'w') game.moveDirection(EDIRECTION.UP);
+    };
+    const keyUpHandler = (e: KeyboardEvent) => {
+        if (e.key === 'a' || e.key === 'd') {
+            gameRef.current?.stopHorizontal();
         }
-        document.addEventListener('keydown', keyDownHandler);
-        return () => {
-            document.removeEventListener('keydown', keyDownHandler);
-        }
-    });
+    };
+    document.addEventListener('keydown', keyDownHandler);
+    document.addEventListener('keyup', keyUpHandler);
+    return () => {
+        document.removeEventListener('keydown', keyDownHandler);
+        document.removeEventListener('keyup', keyUpHandler);
+    };
+}, []);
+
+
     return (<div className='game'>
         <div id={GAME_FIELD} className={GAME_FIELD}></div>
     </div>)

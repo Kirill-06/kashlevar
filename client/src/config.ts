@@ -10,7 +10,7 @@ export enum EDIRECTION {
     DOWN = 'down',
 };
 
-export type TWINDOW = {
+export type TWINDOW = { //откуда начинается карта
     LEFT: number;
     TOP: number;
     HEIGHT: number;
@@ -21,11 +21,11 @@ const CONFIG = {
     HOST: 'http://localhost:8080',
 
     CHAT_TIMESTAMP: 200, //ms
-
     SPRITE_SIZE: 64, // размер спрайта в пикселях
     LINE_OF_SPRITES: 10, // количество спрайтов в карте спрайтов
     WIDTH: 20, // ширина карты
-    HEIGHT: 32, // высота карты 
+    HEIGHT: 20, // высота карты 
+
     // игровое окно, видимое пользователю
     WINDOW: {
         LEFT: 0,
