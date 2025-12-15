@@ -8,9 +8,9 @@ class DB
     {
         $host = getenv('POSTGRES_HOST') ?: 'postgres';
         $port = getenv('POSTGRES_PORT') ?: '5432';
-        $user = getenv('POSTGRES_USER') ?: 'user';
-        $pass = getenv('POSTGRES_PASSWORD') ?: 'user';
-        $db   = getenv('POSTGRES_DB') ?: 'game_data';
+        $user = getenv('POSTGRES_USER') ?: 'messenger';
+        $pass = getenv('POSTGRES_PASSWORD') ?: 'messenger';
+        $db   = getenv('POSTGRES_DB') ?: 'messenger';
 
         $dsn = "pgsql:host=$host;port=$port;dbname=$db;";
         $this->pdo = new PDO($dsn, $user, $pass, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
