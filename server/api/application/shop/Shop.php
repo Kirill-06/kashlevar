@@ -1,117 +1,74 @@
 <?php
 
-class Shop {
-    private $db;
+class Shop
+{
+    private DB $db;
 
-    function __construct($db) 
+    public function __construct(DB $db)
     {
         $this->db = $db;
     }
 
-    public function getCatalog() 
+    public function getCatalog(): array
     {
         $catalog = $this->db->getCatalogItems();
+
         $result = array_map(
-            function($item) {
+            static function (array $item): array {
                 return [
-                    'id' => $item['id'],
-                    'name' =>  $item['name'],
-                    'cost' => $item['cost'],
-                    'type' => $item['type'],
-                    'value' => $item['value']
+                    'id'    => $item['id'],
+                    'name'  => $item['name'],
+                    'cost'  => $item['cost'],
+                    'type'  => $item['type'],
+                    'value' => $item['value'],
                 ];
-            }, $catalog);
-       
+            },
+            $catalog
+        );
+
         if (!$result) {
             return ['error' => 1010];
         }
+
         return $result;
     }
 
-    public function buy($userId, $itemId) 
+    public function buy(int $userId, int $itemId)
     {
         $item = $this->db->getItemById($itemId);
         if (!$item) {
             return ['error' => 1011];
         }
-        
+
         $person = $this->db->getUserPerson($userId);
+        if (!$person) {
+            return ['error' => 904];
+        }
 
         $inventory = $this->db->getInventoryByPerson($person->id);
         foreach ($inventory as $inv) {
-            if ($inv->item_id == $itemId) {
+            if ((int)($inv['item_id'] ?? 0) === $itemId) {
                 return ['error' => 1012];
             }
         }
 
         $user = $this->db->getUserById($userId);
-        if ($user->money < $item->cost) {
+        if (!$user) {
+            return ['error' => 705];
+        }
+
+        if ((int)$user->money < (int)$item->cost) {
             return ['error' => 1013];
         }
 
-        $user->money -= $item->cost;
-        $this->db->updateUserMoney($userId, $user->money);
-        $this->db->addItemToPerson($person->id, $itemId, $item->base_level, $item->value);
+        $newMoney = (int)$user->money - (int)$item->cost;
+        $this->db->updateUserMoney($userId, $newMoney);
+        $this->db->addItemToPerson((int)$person->id, $itemId, (int)$item->base_level, (int)$item->value);
+
+        return true;
     }
 
-    
-    public function upgradeCost($personId)
-    {
-        $inventory = $this->db->getInventoryByPerson($personId);
-
-        $items = array_map(
-            function($item) {
-                $currentLevel = $item['level'] + 1;
-                $upgradeCost = round($item['cost'] / 2 + (1.6 * ($currentLevel ^ 2)));
-
-                return [
-                    'id' => $item['id'],
-                    'cost' => $upgradeCost,
-                    'level' => $currentLevel
-                ];
-            }, 
-            $inventory
-        );
-
-        if (empty($items)) {
-            return ['error' => 1015];
-        }
-
-        return $items;
-    }
-
-    public function upgradeItem($userId, $itemId) 
-    {
-        $user = $this->db->getUserById($userId);
-        $person = $this->db->getUserPerson($userId);
-        $item = $this->db->getInventoryById($itemId);
-        if (!$item){
-            return ['error' => 1014];
-        }
-        
-        foreach ($this->upgradeCost($person->id) as $item){
-
-            if ($item['id'] == $itemId){
-                $costUpgrage = $item['cost'];
-                break;
-            }
-        }
-
-        if ($user->money < $costUpgrage){
-            return ['error' => 1013];
-        }
-        $user->money -= $costUpgrage;
-
-        $this->db->updateUserMoney($userId, $user->money);
-        $this->db->updateInventoryLevel($itemId, $item['level']);
-
-        return [
-            'itemId' => $item['id'],
-            'level' => $item['level']
-        ];
-    }
-
-    public function refillItem($userId, $itemId)
+    public function upgradeItem(int $userId, int $inventoryId): array
     {
         $user = $this->db->getUserById($userId);
         if (!$user) {
@@ -123,36 +80,100 @@ class Shop {
             return ['error' => 904];
         }
 
-        $inventoryItem = $this->db->getInventoryById($itemId);
-        if (!$inventoryItem) {
-            return ['error' => 1016];
+        $inv = $this->db->getInventoryById($inventoryId);
+        if (!$inv) {
+            return ['error' => 1014];
         }
 
-        if ($inventoryItem->person_id != $person->id) {
-            return ['error' => 1016];
+        if ((int)$inv->person_id !== (int)$person->id) {
+            return ['error' => 1014];
         }
 
-        if ($inventoryItem->type !== 'vape') {
-            return ['error' => 800];
-        }
+        $nextLevel = (int)$inv->level + 1;
+        $cost = ShopPricing::upgradeCost((float)$inv->cost, $nextLevel);
 
-        $refillCost = round($inventoryItem->cost / 4);
-
-        if ($user->money < $refillCost) {
+        if ((int)$user->money < $cost) {
             return ['error' => 1013];
         }
 
-        $user->money -= $refillCost;
-        $this->db->updateUserMoney($userId, $user->money);
-
-        $fullValue = $inventoryItem->value;
-        $this->db->updateInventoryCurrentValue($itemId, $fullValue);
+        $newMoney = (int)$user->money - $cost;
+        $this->db->updateUserMoney($userId, $newMoney);
+        $this->db->updateInventoryLevel($inventoryId, $nextLevel);
 
         return [
-            'itemId'        => $inventoryItem->id,
-            'current_value' => $fullValue,
-            'money'         => $user->money,
-            'refill_cost'   => $refillCost
+            'itemId' => (int)$inv->id,
+            'level'  => $nextLevel,
+            'money'  => $newMoney,
         ];
+    }
+
+    public function refillItem(int $userId, int $inventoryId): array
+    {
+        $user = $this->db->getUserById($userId);
+        if (!$user) {
+            return ['error' => 705];
+        }
+
+        $person = $this->db->getUserPerson($userId);
+        if (!$person) {
+            return ['error' => 904];
+        }
+
+        $inv = $this->db->getInventoryById($inventoryId);
+        if (!$inv) {
+            return ['error' => 1016];
+        }
+
+        if ((int)$inv->person_id !== (int)$person->id) {
+            return ['error' => 1016];
+        }
+
+        if ((string)$inv->type !== 'vape') {
+            return ['error' => 800];
+        }
+
+        $refillCost = ShopPricing::refillCost((float)$inv->cost);
+
+        if ((int)$user->money < $refillCost) {
+            return ['error' => 1013];
+        }
+
+        $newMoney = (int)$user->money - $refillCost;
+        $this->db->updateUserMoney($userId, $newMoney);
+
+        $fullValue = (int)$inv->value;
+        $this->db->updateInventoryCurrentValue($inventoryId, $fullValue);
+
+        return [
+            'itemId'        => (int)$inv->id,
+            'current_value' => $fullValue,
+            'money'         => $newMoney,
+            'refill_cost'   => $refillCost,
+        ];
+    }
+
+    public function upgradeCost(int $personId)
+    {
+        $inventory = $this->db->getInventoryByPerson($personId);
+
+        $items = array_map(
+            static function (array $item): array {
+                $nextLevel = (int)$item['level'] + 1;
+                $upgradeCost = ShopPricing::upgradeCost((float)$item['cost'], $nextLevel);
+
+                return [
+                    'id'    => $item['id'],
+                    'cost'  => $upgradeCost,
+                    'level' => $nextLevel,
+                ];
+            },
+            $inventory
+        );
+
+        if (empty($items)) {
+            return ['error' => 1015];
+        }
+
+        return $items;
     }
 }

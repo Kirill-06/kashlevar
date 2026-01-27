@@ -10,7 +10,7 @@ export enum EDIRECTION {
     DOWN = 'down',
 };
 
-export type TWINDOW = {
+export type TWINDOW = { //откуда начинается карта
     LEFT: number;
     TOP: number;
     HEIGHT: number;

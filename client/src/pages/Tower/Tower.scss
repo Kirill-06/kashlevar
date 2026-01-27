@@ -1,0 +1,149 @@
+.towerRoot {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: url('../../assets/img/background/minigame.png') center/cover no-repeat;
+}
+
+
+.towerTopBar {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  pointer-events: none; 
+}
+
+
+.towerTopBtn {
+  pointer-events: auto;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 38px;
+  padding: 0 14px;
+
+  border: 2px solid #0d0d0d;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.9);
+
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.towerHud {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  pointer-events: none;
+}
+
+.hudItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  height: 38px;
+  padding: 0 10px;
+
+  border: 2px solid #0d0d0d;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.hudIcon {
+  width: 20px;
+  height: 20px;
+  image-rendering: pixelated;
+}
+
+.hudValue {
+  font-weight: 900;
+  font-size: 14px;
+  color: #0d0d0d;
+  line-height: 1;
+}
+
+
+.towerShaft {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+
+  left: var(--shaft-left);
+  width: var(--shaft-width);
+
+  overflow: hidden;
+  pointer-events: none;
+  image-rendering: pixelated;
+}
+
+.platform {
+  position: absolute;
+  background: url("../../assets/img/tower/platform.png") left bottom no-repeat;
+  background-repeat: repeat-x;
+  background-size: var(--tilepx) var(--tilepx);
+  image-rendering: pixelated;
+  z-index: 1;
+}
+
+.ladder {
+  position: absolute;
+  background: url("../../assets/img/tower/ladder.png") center bottom no-repeat;
+  background-repeat: repeat-y;
+  background-size: var(--tilepx) var(--tilepx);
+  image-rendering: pixelated;
+  z-index: 2;
+}
+
+
+.playerWrap {
+  position: absolute;
+  will-change: left, bottom, transform;
+  z-index: 10;
+}
+
+.playerName {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 2px);
+  transform: translateX(-50%);
+  font-size: 12px;
+  font-weight: 700;
+  color: #0d0d0d;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(13, 13, 13, 0.65);
+  border-radius: 6px;
+  padding: 1px 6px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.playerSprite,
+.otherPlayerSprite {
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center bottom;
+  image-rendering: pixelated;
+}
+
+
+.dropItem {
+  position: absolute;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  pointer-events: none;
+  will-change: left, bottom, transform;
+  z-index: 8;
+}
+
+.dropCoin { }
+.dropTablet { }

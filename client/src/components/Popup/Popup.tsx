@@ -9,7 +9,7 @@ type TInnerButton = {
     isHover?: boolean;
     text: string;
     onClick: () => void;
-}
+};
 
 export type TPopupData = {
     className?: string;
@@ -24,42 +24,52 @@ const Popup: React.FC = () => {
     const [data, setData] = useState<TPopupData | null>(null);
 
     useEffect(() => {
+        if (!server) return;
+
         const showErrorHandler = (error: TError) => {
             const { code, text } = error;
             setData({
                 title: `Ошибка №${code}`,
                 text,
             });
-            setTimeout(() => setData(null), 3000);
-        }
-    
-        server.showError(showErrorHandler);
-    });
 
-    if (!data) return (<></>);
+            setTimeout(() => setData(null), 3000);
+        };
+
+        server.showError(showErrorHandler);
+    }, [server]);
+
+    if (!data) return null;
 
     const { title, text, buttons = [] } = data;
 
-    return (<div className="popup">
-        <div className={'popup-wrapper'}>
-            <div className='popup-text-block'>
-                <div className="popup-title">{title}</div>
-                <div className="popup--info-text">{text}</div>
-            </div>
-            <div className='buttons-block'>
-                {buttons.map((data, index) => {
-                    const { text, onClick, isHover } = data;
-                    return <Button
-                        variant='main'
-                        key={index}
-                        text={text}
-                        onClick={onClick}
-                        isHover={isHover}
-                    />
-                })}
+    return (
+        <div className="popup">
+            <div className="popup-wrapper">
+                <div className="popup-text-block">
+                    {title && <div className="popup-title">{title}</div>}
+                    {text && <div className="popup-info-text">{text}</div>}
+                </div>
+
+                {buttons.length > 0 && (
+                    <div className="popup-buttons">
+                        {buttons.map((btn, index) => {
+                            const { text, onClick, isHover } = btn;
+                            return (
+                                <Button
+                                    variant="main"
+                                    key={index}
+                                    text={text}
+                                    onClick={onClick}
+                                    isHover={isHover}
+                                />
+                            );
+                        })}
+                    </div>
+                )}
             </div>
         </div>
-    </div>);
-}
+    );
+};
 
 export default Popup;
