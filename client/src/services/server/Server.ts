@@ -1,9 +1,26 @@
 import md5 from 'md5';
 import CONFIG from "../../config";
 import Store from "../store/Store";
-import { TAnswer, TError, TMessagesResponse, TUser, UserInfo, UserProgress, UserVapes, ShopItem, RefillResult, UpgradeResult, RatingResponse, THellTasksSet, THellSolvePayload, THellSolveResult, } from "./types";
+import {TAnswer,
+  TError,
+  TMessagesResponse,
+  TMessages,
+  TUser,
+  UserInfo,
+  UserProgress,
+  UserVapes,
+  ShopItem,
+  RefillResult,
+  UpgradeResult,
+  RatingResponse,
+  THellTasksSet,
+  THellSolvePayload,
+  THellSolveResult,
+  TowerJoinResponse,
+  TowerMoveResponse,
+  TowerSceneUpdate, } from "./types";
 
-const { CHAT_TIMESTAMP, HOST } = CONFIG;
+const { HOST } = CONFIG;
 
 class Server {
     HOST = HOST;
@@ -23,7 +40,11 @@ class Server {
             if (token) {
                 params.token = token;
             }
-            const response = await fetch(`${this.HOST}/?${Object.keys(params).map(key => `${key}=${params[key]}`).join('&')}`);
+            const qs = Object.keys(params)
+              .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
+              .join('&');
+
+            const response = await fetch(`${this.HOST}/?${qs}`);
             const answer: TAnswer<T> = await response.json();
             if (answer.result === 'ok' && answer.data) {
                 return answer.data;
@@ -90,19 +111,8 @@ class Server {
         return null;
     }
 
-    // startChatMessages(cb: (hash: string) => void): void {
-    //     this.chatInterval = setInterval(async () => {
-    //         const result = await this.getMessages();
-    //         if (result) {
-    //             const { messages, hash } = result;
-    //             this.store.addMessages(messages);
-    //             cb(hash);
-    //         }
-    //     }, CHAT_TIMESTAMP);
-
-    // }
-
     async puff(itemId?: number): Promise<UserProgress | null> {
+        console.log('Server.puff вызван с itemId =', itemId);
         const params: Record<string, string> = {};
 
         if (typeof itemId === "number") {
@@ -205,6 +215,56 @@ class Server {
 
         const result = await this.request<THellSolveResult>('solveHellTasks', params);
         return result ?? null;
+    }
+
+    public async goToTower(): Promise<TowerJoinResponse | null> {
+      return this.request<TowerJoinResponse>('goToTower');
+    }
+
+    public async leaveTower(): Promise<{ active: boolean } | null> {
+      return this.request<{ active: boolean }>('leaveTower');
+    }
+
+    public async movePerson(payload: {
+      x: number;
+      y: number;
+      direction: string;
+      moveStatus: string;
+    }): Promise<TowerMoveResponse | null> {
+      return this.request<TowerMoveResponse>('movePerson', {
+        x: String(payload.x),
+        y: String(payload.y),
+        direction: payload.direction,
+        moveStatus: payload.moveStatus,
+      });
+    }
+
+    public async updateScene(personsHash: string, itemsHash: string): Promise<TowerSceneUpdate | null> {
+      return this.request<TowerSceneUpdate>('updateScene', {
+        personsHash,
+        itemsHash,
+      });
+    }
+
+
+    startChatMessages(onUpdate: (hash: string) => void, intervalMs: number = 1500): void {
+        if (this.chatInterval) return;
+
+        const tick = async () => {
+            const res = await this.getMessages();
+            if (!res) return;
+
+            if (res.messages) {
+                this.store.addMessages(res.messages);
+            }
+
+            onUpdate(res.hash);
+        };
+
+        void tick();
+        this.chatInterval = setInterval(() => {
+            void tick();
+        }, intervalMs);
     }
 
 

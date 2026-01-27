@@ -1,4 +1,4 @@
-import { UserProgress, TMessages, TUser, UserInfo } from "../server/types";
+import { TMessages, TUser, UserInfo } from "../server/types";
 
 const TOKEN = 'token';
 
@@ -46,9 +46,9 @@ class Store {
     }
 
     addMessages(messages: TMessages): void {
-        // TODO сделать, чтобы работало вот так
-        //this.messages.concat(messages);
-        // а вот это - плохой код!
+        
+        
+        
         if (messages?.length) {
             this.messages = messages;
         }

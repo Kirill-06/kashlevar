@@ -135,3 +135,45 @@ export type THellSolveResult = {
     resurrected: boolean;
     solved_count: number;
 };
+
+export type TowerJoinResponse = {
+  active: boolean;
+  x: number;
+  y: number;
+};
+
+export type TowerMoveResponse = {
+  x: number;
+  y: number;
+  direction: string;   
+  moveStatus: string;  
+};
+
+export type TowerScenePerson = {
+  person_id: number;
+  user_id: number;
+  username: string;
+  x: number;
+  y: number;
+  direction: string;
+  movestatus: string;
+  hp: number;
+  happines: number;
+  status: string;
+};
+
+export type TowerSceneItem = {
+  id: number;
+  kind: 'coin' | 'tablet';
+  value: number;
+  x: number;
+  y: number;
+};
+
+export type TowerSceneUpdate = {
+  personsHash: string;
+  itemsHash: string;
+  persons?: TowerScenePerson[];
+  items?: TowerSceneItem[];
+  picked?: any;
+};

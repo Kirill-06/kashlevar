@@ -20,13 +20,13 @@ export type TWINDOW = { //откуда начинается карта
 const CONFIG = {
     HOST: 'http://localhost:8080',
 
-    CHAT_TIMESTAMP: 200, //ms
-    SPRITE_SIZE: 64, // размер спрайта в пикселях
-    LINE_OF_SPRITES: 10, // количество спрайтов в карте спрайтов
-    WIDTH: 20, // ширина карты
-    HEIGHT: 20, // высота карты 
+    CHAT_TIMESTAMP: 200, 
 
-    // игровое окно, видимое пользователю
+    SPRITE_SIZE: 64, 
+    LINE_OF_SPRITES: 10, 
+    WIDTH: 50, 
+    HEIGHT: 32, 
+    
     WINDOW: {
         LEFT: 0,
         TOP: 0,
