@@ -26,7 +26,6 @@ class User {
         return ['error' => 1005];
     }
 
-
     public function logout($token) {
         $user = $this->db->getUserByToken($token);
         if ($user) {

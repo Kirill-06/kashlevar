@@ -11,27 +11,27 @@ const Chat: React.FC<IBasePage> = (props: IBasePage) => {
     const server = useContext(ServerContext);
     const store = useContext(StoreContext);
     const [messages, setMessages] = useState<TMessages>([]);
-    const [_, setHash] = useState<string>('');
+    const lastHashRef = useRef<string>('');
     const messageRef = useRef<HTMLInputElement>(null);
     const user = store.getUser();
 
     useEffect(() => {
-        // const newMessages = (hash: string) => {
-        //     const messages = store.getMessages();
-        //     if (messages?.length) {
-        //         setMessages(messages);
-        //         setHash(hash);
-        //     }
-        //}
+        if (!user) return;
 
-        // if (user) {
-        //     server.startChatMessages(newMessages);
-        // }
+        const onNewMessages = (hash: string) => {
+            const next = store.getMessages();
+            if (next?.length) {
+                setMessages([...next]);
+                lastHashRef.current = hash;
+            }
+        };
+
+        server.startChatMessages(onNewMessages);
 
         return () => {
             server.stopChatMessages();
         }
-    });
+    }, [server, store, user]);
 
     const input = useMemo(() => <input ref={messageRef} placeholder='сообщение' />, []);
 
@@ -44,7 +44,7 @@ const Chat: React.FC<IBasePage> = (props: IBasePage) => {
             }
         }
     }
-    const toGameClickHandler = () => setPage(PAGES.GAME);
+    const toGameClickHandler = () => setPage(PAGES.LOGIN);
     const backClickHandler = () => setPage(PAGES.LOGIN);
 
     if (!user) {
@@ -52,7 +52,6 @@ const Chat: React.FC<IBasePage> = (props: IBasePage) => {
             <h1>Чат</h1>
             <h1>Что-то пошло не так =(</h1>
             <Button onClick={toGameClickHandler} text='В игру!' />
-            <Button onClick={backClickHandler} text='Назад' />
         </div>)
     }
 

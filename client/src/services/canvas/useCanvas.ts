@@ -22,13 +22,13 @@ export default function useCanvas(render = (fps: number) => { }) {
             };
     })();
 
-    //переменные для FPS
+    
     let FPS = 0;
     let outFPS = 0;
     let lastTimestamp = Date.now(); 
 
     const animLoop = () => {
-        //calc fps
+        
         FPS++;
         const timestamp = Date.now();
         if (timestamp - lastTimestamp >= 1000) {
@@ -36,12 +36,12 @@ export default function useCanvas(render = (fps: number) => { }) {
             FPS = 0;
             lastTimestamp = timestamp;
         }
-        render(outFPS); //print scene
+        render(outFPS); 
         window.requestAnimFrame(animLoop);
     }
 
     return (params: TCanvas) => {
-        setTimeout(() => animLoop(), 300); // таймаут необходим для корректной отрисовки первого кадра сцены, потому что статика не успевает подгрузиться
+        setTimeout(() => animLoop(), 300); 
         return new Canvas(params)
     };
 }

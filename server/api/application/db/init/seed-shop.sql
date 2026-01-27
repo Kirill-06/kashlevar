@@ -1,6 +1,6 @@
-INSERT INTO items (name, cost, type, value)
-VALUES
-    ('XROS 5', 100, 'vape', 10),
-    ('Aegis Hero 5', 250, 'vape', 20),
-    ('Pasito II', 500, 'vape', 30)
-ON CONFLICT DO NOTHING;
+-- INSERT INTO items (name, cost, type, value)
+-- VALUES
+--     ('XROS 5', 100, 'vape', 10),
+--     ('Aegis Hero 5', 250, 'vape', 20),
+--     ('Pasito II', 500, 'vape', 30)
+-- ON CONFLICT DO NOTHING;

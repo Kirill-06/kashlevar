@@ -98,7 +98,7 @@ class Math
         return $x >= 0 ? pow($x, 1 / 3) : -pow(-$x, 1 / 3);
     }
 
-     private function buildPolynomialFromRoots(array $roots, int $a = 1): array
+    private function buildPolynomialFromRoots(array $roots, int $a = 1): array
     {
         $coeffs = [1]; 
 
@@ -157,14 +157,14 @@ class Math
 
     public function generateQuadraticHellEquation(): array
     {
-        $x1 = random_int(-5, 5);
-        $x2 = random_int(-5, 5);
+        $x1 = random_int(HellConfig::QUADRATIC_ROOT_MIN, HellConfig::QUADRATIC_ROOT_MAX);
+        $x2 = random_int(HellConfig::QUADRATIC_ROOT_MIN, HellConfig::QUADRATIC_ROOT_MAX);
 
         if ($x1 === 0 && $x2 === 0) {
             $x1 = 1;
         }
 
-        $a = random_int(1, 3);
+        $a = random_int(HellConfig::QUADRATIC_A_MIN, HellConfig::QUADRATIC_A_MAX);
         $coeffs = $this->buildPolynomialFromRoots([$x1, $x2], $a);
 
         $equationText = $this->formatPolynomialEquation($coeffs);
@@ -182,10 +182,10 @@ class Math
     {
         $roots = [];
         while (count($roots) < 3) {
-            $roots[] = random_int(-3, 3);
+            $roots[] = random_int(HellConfig::CUBIC_ROOT_MIN, HellConfig::CUBIC_ROOT_MAX);
         }
 
-        $a = random_int(1, 2);
+        $a = random_int(HellConfig::CUBIC_A_MIN, HellConfig::CUBIC_A_MAX);
         $coeffs = $this->buildPolynomialFromRoots($roots, $a);
 
         $equationText = $this->formatPolynomialEquation($coeffs);
@@ -204,10 +204,10 @@ class Math
     {
         $roots = [];
         while (count($roots) < 4) {
-            $roots[] = random_int(-2, 2);
+            $roots[] = random_int(HellConfig::QUARTIC_ROOT_MIN, HellConfig::QUARTIC_ROOT_MAX);
         }
 
-        $a = random_int(1, 2);
+        $a = random_int(HellConfig::QUARTIC_A_MIN, HellConfig::QUARTIC_A_MAX);
         $coeffs = $this->buildPolynomialFromRoots($roots, $a);
 
         $equationText = $this->formatPolynomialEquation($coeffs);
@@ -229,11 +229,11 @@ class Math
             'quadratic'        => $this->generateQuadraticHellEquation(),
             'cubic'            => $this->generateCubicHellEquation(),
             'quartic'          => $this->generateQuarticHellEquation(),
-            'required_success' => 2,
+            'required_success' => HellConfig::REQUIRED_SUCCESS,
         ];
     }
 
-    private function compareRoots(array $solutions, array $answers, float $eps = 1e-4): bool
+    private function compareRoots(array $solutions, array $answers, float $eps = HellConfig::ROOT_COMPARE_EPS): bool
     {
         if (isset($solutions['error'])) {
             return false;
@@ -321,5 +321,4 @@ class Math
 
         return $okCount;
     }
-
 }
