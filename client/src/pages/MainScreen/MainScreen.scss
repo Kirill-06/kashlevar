@@ -1,4 +1,9 @@
 .mainScreen {
+  
+  --topbarH: 92px;
+  --uiPadX: clamp(12px, 3vw, 40px);
+  --happyDrop: clamp(18px, 2.4vh, 34px);
+
   position: relative;
   width: 100vw;
   height: 100vh;
@@ -6,6 +11,11 @@
   font-family: 'Play', sans-serif;
   color: #fff;
   user-select: none;
+
+  button {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
 
   &-background {
     position: absolute;
@@ -16,21 +26,37 @@
     z-index: 0;
   }
 
+  
+  &-topBar {
+      position: absolute;
+      top: env(safe-area-inset-top, 0px);
+      left: 0;
+      right: 0;
+      height: var(--topbarH);
+      padding: 0 var(--uiPadX);
+
+      display: flex;
+      justify-content: space-between;
+
+      
+      align-items: flex-start;
+
+      z-index: 100;
+    }
+
   &-topLeft {
-    position: absolute;
-    top: 2vh;
-    left: 2vw;
     display: flex;
     align-items: center;
     gap: 0.8vw;
-    z-index: 2;
+    transform: translateY(var(--happyDrop));
 
     .mainScreen-happinessIcon {
-      width: 5.2vw;
-      scale: (0.8);
+      width: clamp(44px, 5.2vw, 82px);
       height: auto;
       display: block;
-      margin-top: -45px;
+      margin-top: 0 !important;
+    transform: none !important;
+
     }
 
     .mainScreen-happinessText {
@@ -40,117 +66,189 @@
     }
   }
 
-  &-topRight {
-    position: absolute;
-    top: 2vh;
-    right: 2vw;
-    display: flex;
-    align-items: center;
-    gap: 0.8vw;
-    z-index: 2;
+  .mainScreen-toast {
+    position: fixed;
+    left: 50%;
+    bottom: calc(26px + env(safe-area-inset-bottom, 0px));
+    transform: translateX(-50%);
+    z-index: 10000;
+    padding: 10px 16px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    font-weight: 700;
+    font-size: 14px;
+    pointer-events: none;
+  }
 
+  &-topRight {
+    display: flex;
+      align-items: center;
+      gap: clamp(8px, 0.8vw, 16px);
+      flex-wrap: nowrap;
+      min-width: 0;
+      margin-top: 0;
+      padding-top: 0;
     .mainScreen-coinsIcon {
-      width: 6.8vw;
-      min-width: 76px;
-      max-width: 90px;
+      width: clamp(64px, 6.8vw, 90px);
       height: auto;
       display: block;
+      flex: 0 0 auto;
     }
 
     .mainScreen-coinsText {
       font-size: clamp(16px, 2vw, 30px);
       font-weight: 700;
       line-height: 1;
+      flex: 0 0 auto;
+      white-space: nowrap;
     }
   }
 
-  &-center {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    z-index: 1;
+  
+ &-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 5;
 
-    .mainScreen-platform {
-      width: clamp(220px, 24vw, 460px);
-      height: auto;
-      display: block;
-      margin: 320px auto 0; // Опускаем платформу
-      z-index: 1;
-    }
+  
+  bottom: clamp(92px, 10vh, 150px);
+  top: auto;
 
-    .mainScreen-healthBar {
-      width: clamp(240px, 26vw, 500px);
-      margin: 1.2vh auto 0;
-      display: block;
-      z-index: 1;
-    }
-  }
-
-  &-personContainer {
-    position: absolute;
-    top: 50%; // Регулируем позицию персонажа отдельно
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 2;
-    text-align: center;
-  }
-
-  &-person {
-    width: 100%;
-    height: 100%;
-    image-rendering: crisp-edges;
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: pixelated;
-    transform: translateZ(0);
-  }
-
-  .mainScreen-person {
-    width: 100%;
+  .mainScreen-platform {
+    width: clamp(220px, 24vw, 460px);
     height: auto;
+    display: block;
+    margin: 0 auto; 
+    z-index: 1;
+    pointer-events: none;
   }
 
-  &-avatarBtn {
-    width: 200px;
-    height: 300px;
-    background: transparent;
-    border: none;
-    padding: 0;
-    
-    &:focus {
-      outline: none;
-    }
+  .mainScreen-healthBar {
+    width: clamp(240px, 26vw, 500px);
+    margin: 1.2vh auto 0;
+    display: block;
+    z-index: 1;
+    pointer-events: none;
   }
+}
 
   &-healthValue {
     margin: 6px auto 0;
-    width: fit-content;       
+    width: fit-content;
     padding: 0 6px;
     font-weight: 700;
-    font-size: 18px;           
+    font-size: 18px;
     line-height: 1.1;
-    text-shadow: 0 1px 2px rgba(0,0,0,.35);
-    pointer-events: none;      
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+    pointer-events: none;
+
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  &-healthNumber {
+    font-size: 18px;
+  }
+
+  .mainScreen-healthHeart {
+    width: 40px;
+    height: 40px;
+    image-rendering: pixelated;
+    display: block;
   }
 
   &-nicknameWrap {
     margin-top: 8px;
+    pointer-events: none;
   }
 
   &-nicknameText {
     font-size: 20px;
     font-weight: 700;
-    text-shadow: 0 1px 2px rgba(0,0,0,.35);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  }
+
+  
+  &-personContainer {
+    position: absolute;
+    left: 50%;
+    top: 48%;
+    transform: translate(-50%, -55%) translate(var(--personShiftX, 0px), var(--personShiftY, 0px));
+    z-index: 60;
+    text-align: center;
+    pointer-events: auto;
+
+    
+    --personShiftX: 145px;
+    --personShiftY: -45px;
+  }
+
+  &-avatarBtn {
+    
+    height: clamp(420px, 46vh, 680px);
+    aspect-ratio: 746 / 600;
+    background: transparent;
+    border: none;
+    padding: 0;
+
+    position: relative;
+    display: block;
+    line-height: 0;
+    cursor: pointer;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .mainScreen-person {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: left top; 
+    image-rendering: pixelated;
+    pointer-events: none;
+  }
+
+  
+  &-smokeLeft,
+  &-smokeRight {
+    pointer-events: none;
+    z-index: 20;
+
+    .smokeBase {
+      pointer-events: none;
+    }
+
+    .smokeCircles {
+      pointer-events: none;
+    }
+
+    .circle {
+      pointer-events: auto;
+      position: relative;
+      z-index: 10;
+      border: none;
+      background: transparent;
+      padding: 0;
+      cursor: pointer;
+    }
   }
 
   &-smokeLeft {
     position: absolute;
-    bottom: -19vh;
-    left: -7vw;
-    width: clamp(320px, 30vw, 600px);
-    z-index: 2;
-    transform: scale(1.7);
+    bottom: clamp(-220px, -19vh, -120px);
+    left: clamp(-140px, -7vw, -60px);
+    width: clamp(260px, 28vw, 520px);
+
+    transform: scale(1.55);
     transform-origin: left bottom;
 
     .smokeBase {
@@ -168,16 +266,11 @@
       padding: 0 2.8vw;
 
       .circle {
-        position: relative;
         width: clamp(80px, 8vw, 160px);
         height: clamp(80px, 8vw, 160px);
         display: flex;
         align-items: center;
         justify-content: center;
-        background: none;
-        border: none;
-        padding: 0;
-        cursor: pointer;
 
         svg {
           width: 90%;
@@ -197,7 +290,7 @@
           font-size: clamp(2px, 0.5vw, 5px);
           font-weight: 700;
           color: #fff;
-          text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+          text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
           white-space: nowrap;
           pointer-events: none;
           text-align: center;
@@ -213,7 +306,7 @@
           font-size: clamp(2px, 0.7vw, 4px);
           font-weight: 700;
           color: #fff;
-          text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+          text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
           white-space: nowrap;
           pointer-events: none;
           text-align: center;
@@ -225,11 +318,11 @@
         margin-bottom: 22vh;
         margin-left: 6.8vw;
         transform: scale(2);
-        
+
         &.is-clickable:hover {
           transform: scale(2) scale(1.05);
         }
-        
+
         &.is-clickable:active {
           transform: scale(2) scale(0.95);
         }
@@ -239,18 +332,17 @@
         margin-bottom: 16vh;
         margin-right: 7vw;
         transform: scale(2.7);
-        
+
         &.is-clickable:hover {
           transform: scale(2.7) scale(1.05);
         }
-        
+
         &.is-clickable:active {
           transform: scale(2.7) scale(0.95);
         }
       }
 
       .is-clickable {
-        cursor: pointer;
         outline: none;
 
         &:focus-visible {
@@ -263,12 +355,14 @@
 
   &-smokeRight {
     position: absolute;
-    top: 50%;
-    right: -8vw;
-    transform: translateY(-50%) scale(1.7);
+
+    
+    top: calc(50% + (var(--topbarH) / 2));
+    right: clamp(-140px, -8vw, -60px);
+
+    width: clamp(260px, 28vw, 520px);
+    transform: translateY(-50%) scale(1.55);
     transform-origin: center right;
-    width: clamp(320px, 30vw, 600px);
-    z-index: 2;
 
     .smokeBase {
       width: 100%;
@@ -283,20 +377,17 @@
       display: flex;
       justify-content: flex-end;
       align-items: center;
-      padding: 0 2.8vw;
+
+      
+      padding: clamp(24px, 6vh, 90px) 2.8vw 0 2.8vw;
 
       .circle {
-        position: relative;
         width: clamp(60px, 6vw, 120px);
         height: clamp(60px, 6vw, 120px);
         transform: scale(1.6);
         display: flex;
         align-items: center;
         justify-content: center;
-        background: none;
-        border: none;
-        padding: 0;
-        cursor: pointer;
 
         svg {
           width: 100%;
@@ -316,7 +407,7 @@
           font-size: clamp(6px, 0.6vw, 10px);
           font-weight: 700;
           color: #fff;
-          text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+          text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
           white-space: nowrap;
           pointer-events: none;
           text-align: center;
@@ -327,18 +418,17 @@
       .circle-right {
         margin-right: 6.6vw;
         margin-bottom: 10.7vw;
-        
+
         &.is-clickable:hover {
           transform: scale(1.62) scale(1.05);
         }
-        
+
         &.is-clickable:active {
           transform: scale(1.62) scale(1);
         }
       }
 
       .is-clickable {
-        cursor: pointer;
         outline: none;
 
         &:focus-visible {
@@ -346,6 +436,259 @@
           border-radius: 999px;
         }
       }
+    }
+  }
+
+  
+  &-logoutBtn {
+    margin-left: 16px;
+    padding: 6px 14px;
+    border-radius: 10px;
+    border: 2px solid #ffffff;
+    background: rgba(0, 0, 0, 0.7);
+    color: #ffffff;
+    font-family: 'August Cyr';
+    font-size: 18px;
+    cursor: pointer;
+    box-shadow: 0 3px 0 rgba(0, 0, 0, 0.9);
+    transition: transform 0.08s ease-out, box-shadow 0.08s ease-out, background 0.08s ease-out;
+    flex: 0 0 auto;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 0 rgba(0, 0, 0, 0.9);
+      background: rgba(20, 20, 20, 0.9);
+    }
+
+    &:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 rgba(0, 0, 0, 0.9);
+    }
+  }
+
+  &-dialogOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+  }
+
+  &-dialog {
+    position: relative;
+    width: min(90vw, 900px);
+    min-height: 160px;
+    padding: 32px 40px 28px;
+    border-radius: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.02);
+    overflow: hidden;
+    text-align: center;
+    color: #ffffff;
+    font-family: 'Play', sans-serif;
+
+    background-image: url('../../assets/img/background/texture2.png');
+    background-size: cover;
+    background-position: center;
+  }
+
+  &-dialog::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  &-dialog-title {
+    font-size: clamp(26px, 3vw, 40px);
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #d0d0d0;
+    position: relative;
+    z-index: 1;
+  }
+
+  &-dialog-text {
+    font-size: clamp(16px, 1.6vw, 22px);
+    margin-bottom: 24px;
+    color: #f5f5f5;
+    position: relative;
+    z-index: 1;
+  }
+
+  &-dialog-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+  }
+
+  &-dialog-button {
+    min-width: 140px;
+    padding: 10px 24px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.65);
+    background: rgba(0, 0, 0, 0.65);
+    color: #ffffff;
+    font-family: 'Play', sans-serif;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.9);
+    transition: transform 0.08s ease-out, box-shadow 0.08s ease-out, background 0.08s ease-out;
+    position: relative;
+    z-index: 1;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 7px 0 rgba(0, 0, 0, 0.9);
+      background: rgba(25, 25, 25, 0.9);
+    }
+
+    &:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 rgba(0, 0, 0, 0.9);
+    }
+
+    &_secondary {
+      opacity: 0.8;
+    }
+
+    &_primary {
+      background: rgba(255, 80, 80, 0.9);
+      border-color: rgba(255, 160, 160, 0.9);
+
+      &:hover {
+        background: rgba(255, 100, 100, 0.95);
+      }
+    }
+  }
+
+  &-vapeButton {
+    position: absolute;
+    right: var(--uiPadX);
+    bottom: calc(var(--uiPadX) + env(safe-area-inset-bottom, 0px));
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 8px 16px;
+    border-radius: 999px;
+    border: 2px solid #ffffff;
+    background: rgba(0, 0, 0, 0.7);
+    color: #ffffff;
+    font-family: 'Play', sans-serif;
+    cursor: pointer;
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.9);
+    transition: transform 0.08s ease-out, box-shadow 0.08s ease-out, background 0.08s ease-out;
+    z-index: 30;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 7px 0 rgba(0, 0, 0, 0.9);
+      background: rgba(20, 20, 20, 0.9);
+    }
+
+    &:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 rgba(0, 0, 0, 0.9);
+    }
+  }
+
+  &-vapeButton-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 14px;
+    line-height: 1.2;
+  }
+
+  &-vapeButton-sub {
+    font-size: 12px;
+    opacity: 0.85;
+  }
+
+  &-vapeDialog {
+    max-width: 520px;
+  }
+
+  &-vapeList {
+    max-height: 260px;
+    overflow-y: auto;
+    margin: 12px 0 18px;
+    padding-right: 4px;
+  }
+
+  &-vapeItem {
+    width: 100%;
+    text-align: left;
+    margin-bottom: 8px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(0, 0, 0, 0.7);
+    color: #ffffff;
+    font-family: 'Play', sans-serif;
+    cursor: pointer;
+    transition: background 0.08s ease-out, transform 0.08s ease-out, border-color 0.08s ease-out;
+
+    &:hover {
+      background: rgba(20, 20, 20, 0.9);
+      transform: translateY(-1px);
+    }
+
+    &_active {
+      border-color: rgba(255, 215, 0, 0.9);
+      background: rgba(60, 50, 0, 0.9);
+    }
+  }
+
+  &-vapeItem-name {
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+
+  &-vapeItem-meta {
+    font-size: 12px;
+    opacity: 0.9;
+    display: flex;
+    gap: 10px;
+  }
+
+  &-vapeEmpty {
+    font-size: 14px;
+    opacity: 0.9;
+    text-align: center;
+    padding: 20px 0;
+  }
+
+  
+  @media (max-width: 420px) {
+    --topbarH: 78px;
+
+    &-center {
+      bottom: clamp(86px, 12vh, 140px);
+    }
+
+    &-avatarBtn {
+      height: clamp(380px, 52vh, 560px);
+    }
+
+    &-smokeLeft {
+      transform: scale(1.25);
+    }
+
+    &-smokeRight {
+      transform: translateY(-50%) scale(1.25);
+    }
+
+    &-topBar {
+      padding: 0 12px;
     }
   }
 }
