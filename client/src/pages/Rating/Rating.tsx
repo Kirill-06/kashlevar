@@ -31,27 +31,22 @@ const Rating: React.FC<IBasePage> = ({ setPage }) => {
         const load = async () => {
             if (!server) return;
             setLoading(true);
-            try {
-                const res = await server.getRating();
-                if (!isMounted) return;
 
-                if (res) {
-                    setRows(res.rating || []);
-                    setUserRow(res.user || null);
-                    setError('');
-                } else {
-                    setError('Не удалось загрузить рейтинг');
-                }
-            } catch (e) {
-                if (isMounted) {
-                    setError('Ошибка при загрузке рейтинга');
-                }
-            } finally {
-                if (isMounted) setLoading(false);
+            const res = await server.getRating();
+            if (!isMounted) return;
+
+            if (res) {
+                setRows(res.rating || []);
+                setUserRow(res.user || null);
+                setError('');
+            } else {
+                setError('Не удалось загрузить рейтинг');
             }
+
+            if (isMounted) setLoading(false);
         };
 
-        load();
+        void load();
 
         return () => {
             isMounted = false;
