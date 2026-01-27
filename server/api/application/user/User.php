@@ -34,7 +34,7 @@ class User {
         }
         return ['error' => 1003];
     }
-   //1&2
+   //1&3
     public function registration($username, $hash_password) {
         $user = $this->db->getUserByUserName($username);
         if ($user) {
