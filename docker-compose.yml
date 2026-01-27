@@ -28,22 +28,22 @@
       networks:
         - backend
 
-    nginx-frontend:
-      build:
-        context: .
-        dockerfile: ./client/Dockerfile
-        args:
-          - NGINX_CONF=${FRONTEND_NGINX_CONF}
-      container_name: nginx-frontend
-      ports:
-        - "${NGINX_FRONTEND_PORT}:80"
-      networks:
-        - backend
-      develop:
-        watch:
-          - action: sync
-            path: ./client
-            target: /app
+#    nginx-frontend:
+#      build:
+#        context: .
+#        dockerfile: ./client/Dockerfile
+#        args:
+#          - NGINX_CONF=${FRONTEND_NGINX_CONF}
+#      container_name: nginx-frontend
+#      ports:
+#        - "${NGINX_FRONTEND_PORT}:80"
+#      networks:
+#        - backend
+#      develop:
+#        watch:
+#          - action: sync
+#            path: ./client
+#            target: /app
 
     postgres:
       image: postgres:16

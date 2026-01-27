@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { ServerContext, StoreContext } from '../../App';
 import { IBasePage, PAGES } from '../PageManager';
 import { TMessages, THellTasksSet, THellSolvePayload } from '../../services/server/types';
@@ -61,7 +61,7 @@ const HellScreen: React.FC<IBasePage> = ({ setPage }) => {
         messageRef.current.value = '';
     };
 
-    const loadHellTasks = async () => {
+    const loadHellTasks = useCallback(async () => {
         if (!server) return;
         const data = await server.getHellTasks();
         if (!data) return;
@@ -74,11 +74,11 @@ const HellScreen: React.FC<IBasePage> = ({ setPage }) => {
         });
         setSubmitStatus('idle');
         setSubmitMessage('');
-    };
+    }, [server]);
 
     useEffect(() => {
         loadHellTasks();
-    }, [server]);
+    }, [loadHellTasks]);
 
     const parseRoots = (value: string): number[] => {
         return value
@@ -135,7 +135,7 @@ const HellScreen: React.FC<IBasePage> = ({ setPage }) => {
         if (res.resurrected) {
             setSubmitStatus('success');
             setSubmitMessage(
-                `Ты решил правильно ${res.solved_count} из 3 заданий. Демоны отпустили тебя в мир живых! `
+                `Ты решил правильно ${res.solved_count} из 3 заданий. Демоны отпустили тебя в мир живых! 🕊`
             );
 
             setTimeout(() => {
@@ -144,7 +144,7 @@ const HellScreen: React.FC<IBasePage> = ({ setPage }) => {
         } else {
             setSubmitStatus('error');
             setSubmitMessage(
-                `Решено правильно: ${res.solved_count} из 3. Нужно минимум ${hellTasks.required_success}. Остаться ещё немного в Аду. `
+                `Решено правильно: ${res.solved_count} из 3. Нужно минимум ${hellTasks.required_success}. Остаться ещё немного в Аду. 🔥`
             );
         }
     };
@@ -155,13 +155,13 @@ const HellScreen: React.FC<IBasePage> = ({ setPage }) => {
 
         const colonIndex = q.indexOf(':');
         if (colonIndex !== -1) {
-            title = q.slice(0, colonIndex).trim();          
-            const rest = q.slice(colonIndex + 1).trim();    
+            title = q.slice(0, colonIndex).trim();
+            const rest = q.slice(colonIndex + 1).trim();
 
             const dotIndex = rest.indexOf('.');
             if (dotIndex !== -1) {
-                equation = rest.slice(0, dotIndex).trim();  
-                hint = rest.slice(dotIndex + 1).trim();     
+                equation = rest.slice(0, dotIndex).trim();
+                hint = rest.slice(dotIndex + 1).trim();
             } else {
                 equation = rest;
             }
@@ -196,7 +196,7 @@ const HellScreen: React.FC<IBasePage> = ({ setPage }) => {
     return (
         <div className="hell">
             <div className="hell-left">
-                <h1 className="hell-title">Ты умер</h1>
+                <h1 className="hell-title">Ты умер 💀</h1>
                 <p className="hell-subtitle">
                     Добро пожаловать в Ад. Реши несколько уравнений, чтобы искупить свои грехи.
                 </p>
@@ -300,7 +300,6 @@ const HellScreen: React.FC<IBasePage> = ({ setPage }) => {
                 </div>
 
                 <div className="hell-controls">
-                  
                     <Button text="Выйти из игры" onClick={toLogin} />
                 </div>
             </div>

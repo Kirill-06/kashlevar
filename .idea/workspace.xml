@@ -6,6 +6,25 @@
   <component name="ChangeListManager">
     <list default="true" id="0aed8d79-2321-4950-8c64-3e60892d5eec" name="Changes" comment="setting up a project">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/assets/img/MainScreen/smokeanum1.png" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/assets/img/MainScreen/smokeanum1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/assets/img/MainScreen/smokeanum2.png" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/assets/img/MainScreen/smokeanum2.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/assets/img/MainScreen/smokeanum3.png" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/assets/img/MainScreen/smokeanum3.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/assets/img/MainScreen/smokeanum4.png" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/assets/img/MainScreen/smokeanum4.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/game/Game.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/index.scss" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/index.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/Game/Game.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/Game/Game.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/Game/hooks/useSprites.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/HellScreen/HellScreen.scss" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/HellScreen/HellScreen.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/HellScreen/HellScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/HellScreen/HellScreen.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/MainScreen/MainScreen.scss" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/MainScreen/MainScreen.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/MainScreen/MainScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/MainScreen/MainScreen.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/PageManager.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/PageManager.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/Welcome/Welcome.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/Welcome/Welcome.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/api/application/db/DB.php" beforeDir="false" afterPath="$PROJECT_DIR$/server/api/application/db/DB.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/api/application/db/init/init.sql" beforeDir="false" afterPath="$PROJECT_DIR$/server/api/application/db/init/init.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,7 +74,7 @@
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "master",
-    "last_opened_file_path": "/Users/kirillvarlamov/PycharmProjects/NoPainNoGame",
+    "last_opened_file_path": "/Users/kirillvarlamov/udgu/kashlevar",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -69,6 +88,7 @@
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/client" />
       <recent name="$PROJECT_DIR$/php" />
       <recent name="$PROJECT_DIR$/client/src/assets/fonts" />
       <recent name="$PROJECT_DIR$/client/src/assets/img/background" />
