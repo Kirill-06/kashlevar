@@ -81,8 +81,8 @@ const MainScreen: React.FC<IBasePage> = (props: IBasePage) => {
   };
 
   const displayHappiness = stats.userProgress
-    ? Math.max(0, Number(stats.userProgress.happines))
-    : 0;
+      ? Math.max(0, Number(stats.userProgress.happines))
+      : 0;
 
   const displayCoins = stats.userInfo ? Number(stats.userInfo.money ?? 0) : 0;
 
@@ -178,8 +178,8 @@ const MainScreen: React.FC<IBasePage> = (props: IBasePage) => {
   const personImage = personFrames[personFrame] || Person1;
 
   return (
-    <div className="mainScreen">
-      <img src={Background} alt="Background" className="mainScreen-background" />
+      <div className="mainScreen">
+        <img src={Background} alt="Background" className="mainScreen-background" />
 
       <TopBar
         happinessBarImage={happinessBarImage}

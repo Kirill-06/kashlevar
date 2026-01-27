@@ -29,24 +29,35 @@ const Login: React.FC<IBasePage> = (props: IBasePage) => {
     const [error, setError] = React.useState<string>("");
 
     const loginClickHandler = async () => {
+        if (!server) {
+            setError("Сервер недоступен");
+            return;
+        }
+
         if (loginRef.current && passwordRef.current) {
-            const login = loginRef.current.value;
-            const password = passwordRef.current.value;
+            const login = loginRef.current.value.trim();
+            const password = passwordRef.current.value.trim();
+
             if (!login || !password) {
                 setError("Заполните все поля");
                 return;
             }
-try {
-                const response = await server.login(login, password);
 
+            try {
+                const ok = await server.login(login, password);
 
-                setPage(PAGES.WELCOME); 
+                if (ok) {
+                    setError("");
+                    setPage(PAGES.WELCOME);
+                } else {
+                    setError("Неверный логин или пароль");
+                }
             } catch (err) {
                 console.error(err);
                 setError("Ошибка соединения с сервером");
             }
         }
-    }
+    };
 
     return (
         <div className='login'>
@@ -84,20 +95,24 @@ try {
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
 const Register: React.FC<IBasePage> = (props: IBasePage) => {
     const { setPage } = props;
     const server = useContext(ServerContext);
     const nameRef = useRef<HTMLInputElement>(null);
-    const loginRef = useRef<HTMLInputElement>(null);
+    const loginRef = useRef<HTMLInputElement>(null);   
     const passwordRef = useRef<HTMLInputElement>(null);
 
     const [error, setError] = React.useState<string>("");
 
     const registerClickHandler = async () => {
-        console.log('hi')
+        if (!server) {
+            setError("Сервер недоступен");
+            return;
+        }
+
         if (nameRef.current && passwordRef.current) {
             const name = nameRef.current.value.trim();
             const password = passwordRef.current.value.trim();
@@ -108,15 +123,20 @@ const Register: React.FC<IBasePage> = (props: IBasePage) => {
             }
 
             try {
-                const response = await server.registration(name, password);
-                setPage(PAGES.START); 
+                const ok = await server.registration(name, password);
+
+                if (ok) {
+                    setError("");
+                    setPage(PAGES.START);
+                } else {
+                    setError("Не удалось зарегистрироваться");
+                }
             } catch (err) {
                 console.error(err);
                 setError("Ошибка соединения с сервером");
             }
         }
     };
-
 
     return (
         <div className='login'>
@@ -154,8 +174,8 @@ const Register: React.FC<IBasePage> = (props: IBasePage) => {
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default Login;
 export { Register };

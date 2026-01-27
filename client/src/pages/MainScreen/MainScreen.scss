@@ -242,6 +242,7 @@
     }
   }
 
+
   &-smokeLeft {
     position: absolute;
     bottom: clamp(-220px, -19vh, -120px);
@@ -260,10 +261,31 @@
     .smokeCircles {
       position: absolute;
       inset: 0;
+      pointer-events: none;
+    }
+
+    .circle {
+      position: absolute;
       display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      padding: 0 2.8vw;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      padding: 0;
+
+      width: clamp(80px, 8vw, 160px);
+      height: clamp(80px, 8vw, 160px);
+
+      pointer-events: auto;
+      cursor: pointer;
+
+      svg {
+        width: 90%;
+        height: auto;
+        display: block;
+        z-index: 2;
+        pointer-events: none;
+      }
 
       .circle {
         width: clamp(80px, 8vw, 160px);
@@ -272,14 +294,22 @@
         align-items: center;
         justify-content: center;
 
-        svg {
-          width: 90%;
-          height: auto;
-          display: block;
-          position: relative;
-          z-index: 2;
-          pointer-events: none;
-        }
+&.circle-right::after {
+        content: "Магазин";
+        position: absolute;
+        top: 40.5%;
+        left: 44%;
+        transform: translateX(-50%);
+        transform: scale(1);
+        font-size: clamp(2px, 0.7vw, 4px);
+        font-weight: 700;
+        color: #fff;
+        text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+        white-space: nowrap;
+        z-index: 3;
+        pointer-events: none;
+      }
+    }
 
         &.circle-left::after {
           content: "Восхождение";
@@ -327,6 +357,7 @@
           transform: scale(2) scale(0.95);
         }
       }
+    }
 
       .circle-right {
         margin-bottom: 16vh;
@@ -345,13 +376,16 @@
       .is-clickable {
         outline: none;
 
-        &:focus-visible {
-          outline: 2px solid rgba(255, 255, 255, 0.7);
-          border-radius: 999px;
-        }
+    .is-clickable {
+      outline: none;
+
+      &:focus-visible {
+        outline: 2px solid rgba(255, 255, 255, 0.7);
+        border-radius: 999px;
       }
     }
   }
+
 
   &-smokeRight {
     position: absolute;
@@ -384,7 +418,7 @@
       .circle {
         width: clamp(60px, 6vw, 120px);
         height: clamp(60px, 6vw, 120px);
-        transform: scale(1.6);
+        transform: scale(1.7);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -401,7 +435,7 @@
         &.circle-right::after {
           content: "Рейтинг";
           position: absolute;
-          top: 45%;
+          top: 49.1%;
           left: 52%;
           transform: translateX(-50%);
           font-size: clamp(6px, 0.6vw, 10px);
@@ -420,11 +454,11 @@
         margin-bottom: 10.7vw;
 
         &.is-clickable:hover {
-          transform: scale(1.62) scale(1.05);
+          transform: scale(1) scale(1.75);
         }
 
         &.is-clickable:active {
-          transform: scale(1.62) scale(1);
+          transform: scale(1) scale(1.65);
         }
       }
 

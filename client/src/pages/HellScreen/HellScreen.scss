@@ -1,0 +1,217 @@
+.hell {
+  display: flex;
+  min-height: 100vh;
+  height: auto;
+  width: 100vw;
+  background: radial-gradient(circle at top, #441111 0, #120000 60%, #050000 100%);
+  color: #fff;
+  font-family: 'Play', sans-serif;
+  padding: 24px 32px;
+  box-sizing: border-box;
+  gap: 24px;
+  overflow-x: hidden;
+}
+
+.hell-left {
+  flex: 1.2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; 
+  padding-right: 24px;
+}
+
+.hell-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid rgba(255, 255, 255, 0.15);
+  padding-left: 24px;
+}
+
+.hell-title {
+  font-size: clamp(32px, 4vw, 44px);
+  margin-bottom: 8px;
+}
+
+.hell-subtitle {
+  font-size: 16px;
+  opacity: 0.9;
+  margin-bottom: 24px;
+}
+
+.hell-task-question {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.hell-task-expression {
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.hell-task-input {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  font-size: 14px;
+}
+
+.hell-task-input:focus {
+  outline: none;
+  border-color: #ff5757;
+}
+
+.hell-task-status {
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.hell-task-status_success {
+  color: #9aff7a;
+}
+
+.hell-task-status_error {
+  color: #ff7a7a;
+}
+
+.hell-controls {
+  margin-top: 24px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.hell-chatTitle {
+  font-size: 22px;
+  margin-bottom: 6px;
+}
+
+.hell-chatUser {
+  font-size: 14px;
+  opacity: 0.85;
+  margin-bottom: 12px;
+}
+
+.hell-chatMessages {
+  flex: 1;
+  min-height: 0;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 12px;
+  padding: 10px 12px;
+  overflow-y: auto;
+  font-size: 14px;
+}
+
+.hell-chatMessage + .hell-chatMessage {
+  margin-top: 4px;
+}
+
+.hell-chatAuthor {
+  font-weight: 700;
+}
+
+.hell-chatText {
+  opacity: 0.92;
+}
+
+.hell-chatInputRow {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+}
+
+.hell-chatInput {
+  flex: 1;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+}
+
+.hell-chatInput:focus {
+  outline: none;
+  border-color: #ff5757;
+}
+
+.hell-task-loading {
+  font-size: 14px;
+  opacity: 0.8;
+  margin-bottom: 12px;
+}
+
+@media (max-width: 900px) {
+  .hell {
+    flex-direction: column;
+    width: 100%;
+    padding: 16px;
+  }
+
+  .hell-left {
+    padding-right: 0;
+  }
+
+  .hell-right {
+    border-left: none;
+    padding-left: 0;
+    padding-top: 16px;
+  }
+
+  .hell-task {
+    max-width: 100%;
+  }
+}
+
+.hell-task {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 460px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.hell-task-block {
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.hell-task-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.7;
+}
+
+.hell-task-title {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.hell-task-equation {
+  margin-top: 2px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px;
+  white-space: nowrap;
+  overflow-x: auto;
+}
+
+.hell-task-hint {
+  font-size: 12px;
+  opacity: 0.8;
+}
