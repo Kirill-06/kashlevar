@@ -1,4 +1,4 @@
-import { UserProgress, TMessages, TUser } from "../server/types";
+import { TMessages, TUser, UserInfo } from "../server/types";
 
 const TOKEN = 'token';
 
@@ -7,6 +7,7 @@ class Store {
     user: TUser | null = null;
     messages: TMessages = [];
     chatHash: string = 'empty chat hash';
+    userInfo: UserInfo | null = null;
 
 
     setToken(token: string): void {
@@ -32,10 +33,22 @@ class Store {
         this.setToken('');
     }
 
+    setUserInfo(info: UserInfo): void {
+        this.userInfo = info;
+    }
+
+    getUserInfo(): UserInfo | null {
+        return this.userInfo;
+    }
+
+    clearUserInfo(): void {
+        this.userInfo = null;
+    }
+
     addMessages(messages: TMessages): void {
-        // TODO сделать, чтобы работало вот так
-        //this.messages.concat(messages);
-        // а вот это - плохой код!
+        
+        
+        
         if (messages?.length) {
             this.messages = messages;
         }

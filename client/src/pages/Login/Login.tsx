@@ -29,24 +29,29 @@ const Login: React.FC<IBasePage> = (props: IBasePage) => {
     const [error, setError] = React.useState<string>("");
 
     const loginClickHandler = async () => {
+        if (!server) {
+            setError("Сервер недоступен");
+            return;
+        }
+
         if (loginRef.current && passwordRef.current) {
-            const login = loginRef.current.value;
-            const password = passwordRef.current.value;
+            const login = loginRef.current.value.trim();
+            const password = passwordRef.current.value.trim();
+
             if (!login || !password) {
                 setError("Заполните все поля");
                 return;
             }
-try {
-                const response = await server.login(login, password);
+            const ok = await server.login(login, password);
 
-
-                setPage(PAGES.WELCOME); 
-            } catch (err) {
-                console.error(err);
-                setError("Ошибка соединения с сервером");
+            if (ok) {
+                setError("");
+                setPage(PAGES.WELCOME);
+            } else {
+                setError("Неверный логин или пароль");
             }
         }
-    }
+    };
 
     return (
         <div className='login'>
@@ -70,7 +75,15 @@ try {
                     {error && <div className="login-error">{error}</div>}
                     <div className='login-register'>
                         Нет аккаунта?
-                        <a href="#" onClick={() => setPage(PAGES.REGISTER)}>Зарегистрироваться</a>
+                        <a
+                            href="/register"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                setPage(PAGES.REGISTER);
+                            }}
+                        >
+                            Зарегистрироваться
+                        </a>
                     </div>
                     <div className='login-buttons'>
                         <Button onClick={loginClickHandler} text='Войти' />
@@ -84,20 +97,23 @@ try {
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
 const Register: React.FC<IBasePage> = (props: IBasePage) => {
     const { setPage } = props;
     const server = useContext(ServerContext);
     const nameRef = useRef<HTMLInputElement>(null);
-    const loginRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
 
     const [error, setError] = React.useState<string>("");
 
     const registerClickHandler = async () => {
-        console.log('hi')
+        if (!server) {
+            setError("Сервер недоступен");
+            return;
+        }
+
         if (nameRef.current && passwordRef.current) {
             const name = nameRef.current.value.trim();
             const password = passwordRef.current.value.trim();
@@ -106,17 +122,16 @@ const Register: React.FC<IBasePage> = (props: IBasePage) => {
                 setError("Заполните все поля");
                 return;
             }
+            const ok = await server.registration(name, password);
 
-            try {
-                const response = await server.registration(name, password);
-                setPage(PAGES.START); 
-            } catch (err) {
-                console.error(err);
-                setError("Ошибка соединения с сервером");
+            if (ok) {
+                setError("");
+                setPage(PAGES.START);
+            } else {
+                setError("Не удалось зарегистрироваться");
             }
         }
     };
-
 
     return (
         <div className='login'>
@@ -124,7 +139,7 @@ const Register: React.FC<IBasePage> = (props: IBasePage) => {
                 <div className='login-logo'>К.</div>
                 <div className='login-title'>Регистрация</div>
                 <div className='login-description'>
-                    Введите имя, логин и пароль для создания аккаунта.
+                    Введите имя и пароль для создания аккаунта.
                 </div>
                 <div className='login-wrapper'>
                     <div className='login-inputs'>
@@ -140,7 +155,15 @@ const Register: React.FC<IBasePage> = (props: IBasePage) => {
                     {error && <div className="login-error">{error}</div>}
                     <div className='login-register'>
                         Уже есть аккаунт?
-                        <a href="#" onClick={() => setPage(PAGES.LOGIN)}>Войти</a>
+                        <a
+                            href="/login"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                setPage(PAGES.LOGIN);
+                            }}
+                        >
+                            Войти
+                        </a>
                     </div>
                     <div className='login-buttons'>
                         <Button onClick={registerClickHandler} text='Зарегистрироваться' />
@@ -154,8 +177,8 @@ const Register: React.FC<IBasePage> = (props: IBasePage) => {
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default Login;
 export { Register };

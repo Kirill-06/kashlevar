@@ -1,9 +1,26 @@
 import md5 from 'md5';
 import CONFIG from "../../config";
 import Store from "../store/Store";
-import { TAnswer, TError, TMessagesResponse, TUser, UserInfo, UserProgress, UserVapes, updateHappines} from "./types";
+import {TAnswer,
+  TError,
+  TMessagesResponse,
+  TMessages,
+  TUser,
+  UserInfo,
+  UserProgress,
+  UserVapes,
+  ShopItem,
+  RefillResult,
+  UpgradeResult,
+  RatingResponse,
+  THellTasksSet,
+  THellSolvePayload,
+  THellSolveResult,
+  TowerJoinResponse,
+  TowerMoveResponse,
+  TowerSceneUpdate, } from "./types";
 
-const { CHAT_TIMESTAMP, HOST } = CONFIG;
+const { HOST } = CONFIG;
 
 class Server {
     HOST = HOST;
@@ -15,7 +32,6 @@ class Server {
         this.store = store;
     }
 
-    // посылает запрос и обрабатывает ответ
     private async request<T>(method: string, params: { [key: string]: string } = {}): Promise<T | null> {
         try {
             params.method = method;
@@ -24,7 +40,11 @@ class Server {
             if (token) {
                 params.token = token;
             }
-            const response = await fetch(`${this.HOST}/?${Object.keys(params).map(key => `${key}=${params[key]}`).join('&')}`);
+            const qs = Object.keys(params)
+              .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
+              .join('&');
+
+            const response = await fetch(`${this.HOST}/?${qs}`);
             const answer: TAnswer<T> = await response.json();
             if (answer.result === 'ok' && answer.data) {
                 return answer.data;
@@ -91,50 +111,26 @@ class Server {
         return null;
     }
 
-    // startChatMessages(cb: (hash: string) => void): void {
-    //     this.chatInterval = setInterval(async () => {
-    //         const result = await this.getMessages();
-    //         if (result) {
-    //             const { messages, hash } = result;
-    //             this.store.addMessages(messages);
-    //             cb(hash);
-    //         }
-    //     }, CHAT_TIMESTAMP);
+    async puff(itemId?: number): Promise<UserProgress | null> {
+        console.log('Server.puff вызван с itemId =', itemId);
+        const params: Record<string, string> = {};
 
-    // }
+        if (typeof itemId === "number") {
+            params.itemId = String(itemId);
+        }
 
-    async puff(userDeviceId?: number): Promise<UserProgress | null> {
-    const token = this.store.getToken() ?? "";
-
-    const params: Record<string, string> = { token };
-    if (typeof userDeviceId === "number") {
-        params.userDeviceId = String(userDeviceId);
-    }
-
-    const result = await this.request<UserProgress>("puff", params);
-    return result ?? null;
+        const result = await this.request<UserProgress>("puff", params);
+        return result ?? null;
     }
 
     async getUserProgress(): Promise<UserProgress | null> {
-        const token = this.store.getToken() ?? ""
-        const result = await this.request<UserProgress>('getUserProgress', {token});
+        const token = this.store.getToken() ?? "";
+        const result = await this.request<UserProgress>('getPerson', { token });
         if (result) {
             return result;
         }
         return null;
     }
-
-
-    async getUserVapes(): Promise<UserVapes | null> {
-        const token = this.store.getToken() ?? ""
-        const result = await this.request<Array<UserVapes>>('getUserVapes', {token});
-        if (result) {
-            return result[0];
-        }
-        return null;
-    }
-
-
 
     async getUserInfo(): Promise<UserInfo | null> {
         const token = this.store.getToken() ?? ""
@@ -145,13 +141,130 @@ class Server {
         return null;
     }
 
-    async updateHappinessAfterOfline(): Promise<updateHappines | null> {
-        const token = this.store.getToken() ?? ""
-        const result = await this.request<updateHappines>('updateHappinessAfterOfline', {token});
+    async updateHappinessAfterOfline(): Promise<UserProgress | null> {
+        const token = this.store.getToken() ?? "";
+        const result = await this.request<UserProgress>('update', { token });
         if (result) {
             return result;
         }
         return null;
+    }
+
+    async getCatalog(): Promise<ShopItem[]> {
+        const result = await this.request<ShopItem[]>('getCatalog');
+        return result ?? [];
+    }
+
+    async buy(itemId: number): Promise<boolean> {
+        const result = await this.request<boolean>('buy', {
+            itemId: String(itemId),
+        });
+        return !!result;
+    }
+
+    async refillItem(itemId: number): Promise<RefillResult | null> {
+        const result = await this.request<RefillResult>('refillItem', {
+            itemId: String(itemId),
+        });
+        return result ?? null;
+    }
+
+
+    async upgradeItem(itemId: number): Promise<UpgradeResult | null> {
+        const result = await this.request<UpgradeResult>('upgradeItem', {
+            itemId: String(itemId),
+        });
+        return result ?? null;
+    }
+
+    async getInventory(): Promise<UserVapes[]> {
+        const token = this.store.getToken() ?? "";
+        const result = await this.request<Array<UserVapes>>('getInventory', { token });
+        return result ?? [];
+    }
+
+    async getRating(): Promise<RatingResponse | null> {
+        const result = await this.request<RatingResponse>('getRating');
+        return result ?? null;
+    }
+
+    public async getHellTasks(): Promise<THellTasksSet | null> {
+        return this.request<THellTasksSet>('getHellTasks');
+    }
+
+    public async solveHellTasks(payload: THellSolvePayload): Promise<THellSolveResult | null> {
+        const params: Record<string, string> = {
+            q_a: String(payload.quadratic.a),
+            q_b: String(payload.quadratic.b),
+            q_c: String(payload.quadratic.c),
+            q_ans: payload.quadratic.answers.join(','),
+
+            c_a: String(payload.cubic.a),
+            c_b: String(payload.cubic.b),
+            c_c: String(payload.cubic.c),
+            c_d: String(payload.cubic.d),
+            c_ans: payload.cubic.answers.join(','),
+
+            qt_a: String(payload.quartic.a),
+            qt_b: String(payload.quartic.b),
+            qt_c: String(payload.quartic.c),
+            qt_d: String(payload.quartic.d),
+            qt_e: String(payload.quartic.e),
+            qt_ans: payload.quartic.answers.join(','),
+        };
+
+        const result = await this.request<THellSolveResult>('solveHellTasks', params);
+        return result ?? null;
+    }
+
+    public async goToTower(): Promise<TowerJoinResponse | null> {
+      return this.request<TowerJoinResponse>('goToTower');
+    }
+
+    public async leaveTower(): Promise<{ active: boolean } | null> {
+      return this.request<{ active: boolean }>('leaveTower');
+    }
+
+    public async movePerson(payload: {
+      x: number;
+      y: number;
+      direction: string;
+      moveStatus: string;
+    }): Promise<TowerMoveResponse | null> {
+      return this.request<TowerMoveResponse>('movePerson', {
+        x: String(payload.x),
+        y: String(payload.y),
+        direction: payload.direction,
+        moveStatus: payload.moveStatus,
+      });
+    }
+
+    public async updateScene(personsHash: string, itemsHash: string): Promise<TowerSceneUpdate | null> {
+      return this.request<TowerSceneUpdate>('updateScene', {
+        personsHash,
+        itemsHash,
+      });
+    }
+
+
+    startChatMessages(onUpdate: (hash: string) => void, intervalMs: number = 1500): void {
+        if (this.chatInterval) return;
+
+        const tick = async () => {
+            const res = await this.getMessages();
+            if (!res) return;
+
+            if (res.messages) {
+                this.store.addMessages(res.messages);
+            }
+
+            onUpdate(res.hash);
+        };
+
+        void tick();
+        this.chatInterval = setInterval(() => {
+            void tick();
+        }, intervalMs);
     }
 
 
