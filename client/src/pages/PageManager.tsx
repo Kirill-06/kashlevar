@@ -3,7 +3,7 @@ import { StoreContext } from '../App';
 import Preloader from './Preloader/Preloader';
 import Login, {Register} from './Login/Login';
 import Chat from './Chat/Chat';
-import GamePage from './Game/Game';
+import GamePage  from './Game/Game';
 import NotFound from './NotFound/NotFound';
 import Start from './Start/Start';
 import Welcome from './Welcome/Welcome';
