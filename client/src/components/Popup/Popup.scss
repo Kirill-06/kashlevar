@@ -4,53 +4,63 @@ $width-wrapper: 500px;
 $height-wrapper: 200px;
 
 .popup {
-    position: absolute;
-    z-index: 2;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
     display: flex;
     align-items: center;
     justify-content: center;
+    background: rgba(0, 0, 0, 0.55);
 
     &-wrapper {
-        text-align: center;
+        position: relative;
         min-width: $width-wrapper;
         min-height: $height-wrapper;
-        background-color: black;
-        border: 6px solid $button-border-color;
-        border-radius: 10px;
-        padding: 0 20px 0 20px;
+        padding: 24px 32px 20px;
+        border-radius: 24px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow:
+                0 18px 40px rgba(0, 0, 0, 0.9),
+                0 0 0 1px rgba(255, 255, 255, 0.02);
+        overflow: hidden;
+        text-align: center;
+        font-family: 'Play', sans-serif;
+
+        background-image: url('../../assets/img/background/texture2.png');
+        background-size: cover;
+        background-position: center;
     }
 
-    &-text-block {
-        font-weight: 500;
-        text-transform: uppercase;
+    &-wrapper::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.55);
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    &-text-block,
+    &-buttons {
+        position: relative;
+        z-index: 1;
+        text-align: center;           
+        font-family: 'Play', sans-serif; 
     }
 
     &-title {
-        height: 100px;
-        margin-top: 10px;
-        font-size: 60px;
-        color: $text-color;
-        background-color: $button-hover-color;
-        -webkit-background-clip: text;
-        -webkit-text-stroke: 8px transparent;
+        margin-top: 8px;
+        margin-bottom: 8px;
+        font-size: 26px;              
+        font-weight: 700;
+        color: #ffffff;              
+        text-transform: uppercase;
     }
 
-    &--info-text {
-        font-size: 40px;
-        color: $text-color;
-        background-color: $button-hover-color;
-        -webkit-background-clip: text;
-        -webkit-text-stroke: 4px transparent;
-    }
-
-    & .buttons-block {
-        margin-top: 1.2rem;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-around;
-    }
-
-    &__hide {
-        display: none;
+    &-info-text {
+        font-size: 18px;
+        font-weight: 400;
+        color: #ffffff;               
+        margin-bottom: 12px;
     }
 }

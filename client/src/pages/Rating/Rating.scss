@@ -1,0 +1,151 @@
+.rating {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  padding: 40px 60px;
+  box-sizing: border-box;
+  background: radial-gradient(circle at top, #333 0, #000 55%);
+  color: #fff;
+  font-family: 'Play', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.rating-inner {
+  width: min(1100px, 100%);
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.rating-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.rating-title {
+  font-size: 32px;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+}
+
+.rating-backBtn {
+  padding: 6px 14px;
+  border-radius: 10px;
+  border: 2px solid #ffffff;
+  background: rgba(0, 0, 0, 0.7);
+  color: #ffffff;
+  font-family: 'August Cyr';
+  font-size: 18px;
+  cursor: pointer;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.9);
+  transition: transform 0.08s ease-out, box-shadow 0.08s ease-out, background 0.08s ease-out;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 rgba(0, 0, 0, 0.9);
+    background: rgba(20, 20, 20, 0.9);
+  }
+
+  &:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.9);
+  }
+}
+
+.rating-userPanel {
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.28);
+  background: rgba(0, 0, 0, 0.65);
+  margin-bottom: 20px;
+}
+
+.rating-userPanel-title {
+  font-size: 16px;
+  opacity: 0.8;
+  margin-bottom: 6px;
+}
+
+.rating-userPanel-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+}
+
+.rating-userPanel-pos {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.rating-userPanel-name {
+  font-size: 18px;
+}
+
+.rating-userPanel-status {
+  font-size: 16px;
+  opacity: 0.9;
+}
+
+.rating-userPanel-time {
+  font-size: 16px;
+  opacity: 0.9;
+}
+
+.rating-state {
+  margin-top: 40px;
+  font-size: 20px;
+  text-align: center;
+
+  &_error {
+    color: #ff7a7a;
+  }
+}
+
+.rating-tableWrap {
+  flex: 1;
+  overflow: auto;
+  margin-top: 8px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.rating-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 16px;
+
+  th, td {
+    padding: 10px 12px;
+    text-align: left;
+  }
+
+  thead {
+    position: sticky;
+    top: 0;
+    background: rgba(10,10,10,0.95);
+    z-index: 1;
+
+    th {
+      font-weight: 600;
+      border-bottom: 1px solid rgba(255,255,255,0.25);
+    }
+  }
+
+  tbody tr:nth-child(odd) {
+    background: rgba(255,255,255,0.02);
+  }
+
+  tbody tr:nth-child(even) {
+    background: rgba(255,255,255,0.04);
+  }
+}
+
+.rating-row_me {
+  background: rgba(255, 215, 0, 0.15) !important;
+}

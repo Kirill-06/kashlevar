@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-
+import React, { useState, useContext} from 'react';
+import { StoreContext } from '../App';
 import Preloader from './Preloader/Preloader';
 import Login, {Register} from './Login/Login';
 import Chat from './Chat/Chat';
@@ -9,6 +9,9 @@ import Start from './Start/Start';
 import Welcome from './Welcome/Welcome';
 import MainScreen from './MainScreen/MainScreen';
 import Shop from './Shop/Shop';
+import Rating from "./Rating/Rating";
+import HellScreen from "./HellScreen/HellScreen";
+
 
 export enum PAGES {
     PRELOADER,
@@ -21,6 +24,8 @@ export enum PAGES {
     WELCOME,
     MAIN_SCREEN,
     SHOP,
+    RATING,
+    HELL,
 }
 
 export interface IBasePage {
@@ -28,7 +33,11 @@ export interface IBasePage {
 }
 
 const PageManager: React.FC = () => {
-    const [page, setPage] = useState<PAGES>(PAGES.LOGIN);
+    const store = useContext(StoreContext);
+    const [page, setPage] = useState<PAGES>(() => {
+        const token = store.getToken();
+        return token ? PAGES.MAIN_SCREEN : PAGES.LOGIN;
+    });
 
     return (
         <>
@@ -42,6 +51,8 @@ const PageManager: React.FC = () => {
             {page === PAGES.WELCOME && <Welcome setPage={setPage} />}
             {page === PAGES.MAIN_SCREEN && <MainScreen setPage={setPage} />}
             {page === PAGES.SHOP && <Shop setPage={setPage} />}
+            {page === PAGES.RATING && <Rating setPage={setPage} />}
+            {page === PAGES.HELL && <HellScreen setPage={setPage} />}
         </>
     );
 }
