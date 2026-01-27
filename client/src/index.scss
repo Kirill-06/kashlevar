@@ -1,11 +1,13 @@
 @charset 'utf-8';
 
-$font-size: 30px; // 1920x1080
+$font-size: 30px; 
 
 @import './scss/variables';
 
 body {
-    overflow: hidden;
+    height: auto;
+    min-height: 100vh;
+    overflow-y: auto;
     background: url('./assets/img/background/bg.png') center center / cover no-repeat, #181818;
     color: $text-color;
     margin: 0;
